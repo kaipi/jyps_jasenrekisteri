@@ -1,0 +1,22 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_admin.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../member>Jäsenet</a> | <a href=join>Lisää jäsen</a> | <a href=member/admin>Admin</a> | Jäsenmaksut | Konfiguraatio | <a href=member/reference_payments>Viiteaineisto</a> | <a href=../../member/logout>Logout</a>  </h3>
+
+
+</form>
+<table border=1 class="gridtable">
+  {% for sysparam in sysparams %}
+
+  {%endfor%}
+</table>
+</br>
+
+</font>
+
+</html>

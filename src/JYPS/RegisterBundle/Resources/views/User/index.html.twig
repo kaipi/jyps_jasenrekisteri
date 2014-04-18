@@ -1,0 +1,55 @@
+
+{% block body -%}
+<head>
+    <title>JYPS Ry jäsenrekisteri</title>
+      <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | Admin | <a href=../../member/memberfees>Jäsenmaksut</a> | <a href=../../member/configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../logout>Logout</a>  </h3>
+
+ <link href="{{ asset('style.css') }}" rel="stylesheet" />
+    <h1>Järjestelmän käyttäjät</h1>
+
+    <table class="gridtable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Isactive</th>
+                <th>Realname</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.username }}</td>
+               
+             
+                <td>{{ entity.email }}</td>
+                <td>{{ entity.isActive }}</td>
+                <td>{{ entity.realname }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<br/>
+            <a href="{{ path('user_new') }}">
+                Create a new entry
+            </a>
+   
+    {% endblock %}

@@ -1,0 +1,35 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_unpaid_fees.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../../member/user>Admin</a> | Jäsenmaksut| <a href=../../../member/configuration>Konfiguraatio</a> | <a href=../../member/reference_payments>Viiteaineisto</a> | <a href=logout>Logout</a>  </h3>
+<h3>Maksamattomat jäsenmaksut</h3>
+<form name="memberfee_mark" method="post" action='markUnpaidFees'>
+<table border=1 class="gridtable">
+  <th>Jäsennumero</th>
+  <th>Nimi</th>
+  <th>Summa</th>
+  <th>Memo</th>
+  <th>Maksettu</th>
+  </tr>
+  {% for memberfee in memberfees %}
+
+  <td>{{memberfee.getMemberfee().getMemberId()}}</td>
+  <td>{{memberfee.getMemberfee().getFullName()}}</td>
+  <td>{{memberfee.getFeeAmountWithVat() }}</td>
+  <td>{{memberfee.getMemo() }}</td>
+  <td><input type="checkbox" name="Fees_to_be_marked[]" value="{{memberfee.getId()}}"> <input type="hidden" name="year" value="{{year}}"></td>
+
+  </tr>
+  {%endfor%}
+</table>
+</br>
+<input type="submit" value="Merkkaa maksetuksi">
+</form>
+</font>
+
+</html>

@@ -1,0 +1,9 @@
+Tervetuloa Jypsin jäseneksi!,
+Sinut on lisätty jäsenrekisteriimme.
+Jäsennumerosi on: {{member.getMemberId()}}
+Jos et vielä ole maksanut jäsenmaksua, voit maksaa {{memberfee.getFeeAmountWithVat()}}euroa, tilille {{bankaccount.getStringValue()}} viittellä {{memberfee.getReferenceNumber()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
+Kirjoita viestiosaan nimesi millä rekisteröidyit!
+{% if member.getMailingListYleinen() == true %}
+Sinut on myös liitetty Yleinen sähköpostilistalle (yleinen@jyps.info) tällä sähköpostiosoitteella ({{member.getEmail()}})
+{% endif %}
+Tervetuloa mukaan toimintaan!

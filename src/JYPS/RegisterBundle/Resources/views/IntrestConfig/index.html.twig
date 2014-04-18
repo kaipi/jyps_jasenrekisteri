@@ -1,0 +1,46 @@
+{% block body -%}
+
+<head>
+    <title>JYPS Ry jäsenrekisteri</title>
+      <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | Admin | <a href=../../member/memberfees>Jäsenmaksut</a> | <a href=../../member/configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../logout>Logout</a>  </h3>
+
+    <h3>Kiinnostuksen kohteet</h3>
+
+    <table class="gridtable">
+            <tr>
+                <th>Id</th>
+                <th>Intrestname</th>
+                <th>Actions</th>
+            </tr>
+       
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('member_intrestconfig_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.intrestname }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('member_intrestconfig_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('member_intrestconfig_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+       
+            <a href="{{ path('member_intrestconfig_new') }}">
+                Create a new entry
+            </a>
+    
+    {% endblock %}

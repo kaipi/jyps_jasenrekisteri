@@ -1,0 +1,38 @@
+
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_members.html.twig #}
+
+
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3>Jäsenet | <a href=member/add>Lisää jäsen</a> | <a href=member/user>Admin</a> | <a href=member/memberfees>Jäsenmaksut</a> | <a href=member/configuration>Konfiguraatio</a> | Viiteaineisto | Raportit | <a href=member/logout>Logout</a> |Käyttäjä: {{ app.user.username }} </h3>
+
+<h3>Kaikki jäsenet</h3>
+<form action="search" method="post">
+  <input type="text" name="search_name">
+ 
+  <input type="submit" value="Haku">   <a href=../member>Näytä kaikki</a>|<a href=../member/history>Näytä vanhat</a>
+</form>
+<table border=1 class="gridtable">
+  <th>Jäsennumero</th>
+  <th>Nimi</th>
+  <th>Toiminnot</th>
+  </tr>
+  {% for member in members %}
+
+  <td>{{member.getMemberid()}}</td>
+  <td><a href=show/{{member.getMemberId}}>{{ member.getFullname() }}</a>  </td>
+  <td></form> </td>
+
+  </tr>
+  {%endfor%}
+</table>
+</br>
+
+</font>
+
+</html>

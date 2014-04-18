@@ -1,0 +1,162 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%; 
+	font-family:Tahoma;
+	font-size:small;
+
+	
+}
+
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+table.gridtable td.a {
+	visited { color: #551a8b; }
+	hover { color: #06e; }​
+}
+.content {
+	min-height: 100%;
+	position: relative;
+	overflow: auto;
+	z-index: 0; 
+}
+
+.background {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.top_block {
+	width: 100%;
+	display: block; 
+}
+
+.bottom_block {
+	position: absolute;
+	width: 100%;
+	display: block;
+	bottom: 0; 
+}
+
+.left_block {
+	display: block;
+	float: left; 
+}
+
+.right_block {
+	display: block;
+	float: right; 
+}
+
+.center_block {
+	display: block;
+	width: auto; 
+}
+
+.menu {
+	width: 100%;
+	height: 70px;
+	background-color: #9999ff;
+}
+
+.background.search_sidebar {
+	height: auto !important;
+	padding-bottom: 0;
+	left: 0;
+	width: 213px;
+	background-color: #999999;
+	margin-top: 70px; 
+}
+
+.search_sidebar {
+	height: auto;
+	width: 213px;
+	padding-bottom: 0px;
+}
+
+.background.member_info {
+	height: auto !important;
+	padding-bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #999966;
+	margin-top: 70px;
+	margin-left: 213px; 
+}
+
+.member_info {
+	width: auto;
+	height: auto;
+	padding-bottom: 0px;
+}
+
+label
+{
+width: 40%;
+float: left;
+text-align: left;
+margin-right: 0.5em;
+display: block
+}
+
+.submit input
+{
+margin-left: 3em;
+}
+input
+{
+color: #000000;
+border: 1px solid #000000
+}
+
+.submit input
+{
+color: #000;
+background: #ffa20f;
+border: 2px outset #d7b9c9;
+float:left;
+}
+fieldset
+{
+border: 1px solid  	#0000F;
+width: 80%;
+padding-top: 5px;
+}
+ fieldset.memberfee_create
+{
+border: 1px solid  	#0000F;
+width: 32%;
+padding-top: 5px;
+}
+legend
+{
+color: #fff;
+background: #0357B1;
+border: 0px solid #0357B1;
+padding: 2px 6px
+} 

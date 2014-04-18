@@ -1,0 +1,108 @@
+<?php
+
+namespace JYPS\RegisterBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * User
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ */
+class SystemParameter implements UserInterface, \Serializable
+{
+/**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    /**
+    * @ORM\Column(type="string")
+    */
+    private $key;
+    /**
+    * @ORM\Column(type="integer")
+    */
+    private $int_value;
+    /**
+    * @ORM\Column(type="string")
+    */
+    private $string_value;
+    /**
+    * @ORM\Column(type="decimal")
+    */
+    private $dec_value;
+    /**
+    * @ORM\Column(type="boolean")
+    */
+    private $boolean_value;
+ /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * @see \Serializable::serialize()
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password,
+        ));
+    }
+
+    /**
+     * @see \Serializable::unserialize()
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password,
+        ) = unserialize($serialized);
+    }
+
+
+}

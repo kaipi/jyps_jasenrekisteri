@@ -1,0 +1,72 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_member.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri - Lisää jäsen </title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+
+<h3><a href=../member>Jäsenet</a> | Lisää jäsen | <a href=../member/user>Admin</a> | <a href=memberfees>Jäsenmaksut</a>| <a href=configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../member/logout>Logout</a>  </h3>
+
+
+<h3>Henkilötiedot</h3>
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<table class="gridtable">
+  <th>Etunimi</th>
+  <th>Sukunimi</th>
+  <th>Katuosoite</th>
+  <th>Postinumero</th>
+  <th>Kaupunki</th>
+  <th>Maa</th>
+  <th>Sähköposti</th>
+  <th>Puhelin</th>
+  <th>Syntymävuosi</th> 
+  <th>Sukupuoli</th>
+  </tr>
+  <td> {{ form_widget(form.firstname) }}</td>
+  <td> {{ form_widget(form.surname) }}</td>
+  <td> {{ form_widget(form.street_address) }} </td>
+  <td> {{ form_widget(form.postal_code) }}</td>
+  <td> {{ form_widget(form.city) }}</td>
+  <td> {{ form_widget(form.country) }} </td>
+  <td> {{ form_widget(form.email) }}</td>
+  <td> {{ form_widget(form.telephone) }}</td>
+  <td> {{ form_widget(form.birth_year) }}</td>
+   <td> {{ form_widget(form.gender) }}</td>
+</table>
+
+<h3>Muut tiedot</h3>
+<table class="gridtable">
+<th>Tyyppi</th>
+<th>Sähköinen Jäsenlehti</th>
+<th>Sähköinen lasku</th>
+<th>Yleinen sähköpostilista</th>
+<th>Memo</th>
+</tr>
+<td> {{ form_widget(form.membertype) }}</td>
+<td> {{ form_widget(form.magazine_preference) }}</td>
+<td> {{ form_widget(form.invoice_preference) }}</td>
+<td> {{ form_widget(form.mailing_list_yleinen) }}</td>
+<td></td>
+</table>
+</br>
+
+</br>
+<h3>Jäsenlomakkeen lisätiedot</h3>
+<table class="gridtable">
+<th>Suosittelija</th>
+<th>Kiinnostuksen kohteet</th>
+
+<th>Vapaa sana</th>
+</tr>
+<td> {{ form_widget(form.referer_person_name) }}</td>
+<td> {{ form_widget(form.intrests) }} </td>
+
+<td> {{form_widget(form.join_form_freeword) }}</td>
+</table>
+{{ form_widget(form.save) }}
+{{ form_end(form) }}
+

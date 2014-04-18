@@ -1,0 +1,64 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_members.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../member>Jäsenet</a> | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | Jäsenmaksut| <a href=../member/configuration>Konfiguraatio</a> | Viiteaineisto | <a href=logout>Logout</a>  </h3>
+<h3>Jäsenmaksujen hallinta</h3>
+<table border=1 class="gridtable">
+  <th>Nimi</th>
+  <th>Summa</th>
+  <th>Voimassa alkaen</th>
+  <th>Voimassa loppuen</th>
+  <th>Toiminto</th>
+  </tr>
+  {% for memberfee_conf in memberfee_configs %}
+
+  <td>{{memberfee_conf.getMemberFeeName()}}</td>
+  <td>{{memberfee_conf.getMemberFeeAmount()}}</td>
+  <td>{{memberfee_conf.getValidFrom()|date('Y-m-d')}}</td>
+  <td>{{memberfee_conf.getValidTo()|date('Y-m-d')}}</td>
+  <td><input type="submit" value="Poista"> </td>
+
+  </tr>
+  {%endfor%}
+</table>
+</br>
+<fieldset class='memberfee_create'>
+<legend>Jäsenmaksujen luonti</legend>
+Tästä voit luoda jäsenmaksut kuluvalle jäsenkaudelle.
+
+<form name="memberfee_create" method="post" action='../member/memberfees/create'>
+</br>
+<button type="submit" id="create_memberfees" name='create_memberfees'>Luo jäsenmaksut</button>
+</form>
+</fieldset>
+
+<fieldset class='memberfee_create'>
+<legend>Jäsenmaksujen merkkaus</legend>
+<form name="memberfee_mark" method="post" action='../member/memberfees/showFees'>
+
+<select name="year">
+{%for year in years%}
+    <option value="{{year['fee_period']}}">{{year['fee_period']}}</option>
+
+{%endfor%}
+</select>
+<button type="submit" id="show_unpaid_memberfees" name='show_unpaid_memberfees'>Näytä maksamattomat maksut</button>
+</form>
+</fieldset>
+
+<fieldset class='memberfee_create'>
+<legend>Muistutusten lähetys</legend>
+Tästä voit lähettää muistutukset. Muistutukset lähetetään kaikille kellä on maksamattomia jäsenmaksuja tällähetkellä.
+<form name="reminder_send" method="post" action='../member/memberfees/sendReminders'>
+</br>
+<button type="submit" id="show_unpaid_memberfees" name='show_unpaid_memberfees'>Lähetä muistutukset</button>
+</form>
+</fieldset>
+</font>
+
+</html>

@@ -1,0 +1,27 @@
+security:
+    encoders:
+        JYPS\RegisterBundle\Entity\User:
+            algorithm: bcrypt
+            cost:  15 
+
+    providers:
+        administrators:
+            entity: { class: JYPSRegisterBundle:User, property: username }
+
+    firewalls:
+       login_firewall:
+          pattern:    ^/member/login$
+          anonymous:  ~
+
+       secured_area:
+           pattern: ^/member
+           form_login:
+                login_path: /member/login
+                check_path: /member/login_check
+                default_target_path: /member
+           logout: 
+                path:   /member/logout
+                target: /member/login
+
+
+

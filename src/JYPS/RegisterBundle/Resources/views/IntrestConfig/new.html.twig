@@ -1,0 +1,20 @@
+{% block body -%}
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | Admin | <a href=../../member/memberfees>Jäsenmaksut</a> | <a href=../../member/configuration>Konfiguraatio</a> | Viiteaineisto | <a href=logout>Logout</a>  </h3>
+
+    <h3>IntrestConfig creation</h3>
+
+    {{ form(form) }}
+
+ 
+        <a href="{{ path('member_intrestconfig') }}">
+            Back to the list
+        </a>
+
+{% endblock %}

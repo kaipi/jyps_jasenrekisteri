@@ -1,0 +1,105 @@
+_wdt:
+    resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
+    prefix:   /_wdt
+
+_profiler:
+    resource: "@WebProfilerBundle/Resources/config/routing/profiler.xml"
+    prefix:   /_profiler
+
+_configurator:
+    resource: "@SensioDistributionBundle/Resources/config/routing/webconfigurator.xml"
+    prefix:   /_configurator
+
+_main:
+    resource: routing.yml
+
+jyps_register:
+    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"
+    prefix:   /
+
+login:
+    path:   /member/login
+    defaults:  { _controller: JYPSRegisterBundle:Security:login }
+
+login_check:
+    path:   /member/login_check
+  
+logout:
+    path:   /member/logout
+
+member:
+    pattern: /member/show/{memberid}
+    defaults: { _controller: JYPSRegisterBundle:Member:showAll }
+    requirements:
+        id:  \d+
+
+all_members:
+    path:   /member
+    defaults:  { _controller: JYPSRegisterBundle:Member:index }
+
+add_member:
+    path:   /member/add
+    defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
+
+search:
+    path:   /search
+    defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
+
+save_member:
+    path: /member/{memberid}/save
+    defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
+    requirements:
+        id:  \d+
+
+join_member:
+    path: /join
+    defaults:  { _controller: JYPSRegisterBundle:Member:joinMember}
+
+join_save:
+    path: /join/joinSave
+    defaults:  { _controller: JYPSRegisterBundle:Member:joinSave}
+
+join_complete:
+    path: /join/joinComplete
+    defaults: {_controller: JYPSRegisterBundle:Member:joinComplete}
+
+join_internal_save:
+    path: /member/joinSave
+    defaults:  { _controller: JYPSRegisterBundle:Member:joinSaveInternal}
+
+configuration:
+    path: /member/configuration
+    defaults: {_controller: JYPSRegisterBundle:Configuration:showAll}
+
+memberfees:
+    path: /member/memberfees
+    defaults: {_controller: JYPSRegisterBundle:MemberFee:showAll}
+
+memberfees_create:
+    path: /member/memberfees/create
+    defaults: {_controller: JYPSRegisterBundle:MemberFee:createMemberFees}
+
+end_member:
+    path:   /member/end_member
+    defaults:  { _controller: JYPSRegisterBundle:Member:endMember}
+
+mark_member_fees:
+    path:   /member/memberfees/showFees
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:showUnpaidFees}
+
+mark_fees:
+    path:   /member/memberfees/markUnpaidFees
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:markFeesPaid}
+
+showClosed:
+    path:   /member/history
+    defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
+
+JYPSRegisterBundle_user:
+        resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
+        prefix:   /member/user
+
+JYPSRegisterBundle_member_intrestconfig:
+        resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
+        prefix:   /member/intrestconfig
+

@@ -1,0 +1,27 @@
+{# src/JYPS/RegisterBundle/Resources/views/Security/login.html.twig #}
+{% if error %}
+    <div>{{ error.message }}</div>
+{% endif %}
+<center>
+<h2>JYPS Ry</h2>
+<form action="{{ path('login_check') }}" method="post">
+    <table>
+    <td><label for="username">Username:</label></td>
+    <td><input type="text" id="username" name="_username" value="{{ last_username }}" /></td>
+    </tr>
+    
+    <td><label for="password">Password:</label></td>
+    <td><input type="password" id="password" name="_password" /></td>
+
+    {#
+        If you want to control the URL the user
+        is redirected to on success (more details below)
+
+        <input type="hidden" name="/member" value="/member" />
+     #}
+    </tr>
+
+    <td colspan="2"><center><button type="submit">login</button></center></td>
+    </table>
+</form>
+</center>

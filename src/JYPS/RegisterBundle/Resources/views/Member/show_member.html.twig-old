@@ -1,0 +1,117 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_member.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri - Jäsen {{member.getMemberId}}</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+
+<h3><a href=../../member>Jäsenet</a> | <a href=../add>Lisää jäsen</a> | <a href=../admin>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | <a href=../reference_payments>Viiteaineisto</a> | <a href=logout>Logout</a>  </h3>
+
+
+<h3>Henkilötiedot (jäsen: {{member.getMemberId}})</h3>
+<form action="{{member.getMemberId}}/save" method="post">
+<table class="gridtable">
+  <th>Etunimi</th>
+  <th>Sukunimi</th>
+  <th>Katuosoite</th>
+  <th>Postinumero</th>
+  <th>Kaupunki</th>
+  <th>Maa</th>
+  <th>Sähköposti</th>
+  <th>Puhelin</th>
+  <th>Sukupuoli</th>
+  </tr>
+  <td><input type="text" name="first_name" size="12" value="{{ member.getFirstname() }}"></td>
+  <td><input type="text" name="surname" size="12" value="{{ member.getSurname() }}"></td>
+  <td><input type="text" name="street_address" value="{{ member.getStreetaddress() }}"> </td>
+  <td><input type="text" name="PostalCode" size="4" value="{{ member.getPostalcode() }}"></td>
+  <td><input type="text" name="city" size="12" value="{{ member.getCity() }}"></td>
+  <td><input type="text" name="country" size="10" value="{{ member.getCountry() }}"> </td>
+  <td><input type="text" name="email" value="{{ member.getEmail() }}"></td>
+  <td><input type="text" name="phone" size="10" value="{{ member.getTelephone()}}"></td>
+  <td><input type="text" name="phone" size="10" value="{{ member.getGender()}}"></td>
+</table>
+
+<h3>Muut tiedot</h3>
+<table class="gridtable">
+<th>Alkaen</th>
+<th>Loppunut</th>
+<th>Tyyppi</th>
+<th>Lehti</th>
+<th>Jäsenmaksu</th>
+<th>Memo</th>
+</tr>
+  <td> {{ member.getMembershipStartDate()|date('Y-m-d')}}</td>
+  <td> </td>
+  <td>  <select name="membership_type">
+<option value="1">Normaalijäsen</option>
+<option value="2">Ainaisjäsen</option>
+<option value="3">Kunniajäsen</option>
+<option value="4">Juniori</option>
+<option value="5">Yhteisö</option>
+
+</select></td>
+
+  <td> <select name="magazine_preference">
+<option value="1">Sähköinen</option>
+<option value="2">Paperi</option>
+
+</select> </td>
+  <td>  <select name="invoice_prefence">
+<option value="1">Sähköinen</option>
+<option value="2">Paperi/PDF</option>
+
+</select></td>
+  <td> {{ member.getMemo() }}</td>
+</table>
+</br>
+<input type="submit" value="Tallenna"> 
+</br>
+<h3>Jäsenlomakkeen lisätiedot</h3>
+<table class="gridtable">
+<th>Suosittelija</th>
+<th>Kiinnostuksen kohteet</th>
+<th>Yleinen sähköpostilista</th>
+<th>Vapaa sana</th>
+</tr>
+<td>{{ member.getRefererPersonName() }}</td>
+<td>{{ member.getRefererPersonName() }}</td>
+<td>{{ member.getRefererPersonName() }}</td>
+<td>{{ member.getRefererPersonName() }}</td>
+</table>
+
+<h3>Jäsenmaksut</h3>
+<table class="gridtable">
+
+<th>Jäsenkausi</th>
+<th>Viite</th>
+<th>Maksettu</th>
+<th>Eräpäivä</th>
+<th>Summa</th>
+<th>Memo</th>
+</tr>
+{% for memberfee in memberfees %}
+<td>{{ memberfee.getFeePeriod() }}</td>
+<td>{{ memberfee.getReferenceNumber() }}</td>
+<td></td>
+<td>{{ memberfee.getDueDate()|date('Y-m-d') }}</td>
+<td>{{ memberfee.getFeeAmountWithVat() }}</td>
+<td>{{ memberfee.getMemo() }}</td>
+
+</tr>
+{% endfor %}
+</table>
+
+
+</br>
+<h3>Tapahtumalogi</h3>
+<table class="gridtable">
+<th>Tapahtuma</th>
+<th>Käyttäjä</th>
+<th>Päivämäärä</th>
+</table>
+</br>
+

@@ -1,0 +1,3 @@
+jyps_register_homepage:
+    pattern:  /
+    defaults: { _controller: JYPSRegisterBundle:Default:index }

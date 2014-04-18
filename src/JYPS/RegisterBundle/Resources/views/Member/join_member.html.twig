@@ -1,0 +1,49 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/join_member.html.twig #}
+<head>
+<title>JYPS Ry Liittymislomake</title>
+<link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<fieldset>
+<legend>Henkilötiedot:</legend>
+<p>{{ form_label(form.firstname, 'Etunimi') }} {{ form_widget(form.firstname) }}</p>
+<p>{{ form_label(form.firstname, 'Sukunimi') }} {{ form_widget(form.surname) }}</p>
+<p>{{ form_label(form.birth_year, 'Syntymävuosi') }} {{ form_widget(form.birth_year) }}</p>
+<p>{{ form_label(form.gender, 'Sukupuoli') }} {{ form_widget(form.gender) }}</p>
+<p>{{ form_label(form.membertype, 'Jäsenyyden tyyppi') }} {{ form_widget(form.membertype) }}</p>
+</fieldset>
+<fieldset>
+<legend>Yhteystiedot:</legend>
+<p>{{ form_label(form.street_address, 'Katuosoite') }} {{ form_widget(form.street_address) }}</p>
+<p>{{ form_label(form.postal_code, 'Postinumero') }} {{ form_widget(form.postal_code) }}</p>
+<p>{{ form_label(form.city, 'Postitoimipaikka/Kaupunki') }} {{ form_widget(form.city) }}</p>
+<p>{{ form_label(form.country, 'Maa') }} {{ form_widget(form.country) }}</p>
+<p>{{ form_label(form.email, 'Email') }} {{ form_widget(form.email) }}</p>
+<p>{{ form_label(form.telephone, 'Puhelinnumero') }} {{ form_widget(form.telephone) }}</p>
+<p>{{ form_label(form.magazine_preference, 'Haluan jäsenlehden sähköisenä') }} {{ form_widget(form.magazine_preference) }}</p>
+<p>{{ form_label(form.mailing_list_yleinen, 'Haluan liittyä sähköpostilistalle') }} {{ form_widget(form.mailing_list_yleinen) }}</p>
+<p>{{ form_label(form.invoice_preference, 'Haluan jäsenmaksun sähköisenä') }} {{ form_widget(form.invoice_preference) }}</p>
+
+</fieldset>
+
+<fieldset>
+<legend>Kiinnostuksen kohteet:</legend>
+<p>{{ form_label(form.intrests, 'Kiinnostukset') }} {{ form_widget(form.intrests) }} </p>
+<p>{{ form_label(form.join_form_freeword, 'Mitä odotat ja toivot JYPS:in jäsenyydeltä? Mistä kuulit seurasta?') }} {{form_widget(form.join_form_freeword) }}
+</p>
+</fieldset>
+<fieldset>
+<legend>Suosittelija</legend>
+<p>{{ form_label(form.referer_person_name, 'Suosittelijan nimi') }} {{ form_widget(form.referer_person_name) }}</p>
+
+</fieldset>
+<fieldset >
+Liittymisen jälkeen saat jäsenmaksutiedot välittömästi antaamaasi sähköpostiosoitteeseen. Jos tietoja ei kuulu, ota yhteyttä jäsensihteeriin () tai www-vastaavaan (). Olethan huolellinen täyttäessäsi tiedot!
+</fieldset>
+ {{ form_widget(form.save) }}
+{{ form_end(form) }}
+<a href=register_info>Rekisteriseloste</a>
+</head>
+</html>

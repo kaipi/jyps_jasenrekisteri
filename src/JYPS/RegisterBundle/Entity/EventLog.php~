@@ -1,0 +1,105 @@
+<?php
+
+namespace JYPS\RegisterBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * User
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ */
+class EventLog implements UserInterface, \Serializable
+{
+/**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+     /**
+    * @ORM\Column(type="string")
+    */
+    private $event;
+     /**
+    * @ORM\Column(type="string")
+    */
+    private $user;
+     /**
+    * @ORM\Column(type="date")
+    */
+    private $date;
+     /**
+    * @ORM\Column(type="integer")
+    */
+    private $member_id;
+   
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /**
+     * @see \Serializable::serialize()
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password,
+        ));
+    }
+
+
+    /**
+     * @see \Serializable::unserialize()
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password,
+        ) = unserialize($serialized);
+    }
+}

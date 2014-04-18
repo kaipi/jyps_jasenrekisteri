@@ -124,15 +124,9 @@ public function joinMemberAction(Request $request)
   ->getManager()
   ->getRepository('JYPSRegisterBundle:IntrestConfig');
 
- /* $memberfee_confs = $this->getDoctrine()
+  $memberfee_confs = $this->getDoctrine()
   ->getManager()
   ->getRepository('JYPSRegisterBundle:MemberFeeConfig');
-*/
-
-$memberfee_confs = $this->getDoctrine()
-    ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-    ->findBy(array('show_on_join_form' => 0),
-             array('membertype' => 'ASC'));
 
   $form = $this->createForm(new MemberJoinType(), $member, array('action' => $this->generateUrl('join_save'),
    'intrest_configs' => $all_confs,

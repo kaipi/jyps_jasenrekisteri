@@ -25,6 +25,7 @@ class MemberJoinType extends AbstractType
         ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
                                             'query_builder' => function(EntityRepository $fee_conf) {
                                                 return $fee_conf->createQueryBuilder('f')
+                                                ->where('f.show_on_join_form = 1')
                                                 ->orderBy('f.membertype', 'ASC'); 
                                             },
                                             'property'=>'NameWithFeeAmount',

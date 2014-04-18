@@ -298,4 +298,50 @@ class MemberFeeConfig implements UserInterface, \Serializable
     return $this->memberfee_name." (".$this->memberfee_amount."eur)";
 }
 
+
+    /**
+     * Set campaign_fee
+     *
+     * @param boolean $campaignFee
+     * @return MemberFeeConfig
+     */
+    public function setCampaignFee($campaignFee)
+    {
+        $this->campaign_fee = $campaignFee;
+
+        return $this;
+    }
+
+    /**
+     * Get campaign_fee
+     *
+     * @return boolean 
+     */
+    public function getCampaignFee()
+    {
+        return $this->campaign_fee;
+    }
+
+    /**
+     * Set real_membertype
+     *
+     * @param integer $realMembertype
+     * @return MemberFeeConfig
+     */
+    public function setRealMembertype($realMembertype)
+    {
+        $this->real_membertype = $realMembertype;
+
+        return $this;
+    }
+
+    /**
+     * Get real_membertype
+     *
+     * @return integer 
+     */
+    public function getRealMembertype()
+    {
+        return $this->real_membertype;
+    }
 }

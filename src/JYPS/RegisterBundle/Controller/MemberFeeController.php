@@ -62,10 +62,12 @@ class MemberFeeController extends Controller
    	}
 	public function createMemberFeesAction(Request $request)
 	{
-		//ini_set('max_execution_time', 300);
+		ini_set('max_execution_time', 300);
 		$members = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:Member')
 		->findAll();
+		$total_amount = 0;
+		$total_qty = 0;
 
 		foreach($members as $member) {
 		    
@@ -73,9 +75,10 @@ class MemberFeeController extends Controller
 			->getRepository('JYPSRegisterBundle:MemberFeeConfig')
 			->findOneBy(array('membertype' => $member->getMemberType()));
 			//Do not create fees for membertypes where it's prevented
-			//if($memberFeeConfig->getCreateFees() == "JOIN_ONLY") {
-			//	continue;
-			//}
+
+			if( $memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
+				continue;
+			}
 			//Check that fee does not exists fe. already joined members who get fee when joining.
 			$createfee = TRUE;
 			$fees = $member->getMemberFees();
@@ -88,6 +91,8 @@ class MemberFeeController extends Controller
 			$duedate = new \DateTime('now');
 			$duedate->add(new \DateInterval('P10D'));
 			if ($createfee == TRUE) {
+				$total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
+				$total_qty    = $total_qty + 1;
 				$memberfee = new MemberFee();
 	            $memberfee->setMemberId($member->getMemberid());
 	            $memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
@@ -102,7 +107,7 @@ class MemberFeeController extends Controller
 			}
 
 		}
-		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array());
+		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
 
 	public function readReferencePayments(Request $request) 

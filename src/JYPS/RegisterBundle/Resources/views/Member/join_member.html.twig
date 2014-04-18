@@ -30,12 +30,12 @@
 
 <fieldset>
 <legend>Kiinnostuksen kohteet:</legend>
-
+<ul class="checkbox-grid">
 {% for intrest in form.intrests %}
-		{{ form_widget(intrest) }} {{ form_label(intrest) }}
+		<li>{{ form_widget(intrest) }} {{ form_label(intrest) }}</li>
 
 {%endfor%}
-
+</ul>
 <br/>
 <p>{{ form_label(form.join_form_freeword, 'Mitä odotat ja toivot JYPS:in jäsenyydeltä? Mistä kuulit seurasta?') }} {{form_widget(form.join_form_freeword) }}
 </p>

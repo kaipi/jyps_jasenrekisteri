@@ -117,16 +117,22 @@ table.gridtable td.a {
 
 label
 {
-width: 40%;
-float: left;
-text-align: left;
-margin-right: 0.5em;
-display: block
+	width: 40%;
+	float: left;
+	text-align: left;
+	margin-right: 0.5em;
+	display: block
 }
 .checkbox-grid li {
     display: block;
     float: left;
     width: 25%;
+}
+.checkbox-grid label {
+	width: 10%;
+	float: left;
+	text-align: left;
+	margin-right: 0.5em;
 }
 .submit input
 {

@@ -1,6 +1,6 @@
 set :application, "kaipi.kapsi.fi"
 set :domain,      "kaipi@lakka.kapsi.fi"
-set :deploy_to,   "/home/users/kaipi/sites/kaipi.kapsi.fi/secure-www/JYPS"
+set :deploy_to,   "/home/users/kaipi/sites/kaipi.kapsi.fi/secure-www/jyps_jasenrekisteri"
 set :app_path,    "app"
 
 set :repository,  "https://github.com/kaipi/jyps_jasenrekisteri.git"

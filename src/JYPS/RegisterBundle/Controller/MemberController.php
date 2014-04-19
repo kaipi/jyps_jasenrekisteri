@@ -182,34 +182,9 @@ if(!empty($intrests)) {
 }
 
 $form = $this->createForm(new MemberJoinType, $member);
- 
-
-/*data = $request->request->all();
-
-print("REQUEST DATA<br/>");
-foreach ($data as $k => $d) {
-    print("$k: <pre>"); print_r($d); print("</pre>");
-}
-
-$children = $form->all();
-
-print("<br/>FORM CHILDREN<br/>");
-foreach ($children as $ch) {
-    print($ch->getName() . "<br/>");
-}
-
-$data = array_diff_key($data, $children);
-//$data contains now extra fields
-
-print("<br/>DIFF DATA<br/>");
-foreach ($data as $k => $d) {
-    print("$k: <pre>"); print_r($d); print("</pre>");
-}
-
-*/
 
 $form->handleRequest($request);
-//print $form->getErrorsAsString();
+
 if ($form->isValid()) {
 
   $em = $this->getDoctrine()->getManager();
@@ -299,43 +274,26 @@ if(!empty($intrests)) {
  }
 }
 
-$form = $this->createForm(new MemberJoinType, $member);
+$form = $this->createForm(new MemberAddType, $member);
  
-
-/*data = $request->request->all();
-
-print("REQUEST DATA<br/>");
-foreach ($data as $k => $d) {
-    print("$k: <pre>"); print_r($d); print("</pre>");
-}
-
-$children = $form->all();
-
-print("<br/>FORM CHILDREN<br/>");
-foreach ($children as $ch) {
-    print($ch->getName() . "<br/>");
-}
-
-$data = array_diff_key($data, $children);
-//$data contains now extra fields
-
-print("<br/>DIFF DATA<br/>");
-foreach ($data as $k => $d) {
-    print("$k: <pre>"); print_r($d); print("</pre>");
-}
-
-*/
-
 $form->handleRequest($request);
-//print $form->getErrorsAsString();
+print $form->getErrorsAsString();
+print $member->getMemberType();
 if ($form->isValid()) {
 
+  $send_mail_without_payment_info = False;
+  if($memberFeeConfig->getCampaignFee() == True) {
+    $send_mail_without_payment_info = True;
+    $member->setMemberType($memberFeeConfig->getRealMemberType());
+    $memberfee->setMemo("KAMPPIS");
+  }
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
   if(!empty($intrests)) {
     $em->persist($new_intrest);
   }
+  
   $em->flush();
 
   $bankaccount = $this->getDoctrine()
@@ -353,18 +311,31 @@ if ($form->isValid()) {
     $this->get('mailer')->send($message);
   }
   //2) information mail
-               
-  $message = \Swift_Message::newInstance()
-  ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-  ->setFrom('pj@jyps.fi')
-  ->setTo($member->getEmail())
-  ->setBody($this->renderView(
-    'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
-    array('member'=>$member,
-          'memberfee'=>$memberfee,
-          'bankaccount'=>$bankaccount,
-          'virtualbarcode'=>$virtualbarcode)));
-
+  if($send_mail_without_payment_info == True) {
+    $message = \Swift_Message::newInstance()
+    ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
+    ->setFrom('pj@jyps.fi')
+    ->setTo($member->getEmail())
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'bankaccount'=>$bankaccount,
+            'virtualbarcode'=>$virtualbarcode)));
+  } 
+  else {            
+    $message = \Swift_Message::newInstance()
+    ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
+    ->setFrom('pj@jyps.fi')
+    ->setTo($member->getEmail())
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'bankaccount'=>$bankaccount,
+            'virtualbarcode'=>$virtualbarcode)));
+  }
+  
   $this->get('mailer')->send($message);
   
   return $this->redirect($this->generateUrl('add_member'));

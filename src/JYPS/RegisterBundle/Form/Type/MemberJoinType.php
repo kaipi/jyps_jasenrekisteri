@@ -19,9 +19,10 @@ class MemberJoinType extends AbstractType
         $fee_conf = $options['memberfee_configs'];
 
         $builder
-        ->add('firstname','text')
-        ->add('surname','text')
-        ->add('birth_year','text')
+        ->add('firstname','text', array('attr'=> array('size'=> '63')))
+        ->add('surname','text', array('attr'=> array('size'=> '63')))
+        ->add('birth_year','text', array('attr' =>  array('size' => '4',
+                                                          'max_length' => '4')))
         ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
                                             'query_builder' => function(EntityRepository $fee_conf) {
                                                 return $fee_conf->createQueryBuilder('f')
@@ -33,14 +34,19 @@ class MemberJoinType extends AbstractType
                                             'required' => true,
                                             'property_path' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig'))
     
-        ->add('street_address')
-        ->add('postal_code')
-        ->add('city')
-        ->add('country','text',array('required'=>true,))
-        ->add('email', 'text', array('required'=>false,))
-        ->add('telephone','text', array('required'=>false,))
-        ->add('magazine_preference','checkbox',array('required'=>false,))
-        ->add('mailing_list_yleinen','checkbox',array('required'=>false,))
+        ->add('street_address','text',array('attr'=> array('size'=> '63')))
+        ->add('postal_code','text', array('attr'=> array('size'=> '63')))
+        ->add('city','text', array('attr'=> array('size'=> '63')))
+        ->add('country','text',array('required'=>true,
+                                     'attr'=> array('size'=> '63')))
+        ->add('email', 'text', array('required'=>false,
+                                     'attr'=> array('size'=> '63')))
+        ->add('telephone','text', array('required'=>false,
+                                        'attr'=> array('size'=> '63')))
+        ->add('magazine_preference','checkbox',array('required'=>false,
+                                                     'attr'=> array('size'=> '63')))
+        ->add('mailing_list_yleinen','checkbox',array('required'=>false,
+                                                      'attr'=> array('size'=> '63')))
         ->add('gender','choice', array('choices' => array( 
                                         true  => 'Mies', 
                                         false => 'Nainen'), 
@@ -61,7 +67,8 @@ class MemberJoinType extends AbstractType
     
         ->add('join_form_freeword', 'textarea',array('required' => false,
                                                      'attr' =>  array('cols' => '45', 'rows' => '10')))
-        ->add('referer_person_name', 'text', array('required'=>false,))
+        ->add('referer_person_name', 'text', array('required'=>false,
+                                                    'attr' =>  array('size' => '63')))
         ->add('save', 'submit');
 
     }

@@ -120,18 +120,21 @@ label
 	width: 40%;
 	float: left;
 	text-align: left;
-	margin-right: 0.5em;
-	display: block
 }
 
 .checkbox-grid li {
     float: left;
-    width: 15%;
+    list-style: none;    
+}
+ul {
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
 }
 .checkbox-grid label {
 	float: left;
 	text-align: left;
-	margin-right: 0.5em;
+	
 }
 
 .checkbox-grid input {

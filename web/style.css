@@ -121,13 +121,12 @@ label
 	float: left;
 	text-align: left;
 }
-
 .checkbox-grid li {
     float: left;
     list-style: none;    
 }
 ul {
-    list-style-image: none;
+    list-style: none;
     margin: 0;
     padding: 0;
 }
@@ -136,7 +135,6 @@ ul {
 	text-align: left;
 	
 }
-
 .checkbox-grid input {
   float: left;  
 }  

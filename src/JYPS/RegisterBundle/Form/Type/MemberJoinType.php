@@ -54,7 +54,6 @@ class MemberJoinType extends AbstractType
                                             },
                                             'property'=>'intrestname',
                                             'multiple'=>true,
-                                            'expanded'=>true,
                                             'mapped' => false,
                                             'required' => false,
                                             'property_path' => 'JYPS\RegisterBundle\Entity\Intrest'))

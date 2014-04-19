@@ -32,12 +32,8 @@
 
 <fieldset>
 <legend>Kiinnostuksen kohteet:</legend>
-<ul class="checkbox-grid">
-{% for intrest in form.intrests %}
-		<li>{{ form_widget(intrest)}}  {{ form_label(intrest)}}</li>
+{{form_label(form.intrests, 'Kiinnostuksen kohteet, voit valita useita vaihtoehtoja CRTL näppäimellä!')}} {{form_widget(form.intrests)}}
 
-{%endfor%}
-</ul>
 <br/>
 <p>{{ form_label(form.join_form_freeword, 'Mitä odotat ja toivot JYPS:in jäsenyydeltä? Mistä kuulit seurasta?') }} {{form_widget(form.join_form_freeword) }}
 </p>

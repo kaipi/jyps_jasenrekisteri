@@ -56,7 +56,8 @@ class MemberJoinType extends AbstractType
                                             'multiple'=>true,
                                             'mapped' => false,
                                             'required' => false,
-                                            'property_path' => 'JYPS\RegisterBundle\Entity\Intrest',))
+                                            'property_path' => 'JYPS\RegisterBundle\Entity\Intrest',
+                                            'attr' => array('size' => '21')))
     
         ->add('join_form_freeword', 'textarea',array('required' => false,
                                                      'attr' =>  array('cols' => '45', 'rows' => '10')))

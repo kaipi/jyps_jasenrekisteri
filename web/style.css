@@ -123,17 +123,21 @@ label
 	margin-right: 0.5em;
 	display: block
 }
+
 .checkbox-grid li {
-    
     float: left;
     width: 15%;
 }
 .checkbox-grid label {
-	width: 30%;
 	float: left;
 	text-align: left;
 	margin-right: 0.5em;
 }
+
+.checkbox-grid input {
+  float: left;  
+}  
+
 .submit input
 {
 margin-left: 3em;
@@ -154,7 +158,7 @@ float:left;
 fieldset
 {
 border: 1px solid  	#0000F;
-width: 80%;
+width: 800px;
 padding-top: 5px;
 }
  fieldset.memberfee_create

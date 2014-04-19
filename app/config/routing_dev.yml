@@ -42,7 +42,7 @@ add_member:
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
 
 search:
-    path:   /search
+    path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
 
 save_member:

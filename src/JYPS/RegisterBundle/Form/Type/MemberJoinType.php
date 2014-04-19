@@ -34,7 +34,6 @@ class MemberJoinType extends AbstractType
                                             'property_path' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig'))
     
         ->add('street_address')
-        ->add('invoice_preference','checkbox', array('required'=>false))
         ->add('postal_code')
         ->add('city')
         ->add('country','text',array('required'=>true,))

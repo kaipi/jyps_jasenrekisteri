@@ -9,6 +9,14 @@ html, body {
 	
 }
 
+table.gridtable-intrests {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 0px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
 table.gridtable {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;

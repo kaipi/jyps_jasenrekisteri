@@ -32,8 +32,18 @@
 
 <fieldset>
 <legend>Kiinnostuksen kohteet:</legend>
-{{form_label(form.intrests, 'Kiinnostuksen kohteet, voit valita useita vaihtoehtoja Alt-näppäimellä (Windows) ja Cmd-näppäimellä (Mac)!')}} {{form_widget(form.intrests)}}
+<table class="gridtable-intrests">
 
+{% for intrest in form.intrests|batch(2) %}
+<tr>
+	{%for column in intrest%}
+	<td>{{form_widget(column)}} {{column.vars.label}}</td>
+	{%endfor%}
+</tr>
+
+{%endfor%}
+
+</table>
 <br/>
 <p>{{ form_label(form.join_form_freeword, 'Mitä odotat ja toivot JYPS:in jäsenyydeltä? Mistä kuulit seurasta?') }} {{form_widget(form.join_form_freeword) }}
 </p>

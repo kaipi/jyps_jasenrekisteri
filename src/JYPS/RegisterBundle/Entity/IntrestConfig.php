@@ -23,6 +23,10 @@ class IntrestConfig implements UserInterface, \Serializable
      * @ORM\Column(type="string")
     */ 
     private $intrestname;
+    /**
+     * @ORM\Column(type="integer")
+    */ 
+    private $order;
 
     public function getUsername()
     {
@@ -115,5 +119,28 @@ class IntrestConfig implements UserInterface, \Serializable
     public function getIntrestname()
     {
         return $this->intrestname;
+    }
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     * @return IntrestConfig
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer 
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 }

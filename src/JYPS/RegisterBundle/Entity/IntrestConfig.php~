@@ -23,6 +23,10 @@ class IntrestConfig implements UserInterface, \Serializable
      * @ORM\Column(type="string")
     */ 
     private $intrestname;
+    /**
+     * @ORM\Column(type="integer")
+    */ 
+    private $order;
 
     public function getUsername()
     {

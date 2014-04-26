@@ -56,7 +56,7 @@ class MemberJoinType extends AbstractType
         ->add('intrests', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\IntrestConfig',
                                           'query_builder' => function(EntityRepository $conf) {
                                                 return $conf->createQueryBuilder('c')
-                                                ->orderBy('c.intrestname', 'ASC'); 
+                                                ->orderBy('c.order', 'ASC'); 
                                             },
                                             'property'=>'intrestname',
                                             'multiple'=>true,

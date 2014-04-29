@@ -13,6 +13,7 @@ use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use JYPS\RegisterBundle\Form\Type\MemberAddType;
 use JYPS\RegisterBundle\Form\Type\MemberEditType;
 use Doctrine\ORM\EntityRepository;
+use Endroid\QrCode\QrCode;
 
 class MemberController extends Controller 
 {
@@ -136,6 +137,41 @@ public function joinMemberAction(Request $request)
    'form' => $form->createView(),
    ));
 
+}
+
+public function generate_membership_card(Member $member) 
+{
+ 
+  $base_image_path = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
+  $base_image = imagecreatefrompng($base_image_path);
+  $output_image = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'MemberCard_'.$member->getMemberId().'.png';
+  
+  /* member data to image */
+  $width = imagesx($base_image);
+  $height = imagesy($base_image);
+  $black = imagecolorallocate($base_image, 0, 0, 0);
+  $memberid = $member->getMemberId();
+  $join_year = $member->getMembershipStartDate()->format('Y');
+  imagestring($base_image, 10, 390, $height-160, $memberid, $black);
+  imagestring($base_image, 10, 390, $height-90, $join_year, $black);
+  
+  /*qr code to image */
+  $qrCode = new QrCode();
+  $qrCode->setSize(2000);
+  $qrCode->setText($member_qr_data);
+  $qrCode = $qrCode->get('png');
+
+  /*write image to disk */
+  imagepng($base_image,$output_image);
+  
+ /* $qrCode = new QrCode();
+  $qrCode->setSize(2000);
+  $qrCode->setText($member_qr_data);
+  $qrCode = $qrCode->get('png');
+  $output_qr = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'qr.png';
+  imagepng(imagecreatefromstring($qrCode),$output_qr);
+*/
+  return $output_image;
 }
 public function joinSaveAction(Request $request) 
 {
@@ -280,6 +316,8 @@ $form->handleRequest($request);
 print $form->getErrorsAsString();
 print $member->getMemberType();
 if ($form->isValid()) {
+  $membership_card = $this->generate_membership_card($member);
+
 
   $send_mail_without_payment_info = False;
   if($memberFeeConfig->getCampaignFee() == True) {
@@ -316,6 +354,7 @@ if ($form->isValid()) {
     ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
     ->setFrom('pj@jyps.fi')
     ->setTo($member->getEmail())
+    ->attach(\Swift_Attachment::fromPath($membership_card))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
       array('member'=>$member,
@@ -327,7 +366,8 @@ if ($form->isValid()) {
     $message = \Swift_Message::newInstance()
     ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
     ->setFrom('pj@jyps.fi')
-    ->setTo($member->getEmail())
+    ->setTo($member->getEmail())    
+    ->attach(\Swift_Attachment::fromPath($membership_card))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
       array('member'=>$member,

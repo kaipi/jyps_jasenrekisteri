@@ -93,11 +93,11 @@ mark_fees:
 
 showClosed:
     path:   /member/history
-    defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
+    defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
 
-change_password:
+index_password:
     path:   /member/changePassword
-    defaults:  { _controller: JYPSRegisterBundle:PasswordChange:changePasswd}
+    defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
 JYPSRegisterBundle_user:
         resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"

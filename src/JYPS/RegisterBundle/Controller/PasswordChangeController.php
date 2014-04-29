@@ -9,23 +9,25 @@ use JYPS\RegisterBundle\Form\Type\Model\ChangePassword;
 
 class PasswordChangeController extends Controller
 {
-    public function changePasswdAction(Request $request)
-    {
-      $changePasswordModel = new ChangePassword();
-      $form = $this->createForm(new ChangePasswordType(), $changePasswordModel);
+
+  public function indexAction(Request $request)
+  {
+    $changePasswordModel = new ChangePassword();
+    $form = $this->createForm(new ChangePasswordType(), $changePasswordModel, array('action'=>$this->generateUrl('index_password'),
+                                                                                    'method'=> 'POST'));
+    if ($request->isMethod('POST')) {
 
       $form->handleRequest($request);
-      print $request;
-      if ($form->isSubmitted() && $form->isValid()) {
-            /*$em = $this->getDoctrine()->getManager();
-            $entity->setPassword($this->password = password_hash($entity->getPassword(), PASSWORD_BCRYPT, array("cost" => 15)));
-            $em->persist($entity);
-            $em->flush();*/
-          return $this->redirect($this->generateUrl('change_password'));
-      }
-
-      return $this->render('JYPSRegisterBundle:Admin:change_password.html.twig', array(
-          'form' => $form->createView(),
-      ));      
+        if ($form->isSubmitted() && $form->isValid()) {
+              $user = $this->getUser();
+              $em = $this->getDoctrine()->getManager();
+              $user->setPassword(password_hash($changePasswordModel->getNewPassword(), PASSWORD_BCRYPT, array("cost" => 15)));
+              $em->persist($user);
+              $em->flush();
+          return $this->redirect($this->generateUrl('index_password'));
+        }
     }
+    return $this->render('JYPSRegisterBundle:Admin:change_password.html.twig', array(
+       'form' => $form->createView()));     
+  }
 }

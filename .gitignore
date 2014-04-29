@@ -14,3 +14,4 @@
 /migration/*
 *.DS_Store
 /vendor/*
+src/JYPS/RegisterBundle/Resources/savedCards/*.png

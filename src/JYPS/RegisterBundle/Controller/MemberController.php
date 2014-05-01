@@ -314,8 +314,7 @@ if(!empty($intrests)) {
 $form = $this->createForm(new MemberAddType, $member);
  
 $form->handleRequest($request);
-print $form->getErrorsAsString();
-print $member->getMemberType();
+
 if ($form->isValid()) {
   $membership_card = $this->generate_membership_card($member);
 

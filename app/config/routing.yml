@@ -89,3 +89,8 @@ JYPSRegisterBundle_member_intrestconfig:
         resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
         prefix:   /member/intrestconfig
 
+index_password:
+    path:   /member/changePassword
+    defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
+
+

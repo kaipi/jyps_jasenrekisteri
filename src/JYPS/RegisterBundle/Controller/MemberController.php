@@ -152,27 +152,29 @@ public function generate_membership_card(Member $member)
   $black = imagecolorallocate($base_image, 0, 0, 0);
   $memberid = $member->getMemberId();
   $join_year = $member->getMembershipStartDate()->format('Y');
-  imagestring($base_image, 10, 390, $height-160, $memberid, $black);
-  imagestring($base_image, 10, 390, $height-90, $join_year, $black);
+  $font = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/fonts/LucidaGrande.ttf');
   
-  /*qr code to image */
+  imagettftext($base_image, 38, 0, 390, 505, $black, $font, $memberid);
+  imagettftext($base_image, 38, 0, 390, 570, $black, $font, $join_year);
+  
+  /*qr code to image & serialize json for qr code*/ 
+  $member_data = array('member_id'=>$member->getMemberId(),
+                       'join_year'=>$member->getMembershipStartDate()->format('Y'),
+                       'name'=>$member->getFullName());
+  $member_qr_data = json_encode($member_data);
+
   $qrCode = new QrCode();
-  $qrCode->setSize(2000);
+  $qrCode->setSize(380);
   $qrCode->setText($member_qr_data);
   $qrCode = $qrCode->get('png');
-
+  $qr_image = imagecreatefromstring($qrCode);
+  imagecopy($base_image,$qr_image,550,22,0,0,imagesx($qr_image),imagesy($qr_image));
   /*write image to disk */
   imagepng($base_image,$output_image);
   
- /* $qrCode = new QrCode();
-  $qrCode->setSize(2000);
-  $qrCode->setText($member_qr_data);
-  $qrCode = $qrCode->get('png');
-  $output_qr = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'qr.png';
-  imagepng(imagecreatefromstring($qrCode),$output_qr);
-*/
   return $output_image;
 }
+
 public function joinSaveAction(Request $request) 
 {
 
@@ -198,7 +200,7 @@ $maxmemberid++;
  //extra params for member
 $member->setMemberid($maxmemberid);  
 $member->setMemberType($membertype);
-$member->setMembershipEndDate(new \DateTime("2054-12-31"));
+$member->setMembershipEndDate(new \DateTime("2038-12-31"));
  //create memberfee
 $memberFeeConfig = $this->getDoctrine()
 ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
@@ -238,29 +240,28 @@ if ($form->isValid()) {
                     '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
-  if($member->getMailingListYleinen() == True) {
+  if($member->getEmail() != "") {
+    if($member->getMailingListYleinen() == True) {
+      $message = \Swift_Message::newInstance()
+      ->setFrom($member->getEmail())
+      ->setTo('yleinen-join@jyps.info');
+      $this->get('mailer')->send($message);
+    }
+    //2) information mail 
     $message = \Swift_Message::newInstance()
-    ->setFrom($member->getEmail())
-    ->setTo('yleinen-join@jyps.info');
-    $this->get('mailer')->send($message);
-  }
-  //2) information mail
-               
-  $message = \Swift_Message::newInstance()
-  ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-  ->setFrom('pj@jyps.fi')
-  ->setTo($member->getEmail())
-  ->setBody($this->renderView(
-    'JYPSRegisterBundle:Member:join_member_email_base.txt.twig',
-    array('member'=>$member,
-          'memberfee'=>$memberfee,
-          'bankaccount'=>$bankaccount,
-          'virtualbarcode'=>$virtualbarcode)));
+    ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
+    ->setFrom('pj@jyps.fi')
+    ->setTo($member->getEmail())
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_email_base.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'bankaccount'=>$bankaccount,
+            'virtualbarcode'=>$virtualbarcode)));
 
-  $this->get('mailer')->send($message);
-  
-  return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
-  
+    $this->get('mailer')->send($message);
+    }
+    return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
 }
 return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
 }
@@ -291,7 +292,7 @@ $maxmemberid++;
  //extra params for member
 $member->setMemberid($maxmemberid);  
 $member->setMemberType($membertype);
-$member->setMembershipEndDate(new \DateTime("2054-12-31"));
+$member->setMembershipEndDate(new \DateTime("2038-12-31"));
  //create memberfee
 $memberFeeConfig = $this->getDoctrine()
 ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
@@ -342,42 +343,43 @@ if ($form->isValid()) {
                     '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
-  if($member->getMailingListYleinen() == True) {
-    $message = \Swift_Message::newInstance()
-    ->setFrom($member->getEmail())
-    ->setTo('yleinen-join@jyps.info');
+  if($member->getEmail() != "") {
+    if($member->getMailingListYleinen() == True) {
+      $message = \Swift_Message::newInstance()
+      ->setFrom($member->getEmail())
+      ->setTo('yleinen-join@jyps.info');
+      $this->get('mailer')->send($message);
+    }
+    //2) information mail
+    if($send_mail_without_payment_info == True) {
+      $message = \Swift_Message::newInstance()
+      ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
+      ->setFrom('pj@jyps.fi')
+      ->setTo($member->getEmail())
+      ->attach(\Swift_Attachment::fromPath($membership_card))
+      ->setBody($this->renderView(
+        'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
+        array('member'=>$member,
+              'memberfee'=>$memberfee,
+              'bankaccount'=>$bankaccount,
+              'virtualbarcode'=>$virtualbarcode)));
+    } 
+    else {            
+      $message = \Swift_Message::newInstance()
+      ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
+      ->setFrom('pj@jyps.fi')
+      ->setTo($member->getEmail())    
+      ->attach(\Swift_Attachment::fromPath($membership_card))
+      ->setBody($this->renderView(
+        'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
+        array('member'=>$member,
+              'memberfee'=>$memberfee,
+              'bankaccount'=>$bankaccount,
+              'virtualbarcode'=>$virtualbarcode)));
+    }
+    
     $this->get('mailer')->send($message);
   }
-  //2) information mail
-  if($send_mail_without_payment_info == True) {
-    $message = \Swift_Message::newInstance()
-    ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-    ->setFrom('pj@jyps.fi')
-    ->setTo($member->getEmail())
-    ->attach(\Swift_Attachment::fromPath($membership_card))
-    ->setBody($this->renderView(
-      'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
-      array('member'=>$member,
-            'memberfee'=>$memberfee,
-            'bankaccount'=>$bankaccount,
-            'virtualbarcode'=>$virtualbarcode)));
-  } 
-  else {            
-    $message = \Swift_Message::newInstance()
-    ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-    ->setFrom('pj@jyps.fi')
-    ->setTo($member->getEmail())    
-    ->attach(\Swift_Attachment::fromPath($membership_card))
-    ->setBody($this->renderView(
-      'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
-      array('member'=>$member,
-            'memberfee'=>$memberfee,
-            'bankaccount'=>$bankaccount,
-            'virtualbarcode'=>$virtualbarcode)));
-  }
-  
-  $this->get('mailer')->send($message);
-  
   return $this->redirect($this->generateUrl('add_member'));
   
 }

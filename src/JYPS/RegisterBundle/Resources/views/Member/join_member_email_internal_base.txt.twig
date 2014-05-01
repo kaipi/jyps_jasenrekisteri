@@ -1,6 +1,6 @@
 Hei, {{member.getFirstname()}}!
 Tervetuloa Jypsin jäseneksi!,
-Sinut on lisätty jäsenrekisteriimme.
+Sinut on lisätty jäsenrekisteriimme. Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallentaa matkapuhelimeesi, saat kortilla mm. alennuksia useista eri liikkeistä (katso lisää http://www.jyps.fi/seura/jasenyys-ja-maksut/jasenedut).
 Jäsennumerosi on: {{member.getMemberId()}}
 Jos et vielä ole maksanut jäsenmaksua, voit maksaa {{memberfee.getFeeAmountWithVat()}}euroa, tilille {{bankaccount.getStringValue()}} viitteellä {{memberfee.getReferenceNumber()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
 Kirjoita viestiosaan nimesi millä rekisteröidyit!

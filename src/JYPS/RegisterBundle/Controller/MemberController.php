@@ -25,7 +25,7 @@ class MemberController extends Controller
   $query = $repository->createQueryBuilder('m')
     ->where('m.membership_end_date >= :current_date')
     ->setParameter('current_date', new \DateTime("now") )
-    ->orderBy('m.member_id', 'ASC')
+    ->orderBy('m.surname', 'ASC')
     ->getQuery();
   
   $members = $query->getResult();

@@ -25,7 +25,7 @@
   {% for member in members %}
 
   <td>{{member.getMemberid()}}</td>
-  <td><a href=member/show/{{member.getMemberId}}>{{ member.getFullname() }}</a>  </td>
+  <td><a href=member/show/{{member.getMemberId}}>{{ member.getFullNameSurnameFirst() }}</a>  </td>
   <td><form action="member/end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
 <input type="submit" value="Poista"></form> </td>
 

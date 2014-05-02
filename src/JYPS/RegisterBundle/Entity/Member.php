@@ -165,6 +165,16 @@ class Member implements UserInterface, \Serializable
         $fullname = $this->firstname." ".$this->surname;
         return  $fullname;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFullNameSurnameFirst()
+    {
+        $fullname = $this->surname." ".$this->firstname;
+        return  $fullname;
+    }
+
     public function getFullAddress()
     {
         $fulladdress = $this->street_address." ".$this->postal_code." ".$this->city;

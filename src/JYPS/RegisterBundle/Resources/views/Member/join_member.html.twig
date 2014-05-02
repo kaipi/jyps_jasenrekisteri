@@ -21,7 +21,7 @@
 <p>{{ form_label(form.street_address, 'Katuosoite') }} {{ form_widget(form.street_address) }}</p>
 <p>{{ form_label(form.postal_code, 'Postinumero') }} {{ form_widget(form.postal_code) }}</p>
 <p>{{ form_label(form.city, 'Postitoimipaikka/Kaupunki') }} {{ form_widget(form.city) }}</p>
-<p>{{ form_label(form.country, 'Maa') }} {{ form_widget(form.country) }}</p>
+<p>{{ print $request;}} {{ form_widget(form.country) }}</p>
 <p>{{ form_label(form.email, 'Email') }} {{ form_widget(form.email) }}</p>
 <p>{{ form_label(form.telephone, 'Puhelinnumero') }} {{ form_widget(form.telephone) }}</p>
 <p>{{ form_label(form.magazine_preference,  'Haluan jäsenlehden sähköisenä') }} {{ form_widget(form.magazine_preference) }}</p>

@@ -1,8 +1,12 @@
 Hei, {{member.getFirstname()}}!
-Tervetuloa Jypsin jäseneksi!
-Sinut on lisätty jäsenrekisteriimme. Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallentaa matkapuhelimeesi, saat kortilla mm. alennuksia useista eri liikkeistä (katso lisää http://www.jyps.fi/seura/jasenyys-ja-maksut/jasenedut).
-Jäsennumerosi on: {{member.getMemberId()}}
+Tervetuloa JYPS:in jäseneksi! Sinut on lisätty jäsenrekisteriimme. 
+
+Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallentaa matkapuhelimeesi, saat kortilla mm. alennuksia useista eri liikkeistä (katso lisää http://www.jyps.fi/seura/jasenyys-ja-maksut/jasenedut).
+
 {% if member.getMailingListYleinen() == true %}
+
 Sinut on myös liitetty Yleinen sähköpostilistalle (yleinen@jyps.info) tällä sähköpostiosoitteella ({{member.getEmail()}})
+
 {% endif %}
+
 Tervetuloa mukaan toimintaan!

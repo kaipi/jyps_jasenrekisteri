@@ -39,7 +39,6 @@ class MemberEditType extends AbstractType
         ->add('telephone','text', array('required'=>false,))
         ->add('magazine_preference','checkbox',array('required'=>false,))
         ->add('mailing_list_yleinen','checkbox',array('required'=>false,))
-        ->add('invoice_preference','checkbox',array('required'=>false))
         ->add('memo','textarea',array('required'=>false))
         ->add('gender','choice', array('choices' => array( 
                                         true  => 'Mies', 

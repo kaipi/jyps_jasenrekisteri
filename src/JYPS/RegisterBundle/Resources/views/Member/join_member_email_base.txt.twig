@@ -7,6 +7,7 @@ Jäsennumerosi on: {{member.getMemberId()}}
 Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}} viitteellä {{memberfee.getReferenceNumber()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
 Kirjoita viestiosaan nimesi millä rekisteröidyit!
 
+Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B9NuDzod6jHac21nZ1RzenlWM0E/edit?usp=sharing
 {% if member.getMailingListYleinen() == true %}
 
 Sinut on myös liitetty Yleinen sähköpostilistalle (yleinen@jyps.info) tällä sähköpostiosoitteella ({{member.getEmail()}})

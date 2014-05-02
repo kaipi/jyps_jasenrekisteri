@@ -224,7 +224,7 @@ $form = $this->createForm(new MemberJoinType, $member);
 $form->handleRequest($request);
 
 if ($form->isValid()) {
-
+  $membership_card = $this->generate_membership_card($member);
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
@@ -252,6 +252,7 @@ if ($form->isValid()) {
     ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
     ->setFrom('pj@jyps.fi')
     ->setTo($member->getEmail())
+    ->attach(\Swift_Attachment::fromPath($membership_card))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_email_base.txt.twig',
       array('member'=>$member,

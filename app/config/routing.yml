@@ -93,4 +93,8 @@ index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
-
+#REST API
+api:
+    type: rest
+    prefix: /member/api
+    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"

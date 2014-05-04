@@ -112,4 +112,8 @@ EndroidQrCodeBundle:
     type:       annotation
     prefix:     /member/qrcode
 
-
+#REST API
+api:
+    type: rest
+    prefix: /member/api
+    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"

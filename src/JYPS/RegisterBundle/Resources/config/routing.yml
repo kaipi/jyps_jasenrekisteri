@@ -1,3 +1,9 @@
 jyps_register_homepage:
     pattern:  /
     defaults: { _controller: JYPSRegisterBundle:Default:index }
+
+test:
+    type: rest
+    prefix: /v1
+    resource: "JYPS\RegisterBundle\Controller\APIController"
+    #name_prefix:  api_1_ # naming collision

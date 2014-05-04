@@ -166,7 +166,7 @@ class Member implements UserInterface, \Serializable
      */
     public function getFullName()
     {
-        $fullname = $this->firstname." ".$this->surname;
+        $fullname = $this->firstname." ".$this->second_name." ".$this->surname;
         return  $fullname;
     }
 

@@ -38,7 +38,7 @@ class MemberFeeConfig implements UserInterface, \Serializable
     /**
     * @ORM\Column(type="integer")
     */ 
-    private $membertype;
+    private $member_type;
     /**
     * @ORM\Column(type="string")
     */
@@ -55,6 +55,11 @@ class MemberFeeConfig implements UserInterface, \Serializable
     * @ORM\Column(type="integer")
     */
     private $real_membertype;
+    /**
+    * @ORM\OneToMany(targetEntity="Member", mappedBy="member_type")
+    * @ORM\JoinColumn(referencedColumnName="id")
+    */
+    protected $membertypes;
     /**
      * @inheritDoc
      */
@@ -225,29 +230,6 @@ class MemberFeeConfig implements UserInterface, \Serializable
     }
 
     /**
-     * Set membertype
-     *
-     * @param integer $membertype
-     * @return MemberFeeConfig
-     */
-    public function setMembertype($membertype)
-    {
-        $this->membertype = $membertype;
-
-        return $this;
-    }
-
-    /**
-     * Get membertype
-     *
-     * @return integer 
-     */
-    public function getMembertype()
-    {
-        return $this->membertype;
-    }
-
-    /**
      * Set createfees
      *
      * @param string $createfees
@@ -343,5 +325,96 @@ class MemberFeeConfig implements UserInterface, \Serializable
     public function getRealMembertype()
     {
         return $this->real_membertype;
+    }
+
+    /**
+     * Set member
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $member
+     * @return MemberFeeConfig
+     */
+    public function setMember(\JYPS\RegisterBundle\Entity\Member $member = null)
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
+    /**
+     * Get member
+     *
+     * @return \JYPS\RegisterBundle\Entity\Member 
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+    public function __toString()
+    {
+        return $this->memberfee_name;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->membertype = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Add membertype
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $membertype
+     * @return MemberFeeConfig
+     */
+    public function addMembertype(\JYPS\RegisterBundle\Entity\Member $membertype)
+    {
+        $this->membertype[] = $membertype;
+
+        return $this;
+    }
+
+    /**
+     * Remove membertype
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $membertype
+     */
+    public function removeMembertype(\JYPS\RegisterBundle\Entity\Member $membertype)
+    {
+        $this->membertype->removeElement($membertype);
+    }
+
+    /**
+     * Set member_type
+     *
+     * @param integer $memberType
+     * @return MemberFeeConfig
+     */
+    public function setMemberType($memberType)
+    {
+        $this->member_type = $memberType;
+
+        return $this;
+    }
+
+    /**
+     * Get member_type
+     *
+     * @return integer 
+     */
+    public function getMemberType()
+    {
+        return $this->member_type;
+    }
+
+    /**
+     * Get membertype
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMembertypes()
+    {
+        return $this->membertype;
     }
 }

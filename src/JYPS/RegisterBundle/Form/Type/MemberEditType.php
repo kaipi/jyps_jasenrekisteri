@@ -21,7 +21,7 @@ class MemberEditType extends AbstractType
         ->add('firstname','text')
         ->add('surname','text')
         ->add('birth_year','text')
-        ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
+       /* ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
                                             'query_builder' => function(EntityRepository $fee_conf) {
                                                   return $fee_conf->createQueryBuilder('f')
                                                    ->where('f.show_on_join_form = 1')
@@ -31,7 +31,13 @@ class MemberEditType extends AbstractType
                                             'mapped' => false,
                                             'required' => true,
                                             'property_path' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig'))
-        ->add('street_address')
+        
+       */
+        ->add('membertype','entity', array('class'=>'JYPS\RegisterBundle\Entity\MemberFeeConfig',
+                                           'query_builder' => function(EntityRepository $fee_conf) {
+                                                return $fee_conf->createQueryBuilder('f')
+                                                ->where('f.show_on_join_form = 1')
+                                                ->orderBy('f.member_type', 'ASC'); }))        ->add('street_address')
         ->add('postal_code')
         ->add('city')
         ->add('country','text',array('required'=>false,))

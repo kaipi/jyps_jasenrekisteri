@@ -23,7 +23,7 @@ class MemberJoinType extends AbstractType
         ->add('surname','text', array('attr'=> array('size'=> '63')))
         ->add('birth_year','text', array('attr' =>  array('size' => '4',
                                                           'max_length' => '4')))
-        ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
+       /* ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
                                             'query_builder' => function(EntityRepository $fee_conf) {
                                                 return $fee_conf->createQueryBuilder('f')
                                                 ->where('f.show_on_join_form = 1')
@@ -33,7 +33,12 @@ class MemberJoinType extends AbstractType
                                             'mapped' => false,
                                             'required' => true,
                                             'property_path' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig'))
-    
+        */
+        ->add('membertype','entity', array('class'=>'JYPS\RegisterBundle\Entity\MemberFeeConfig',
+                                           'query_builder' => function(EntityRepository $fee_conf) {
+                                                return $fee_conf->createQueryBuilder('f')
+                                                ->where('f.show_on_join_form = 1')
+                                                ->orderBy('f.member_type', 'ASC'); }))
         ->add('street_address','text',array('attr'=> array('size'=> '63')))
         ->add('postal_code','text', array('attr'=> array('size'=> '63')))
         ->add('city','text', array('attr'=> array('size'=> '63')))

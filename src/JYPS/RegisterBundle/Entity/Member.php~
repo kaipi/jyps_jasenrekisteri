@@ -81,10 +81,6 @@ class Member implements UserInterface, \Serializable
     */
     private $member_id;
     /**
-    * @ORM\Column(type="integer")
-    */   
-    private $membertype;
-    /**
     * @ORM\Column(type="string", nullable=true)
     */   
     private $telephone;
@@ -116,6 +112,10 @@ class Member implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="Intrest", mappedBy="intrest",  cascade={"persist", "remove"})
      */
     protected $intrests;
+    /**
+     * @ORM\ManyToOne(targetEntity="MemberFeeConfig", cascade={"persist", "remove"})
+     */
+    protected $member_type;
     
     /**
      * @inheritDoc
@@ -165,6 +165,16 @@ class Member implements UserInterface, \Serializable
         $fullname = $this->firstname." ".$this->surname;
         return  $fullname;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFullNameSurnameFirst()
+    {
+        $fullname = $this->surname." ".$this->firstname;
+        return  $fullname;
+    }
+
     public function getFullAddress()
     {
         $fulladdress = $this->street_address." ".$this->postal_code." ".$this->city;
@@ -534,16 +544,6 @@ class Member implements UserInterface, \Serializable
     }
 
     /**
-     * Get membertype
-     *
-     * @return integer 
-     */
-    public function getMembertype()
-    {
-        return $this->membertype;
-    }
-
-    /**
      * Set selfcare_password
      *
      * @param string $selfcarePassword
@@ -596,32 +596,6 @@ class Member implements UserInterface, \Serializable
     {
         return $this->selfcare_password_salt;
     }
-
-    
-
-    /**
-     * Set birth_date
-     *
-     * @param \DateTime $birthDate
-     * @return Member
-     */
-    public function setBirthDate($birthDate)
-    {
-        $this->birth_date = $birthDate;
-
-        return $this;
-    }
-
-    /**
-     * Get birth_date
-     *
-     * @return \DateTime 
-     */
-    public function getBirthDate()
-    {
-        return $this->birth_date;
-    }
-
 
     /**
      * Set telephone
@@ -800,5 +774,28 @@ class Member implements UserInterface, \Serializable
         return $this->intrests;
     }
 
-    
+    /**
+     * Set birth_year
+     *
+     * @param integer $birthYear
+     * @return Member
+     */
+    public function setBirthYear($birthYear)
+    {
+        $this->birth_year = $birthYear;
+
+        return $this;
+    }
+
+    /**
+     * Get birth_year
+     *
+     * @return integer 
+     */
+    public function getBirthYear()
+    {
+        return $this->birth_year;
+    }
+
+
 }

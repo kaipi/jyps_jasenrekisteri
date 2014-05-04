@@ -181,9 +181,7 @@ public function joinSaveAction(Request $request)
  $member = new Member();
  
  $temp = $request->request->get('memberid');
- if(isset($temp['membertype'])) {
-  $membertype = $temp['membertype'];
-} 
+ 
 if(isset($temp['intrests'])) {
   $intrests = $temp['intrests'];
 }
@@ -199,17 +197,8 @@ $maxmemberid++;
 
  //extra params for member
 $member->setMemberid($maxmemberid);  
-$member->setMemberType($membertype);
+
 $member->setMembershipEndDate(new \DateTime("2038-12-31"));
- //create memberfee
-$memberFeeConfig = $this->getDoctrine()
-->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-->findOneBy(array('membertype' => $membertype));
-$memberfee = new MemberFee();
-$memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
-$memberfee->setReferenceNumber(date("Y").$member->getMemberId());
-$memberfee->setDueDate(new \DateTime("now"));
-$memberfee->setMemberFee($member);
 
 if(!empty($intrests)) {
  foreach($intrests as $intrest) {
@@ -225,6 +214,14 @@ $form->handleRequest($request);
 
 if ($form->isValid()) {
   $membership_card = $this->generate_membership_card($member);
+
+  //create memberfee
+  $memberfee = new MemberFee();
+  $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
+  $memberfee->setReferenceNumber(date("Y").$member->getMemberId());
+  $memberfee->setDueDate(new \DateTime("now"));
+  $memberfee->setMemberFee($member);
+
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
@@ -238,6 +235,7 @@ if ($form->isValid()) {
 
   $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
                     '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
+  
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {
@@ -274,9 +272,7 @@ public function joinSaveInternalAction(Request $request)
  $member = new Member();
  
  $temp = $request->request->get('memberid');
- if(isset($temp['membertype'])) {
-  $membertype = $temp['membertype'];
-} 
+
 if(isset($temp['intrests'])) {
   $intrests = $temp['intrests'];
 }
@@ -292,17 +288,8 @@ $maxmemberid++;
 
  //extra params for member
 $member->setMemberid($maxmemberid);  
-$member->setMemberType($membertype);
+
 $member->setMembershipEndDate(new \DateTime("2038-12-31"));
- //create memberfee
-$memberFeeConfig = $this->getDoctrine()
-->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-->findOneBy(array('membertype' => $membertype));
-$memberfee = new MemberFee();
-$memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
-$memberfee->setReferenceNumber(date("Y").$member->getMemberId());
-$memberfee->setDueDate(new \DateTime("now"));
-$memberfee->setMemberFee($member);
 
 if(!empty($intrests)) {
  foreach($intrests as $intrest) {
@@ -318,12 +305,28 @@ $form->handleRequest($request);
 
 if ($form->isValid()) {
   $membership_card = $this->generate_membership_card($member);
+  
+  //create memberfee
+  $memberfee = new MemberFee();
+  $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
+  $memberfee->setReferenceNumber(date("Y").$member->getMemberId());
+  $memberfee->setDueDate(new \DateTime("now"));
+  $memberfee->setMemberFee($member);
 
-
+  $memberFeeConfig = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
+  ->findOneBy(array('member_type' => $member->getMemberType()));
+    
   $send_mail_without_payment_info = False;
+
   if($memberFeeConfig->getCampaignFee() == True) {
     $send_mail_without_payment_info = True;
-    $member->setMemberType($memberFeeConfig->getRealMemberType());
+
+    $realMemberFeeConfig =  $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
+      ->findOneBy(array('member_type' => $memberFeeConfig->getRealMemberType()));
+
+    $member->setMemberType($realMemberFeeConfig);
     $memberfee->setMemo("KAMPPIS");
   }
   $em = $this->getDoctrine()->getManager();

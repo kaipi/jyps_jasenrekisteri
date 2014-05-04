@@ -81,10 +81,6 @@ class Member implements UserInterface, \Serializable
     */
     private $member_id;
     /**
-    * @ORM\Column(type="integer")
-    */   
-    private $membertype;
-    /**
     * @ORM\Column(type="string", nullable=true)
     */   
     private $telephone;
@@ -116,6 +112,10 @@ class Member implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="Intrest", mappedBy="intrest",  cascade={"persist", "remove"})
      */
     protected $intrests;
+    /**
+     * @ORM\ManyToOne(targetEntity="MemberFeeConfig", cascade={"persist", "remove"})
+     */
+    protected $member_type;
     
     /**
      * @inheritDoc
@@ -531,29 +531,6 @@ class Member implements UserInterface, \Serializable
     }
 
     /**
-     * Set membertype
-     *
-     * @param integer $membertype
-     * @return Member
-     */
-    public function setMembertype($membertype)
-    {
-        $this->membertype = $membertype;
-
-        return $this;
-    }
-
-    /**
-     * Get membertype
-     *
-     * @return integer 
-     */
-    public function getMembertype()
-    {
-        return $this->membertype;
-    }
-
-    /**
      * Set selfcare_password
      *
      * @param string $selfcarePassword
@@ -575,7 +552,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->selfcare_password;
     }
-  /**
+    /**
      * Get telephone
      *
      * @return string 
@@ -606,12 +583,6 @@ class Member implements UserInterface, \Serializable
     {
         return $this->selfcare_password_salt;
     }
-
-    
-
-
-
-
 
     /**
      * Set telephone
@@ -790,8 +761,6 @@ class Member implements UserInterface, \Serializable
         return $this->intrests;
     }
 
-    
-
     /**
      * Set birth_year
      *
@@ -815,4 +784,27 @@ class Member implements UserInterface, \Serializable
         return $this->birth_year;
     }
 
+
+    /**
+     * Set member_type
+     *
+     * @param \JYPS\RegisterBundle\Entity\MemberFeeConfig $memberType
+     * @return Member
+     */
+    public function setMemberType(\JYPS\RegisterBundle\Entity\MemberFeeConfig $memberType = null)
+    {
+        $this->member_type = $memberType;
+
+        return $this;
+    }
+
+    /**
+     * Get member_type
+     *
+     * @return \JYPS\RegisterBundle\Entity\MemberFeeConfig 
+     */
+    public function getMemberType()
+    {
+        return $this->member_type;
+    }
 }

@@ -24,6 +24,10 @@ class Member implements UserInterface, \Serializable
     */ 
     private $firstname;
     /**
+     * @ORM\Column(type="string", length=30)
+    */ 
+    private $second_name;
+    /**
     * @ORM\Column(type="string", length=50)
     */ 
     private $surname;
@@ -807,4 +811,28 @@ class Member implements UserInterface, \Serializable
     {
         return $this->member_type;
     }
+
+    /**
+     * Set second_name
+     *
+     * @param string $secondName
+     * @return Member
+     */
+    public function setSecondName($secondName)
+    {
+        $this->second_name = $secondName;
+
+        return $this;
+    }
+
+    /**
+     * Get second_name
+     *
+     * @return string 
+     */
+    public function getSecondName()
+    {
+        return $this->second_name;
+    }
+
 }

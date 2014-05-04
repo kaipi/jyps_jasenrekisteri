@@ -16,6 +16,7 @@
 {{ form_errors(form) }}
 <table class="gridtable">
   <th>Etunimi</th>
+  <th>Toinen nimi</th>
   <th>Sukunimi</th>
   <th>Katuosoite</th>
   <th>Postinumero</th>
@@ -27,6 +28,7 @@
   <th>Sukupuoli</th>
   </tr>
   <td> {{ form_widget(form.firstname) }}</td>
+  <td> {{ form_widget(form.second_name) }}</td>
   <td> {{ form_widget(form.surname) }}</td>
   <td> {{ form_widget(form.street_address) }} </td>
   <td> {{ form_widget(form.postal_code) }}</td>

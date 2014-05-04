@@ -24,6 +24,10 @@ class Member implements UserInterface, \Serializable
     */ 
     private $firstname;
     /**
+     * @ORM\Column(type="string", length=30)
+    */ 
+    private $second_name;
+    /**
     * @ORM\Column(type="string", length=50)
     */ 
     private $surname;
@@ -531,19 +535,6 @@ class Member implements UserInterface, \Serializable
     }
 
     /**
-     * Set membertype
-     *
-     * @param integer $membertype
-     * @return Member
-     */
-    public function setMembertype($membertype)
-    {
-        $this->membertype = $membertype;
-
-        return $this;
-    }
-
-    /**
      * Set selfcare_password
      *
      * @param string $selfcarePassword
@@ -565,7 +556,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->selfcare_password;
     }
-  /**
+    /**
      * Get telephone
      *
      * @return string 
@@ -798,4 +789,26 @@ class Member implements UserInterface, \Serializable
     }
 
 
+    /**
+     * Set member_type
+     *
+     * @param \JYPS\RegisterBundle\Entity\MemberFeeConfig $memberType
+     * @return Member
+     */
+    public function setMemberType(\JYPS\RegisterBundle\Entity\MemberFeeConfig $memberType = null)
+    {
+        $this->member_type = $memberType;
+
+        return $this;
+    }
+
+    /**
+     * Get member_type
+     *
+     * @return \JYPS\RegisterBundle\Entity\MemberFeeConfig 
+     */
+    public function getMemberType()
+    {
+        return $this->member_type;
+    }
 }

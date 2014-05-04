@@ -19,7 +19,7 @@ class MemberEditType extends AbstractType
 
         $builder
         ->add('firstname','text')
-        ->add('second_name','text')
+        ->add('second_name','text', array('required'=>false))
         ->add('surname','text')
         ->add('birth_year','text')
         ->add('membertype','entity', array('class'=>'JYPS\RegisterBundle\Entity\MemberFeeConfig',

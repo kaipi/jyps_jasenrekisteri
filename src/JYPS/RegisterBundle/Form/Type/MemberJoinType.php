@@ -20,7 +20,8 @@ class MemberJoinType extends AbstractType
 
         $builder
         ->add('firstname','text', array('attr'=> array('size'=> '63')))
-          ->add('second_name','text',array('attr'=> array('size'=> '63')))
+        ->add('second_name','text',array('required'=>false,
+                                         'attr'=> array('size'=> '63')))
         ->add('surname','text', array('attr'=> array('size'=> '63')))
         ->add('birth_year','text', array('attr' =>  array('size' => '4',
                                                           'max_length' => '4')))

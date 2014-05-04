@@ -71,11 +71,9 @@ class MemberFeeController extends Controller
 
 		foreach($members as $member) {
 		    
-			$memberFeeConfig = $this->getDoctrine()
-			->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-			->findOneBy(array('membertype' => $member->getMemberType()));
-			//Do not create fees for membertypes where it's prevented
+			$memberFeeConfig = $member->getMemberType();
 
+			//Do not create fees for membertypes where it's prevented
 			if( $memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
 				continue;
 			}

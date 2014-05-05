@@ -5,11 +5,16 @@ namespace JYPS\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * User
  *
  * @ORM\Table()
  * @ORM\Entity
+ *
+ * @ExclusionPolicy("all")
  */
 class Member implements UserInterface, \Serializable
 {
@@ -77,11 +82,13 @@ class Member implements UserInterface, \Serializable
     private $membership_end_date;
     /**
     * @ORM\Column(type="integer", nullable=true)
+    * @Expose
     */
     private $birth_year;
     /**
     * @ORM\Column(type="integer",unique=true)
     * @ORM\GeneratedValue(strategy="AUTO")
+    * @Expose
     */
     private $member_id;
     /**
@@ -90,6 +97,7 @@ class Member implements UserInterface, \Serializable
     private $telephone;
     /**
     * @ORM\Column(type="boolean", nullable=true)
+    * @Expose
     */   
     private $gender;
     /**

@@ -82,19 +82,22 @@ showClosed:
     defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
 
 JYPSRegisterBundle_user:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
-        prefix:   /member/user
+    resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
+    prefix:   /member/user
 
 JYPSRegisterBundle_member_intrestconfig:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
-        prefix:   /member/intrestconfig
+    resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
+    prefix:   /member/intrestconfig
 
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
-#REST API
-api:
+member_statistics:
+    path:   /member/statistics
+    defaults:  { _controller: JYPSRegisterBundle:Member:memberStatistics}
+
+acme_blog:
     type: rest
     prefix: /member/api
-    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"
+    resource: "@JYPSRegisterBundle/Resources/config/routes.yml"  

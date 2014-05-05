@@ -427,4 +427,8 @@ public function endMemberAction()
    return $this->redirect($this->generateUrl('all_members'));
 
 }
+public function memberStatisticsAction() 
+{
+  return $this->render('JYPSRegisterBundle:Member:member_statistics.html.twig');
+}
 }

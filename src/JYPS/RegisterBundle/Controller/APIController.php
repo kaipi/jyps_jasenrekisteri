@@ -8,20 +8,20 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Entity\Intrest;
 use JYPS\RegisterBundle\Entity\MemberFeeConfig;
 use FOS\RestBundle\Controller\FOSRestController;
+use Doctrine\ORM\EntityRepository;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 
 class APIController extends FOSRestController
 {
-	public function getGenderDistribution()
+	/**
+	*@Rest\View
+	*/
+	public function getMembersAction()
 	{
 
+		return $this->container->get('doctrine')->getRepository('JYPSRegisterBundle:Member')->findAll();
+		
 	}
-	public function getMemberAmountsPerYear() 
-	{
-
-	}
-	public function getAgeGroups()
-	{
-
-	}
+	
 }

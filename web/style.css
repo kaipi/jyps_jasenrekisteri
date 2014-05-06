@@ -168,6 +168,12 @@ border: 1px solid  	#0000F;
 width: 800px;
 padding-top: 5px;
 }
+fieldset
+{
+border: 1px solid  	#0000F;
+width: 600px;
+padding-top: 5px;
+}
  fieldset.memberfee_create
 {
 border: 1px solid  	#0000F;

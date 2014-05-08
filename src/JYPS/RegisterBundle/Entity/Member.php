@@ -24,7 +24,7 @@ class Member implements UserInterface, \Serializable
     */ 
     private $firstname;
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true)
     */ 
     private $second_name;
     /**

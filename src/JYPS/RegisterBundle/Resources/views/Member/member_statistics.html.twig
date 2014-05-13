@@ -3,8 +3,10 @@
 	<title>JYPS Ry jäsenrekisteri - Raportit </title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
-<body>
 <center>
+
+<body>
+
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
 
@@ -12,12 +14,13 @@
 
 <script src="{{ asset('bundles/jypsregister/js/d3.min.js') }}"></script>
 <script>
+
 var width = 960,
     height = 500,
     radius = Math.min(width, height) / 2;
-
-var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6"]);
+var outerRadius = width / 2;
+var innerRadius = 0;
+var color = d3.scale.category10();
 
 var arc = d3.svg.arc()
     .outerRadius(radius - 10)
@@ -25,46 +28,51 @@ var arc = d3.svg.arc()
 
 var pie = d3.layout.pie()
     .sort(null)
-    .value(function(d) { return d.population; });
+    .value(function(finalized_data) { return 693; });
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 d3.json("http://localhost/jyps_jasenrekisteri/web/app_dev.php/member/api/v1/members.json", function(error, data) {
   var males = 0;
   var females = 0;
-  
   data.forEach(function(d) {
-    console.log(d.gender);
     if(d.gender==true) {
       males++;
     }
     else {
       females++;
-    }
+    } 
   });
- console.log(males);
- console.log(females);
- console.log(males+females);
+
+  var finalized_data = [
+    {gender:"miehet",qty:males},
+    {gender:"naiset",qty:females}];
+  
+  console.log(finalized_data);
 
   var g = svg.selectAll(".arc")
-      .data(pie(data))
-    .enter().append("g")
-      .attr("class", "arc");
+             .data(pie(finalized_data))
+             .enter().append("g")
+             .attr("class", "arc")
+            // .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");;
+             .attr("finalized_data", arc);
 
   g.append("path")
-      .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.age); });
+     // .attr("finalized_data", arc)
+      .style("fill", function(finalized_data,i) { return color(i); });
 
   g.append("text")
-      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("transform", function(finalized_data) { return "translate(" + arc.centroid(finalized_data) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
-      .text(function(d) { return d.data.age; });
+      .text(function(d) { return d.data.gender; });
 
 });
 </script>
 </body>
+</center>

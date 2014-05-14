@@ -6,7 +6,7 @@ Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallenta
 Jäsennumerosi on: {{member.getMemberId()}}
 
 Jos et vielä ole maksanut jäsenmaksua, voit maksaa {{memberfee.getFeeAmountWithVat()}}euroa, tilille {{bankaccount.getStringValue()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
-Kirjoita viestiosaan nimesi millä rekisteröidyit!
+Kirjoita viestiosaan "Uusi jäsen" ja nimesi millä rekisteröidyit!
 
 Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B9NuDzod6jHac21nZ1RzenlWM0E/edit?usp=sharing
 {% if member.getMailingListYleinen() == true %}

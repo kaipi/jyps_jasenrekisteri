@@ -59,13 +59,13 @@
 <table class="gridtable">
 <th>Suosittelija</th>
 <th>Kiinnostuksen kohteet</th>
-
 <th>Vapaa sana</th>
+<th>Merkitse jäsenmaksu heti maksetuksi</th>
 </tr>
 <td> {{ form_widget(form.referer_person_name) }}</td>
 <td> {{ form_widget(form.intrests) }} </td>
-
 <td> {{form_widget(form.join_form_freeword) }}</td>
+<td> {{form_widget(form.mark_fee_paid) }}</td>
 </table>
 {{ form_widget(form.save) }}
 {{ form_end(form) }}

@@ -329,6 +329,9 @@ if ($form->isValid()) {
     $member->setMemberType($realMemberFeeConfig);
     $memberfee->setMemo("KAMPPIS");
   }
+  if($temp['mark_fee_paid'] == True) {
+    $memberfee->setPaid(True);
+  }
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
@@ -361,7 +364,7 @@ if ($form->isValid()) {
       ->setTo($member->getEmail())
       ->attach(\Swift_Attachment::fromPath($membership_card))
       ->setBody($this->renderView(
-        'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
+        'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,

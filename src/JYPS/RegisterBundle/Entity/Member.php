@@ -44,7 +44,7 @@ class Member implements UserInterface, \Serializable
     */
     private $city;
     /**
-    * @ORM\Column(type="string", length=60)
+    * @ORM\Column(type="string", length=60, nullable=true)
     */
     private $country;
     /**

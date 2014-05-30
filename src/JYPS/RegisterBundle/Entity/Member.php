@@ -834,5 +834,5 @@ class Member implements UserInterface, \Serializable
     {
         return $this->second_name;
     }
-
+    
 }

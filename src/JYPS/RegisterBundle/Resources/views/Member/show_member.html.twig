@@ -61,6 +61,7 @@
 <th>Eräpäivä</th>
 <th>Summa</th>
 <th>Memo</th>
+
 </tr>
 {% for memberfee in memberfees %}
 <td>{{ memberfee.getFeePeriod() }}</td>
@@ -80,8 +81,9 @@
 
 </table>
 </br>
-{{ form_widget(form.save) }}
+{{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
 
 {{ form_end(form) }}
-
+<form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
+<input  type="submit" value="Poista jäsen"></form>
 

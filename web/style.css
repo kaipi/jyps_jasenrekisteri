@@ -25,14 +25,14 @@ table.gridtable {
 }
 table.gridtable th {
 	border-width: 1px;
-	padding: 8px;
+	padding: 2px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #dedede;
 }
 table.gridtable td {
 	border-width: 1px;
-	padding: 8px;
+	padding: 2px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
@@ -144,23 +144,12 @@ ul {
 .checkbox-grid input {
   float: left;  
 }  
-
+.normal input {
+	float:left;
+}
 .submit input
 {
 margin-left: 3em;
-}
-input
-{
-color: #000000;
-border: 1px solid #000000
-}
-
-.submit input
-{
-color: #000;
-background: #ffa20f;
-border: 2px outset #d7b9c9;
-float:left;
 }
 fieldset
 {

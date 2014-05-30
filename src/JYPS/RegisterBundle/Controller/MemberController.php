@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JYPS\RegisterBundle\Entity\Member;
 use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Entity\Intrest;
+use JYPS\RegisterBundle\Entity\IntrestConfig;
 use JYPS\RegisterBundle\Entity\MemberFeeConfig;
 use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use JYPS\RegisterBundle\Form\Type\MemberAddType;
@@ -175,6 +176,27 @@ public function generate_membership_card(Member $member)
   return $output_image;
 }
 
+public function send_join_info_mail(Member $member, MemberFee $memberfee) 
+{
+  $intrest_names = array();
+  foreach($member->getIntrests() as $intrest) {
+    $intrest_config = $this->getDoctrine()
+    ->getRepository('JYPSRegisterBundle:IntrestConfig')
+    ->findOneBy(array('id' => $intrest->getIntrestId())); 
+    array_push($intrest_names,$intrest_config->getIntrestname());
+  }
+  $message = \Swift_Message::newInstance()
+  ->setSubject('Uusi JYPS jäsen!')
+    ->setFrom('rekisteri@jyps.fi')
+    ->setTo(array('pj@jyps.fi','kaisa.peltonen@gmail.com','henna.breilin@toivakka.fi'))
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'intrests'=>$intrest_names)));
+  $this->get('mailer')->send($message);
+}
+
 public function joinSaveAction(Request $request) 
 {
 
@@ -205,6 +227,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->addIntrest($new_intrest);
  }
 }
 
@@ -225,9 +248,6 @@ if ($form->isValid()) {
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   $em->flush();
   $bankaccount = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:SystemParameter')
@@ -260,6 +280,7 @@ if ($form->isValid()) {
 
     $this->get('mailer')->send($message);
     }
+    $this->send_join_info_mail($member, $memberfee);
     return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
 }
 return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
@@ -296,6 +317,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->setIntrest($new_intrest);
  }
 }
 
@@ -329,15 +351,14 @@ if ($form->isValid()) {
     $member->setMemberType($realMemberFeeConfig);
     $memberfee->setMemo("KAMPPIS");
   }
-  if($temp['mark_fee_paid'] == True) {
-    $memberfee->setPaid(True);
+  if(isset($temp['mark_fee_paid'])) {
+    if($temp['mark_fee_paid'] == True) {
+      $memberfee->setPaid(True);
+    }
   }
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   
   $em->flush();
 
@@ -386,6 +407,7 @@ if ($form->isValid()) {
     
     $this->get('mailer')->send($message);
   }
+  $this->send_join_info_mail($member, $memberfee);
   return $this->redirect($this->generateUrl('add_member'));
   
 }

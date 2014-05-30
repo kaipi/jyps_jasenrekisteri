@@ -188,7 +188,7 @@ public function send_join_info_mail(Member $member, MemberFee $memberfee)
   $message = \Swift_Message::newInstance()
   ->setSubject('Uusi JYPS jäsen!')
     ->setFrom('rekisteri@jyps.fi')
-    ->setTo(array('pj@jyps.fi','kaisa.peltonen@gmail.com','henna.breilin@toivakka.fi'))
+    ->setTo(array('pj@jyps.fi','kaisa.m.peltonen@gmail.com','henna.breilin@toivakka.fi'))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
       array('member'=>$member,

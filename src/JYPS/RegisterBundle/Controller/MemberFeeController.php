@@ -64,7 +64,7 @@ class MemberFeeController extends Controller
    	{
    		$feeid = $request->get('Fee_Id');
    		$memberid = $request->get("Member_id");
-   		print sd
+   		
    		$em = $this->getDoctrine()->getManager();
    		$markfee = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:MemberFee')

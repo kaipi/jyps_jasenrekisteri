@@ -60,6 +60,24 @@ class MemberFeeController extends Controller
 	    }
 	    return $this->showUnpaidFeesAction($request);
    	}
+   	public function markOneFeeAsPaid(Request $request)
+   	{
+   		$feeid = $request->get('Fee_Id');
+   		$memberid = $request->get("Member_id");
+   		print sd
+   		$em = $this->getDoctrine()->getManager();
+   		$markfee = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('id' => $feeid,));
+	    $markfee->setPaid(True);
+	    $em->flush();
+
+	    $member = $this->getDoctrine()
+  			->getRepository('JYPSRegisterBundle:Member')
+  			->findOneBy(array('member_id' => $memberid));
+
+	    return $member->showAllAction($memberid);
+   	}
 	public function createMemberFeesAction(Request $request)
 	{
 		ini_set('max_execution_time', 300);

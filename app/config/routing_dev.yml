@@ -91,6 +91,10 @@ mark_fees:
     path:   /member/memberfees/markUnpaidFees
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:markFeesPaid}
 
+mark_one_fee:
+    path:   /member/memberfees/markOneFeeAsPaid
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:markOneFeeAsPaid}
+
 showClosed:
     path:   /member/history
     defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}

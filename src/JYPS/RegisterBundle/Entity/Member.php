@@ -36,7 +36,7 @@ class Member implements UserInterface, \Serializable
     */ 
     private $street_address;
     /**
-    * @ORM\Column(type="integer", length=10)
+    * @ORM\Column(type="string", length=10)
     */
     private $postal_code;
     /**
@@ -145,7 +145,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->salt;
     }
- /**
+    /**
      * @inheritDoc
      */
     public function getPassword()

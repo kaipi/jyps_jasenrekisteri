@@ -21,11 +21,7 @@
   <th>Katuosoite</th>
   <th>Postinumero</th>
   <th>Kaupunki</th>
-  <th>Maa</th>
-  <th>Sähköposti</th>
-  <th>Puhelin</th>
-  <th>Syntymävuosi</th> 
-  <th>Sukupuoli</th>
+  
   </tr>
   <td> {{ form_widget(form.firstname) }}</td>
   <td> {{ form_widget(form.second_name) }}</td>
@@ -33,11 +29,19 @@
   <td> {{ form_widget(form.street_address) }} </td>
   <td> {{ form_widget(form.postal_code) }}</td>
   <td> {{ form_widget(form.city) }}</td>
-  <td> {{ form_widget(form.country) }} </td>
-  <td> {{ form_widget(form.email) }}</td>
+
+  </tr>
+  <th>Maa</th>
+  <th colspan="2">Sähköposti</th>
+  <th>Puhelin</th>
+  <th>Syntymävuosi</th> 
+  <th>Sukupuoli</th>
+  </tr>
+   <td> {{ form_widget(form.country) }} </td>
+  <td colspan="2"> {{ form_widget(form.email) }}</td>
   <td> {{ form_widget(form.telephone) }}</td>
   <td> {{ form_widget(form.birth_year) }}</td>
-   <td> {{ form_widget(form.gender) }}</td>
+  <td> {{ form_widget(form.gender) }}</td>
 </table>
 
 <h3>Muut tiedot</h3>
@@ -61,7 +65,7 @@
 <th>Eräpäivä</th>
 <th>Summa</th>
 <th>Memo</th>
-
+<th>Maksun tila</th>
 </tr>
 {% for memberfee in memberfees %}
 <td>{{ memberfee.getFeePeriod() }}</td>
@@ -75,7 +79,12 @@
 <td>{{ memberfee.getDueDate()|date('Y-m-d') }}</td>
 <td>{{ memberfee.getFeeAmountWithVat() }}</td>
 <td>{{ memberfee.getMemo() }}</td>
-
+{% if (memberfee.getPaid() == 0) %}
+<td><input type="submit" value="Maksetuksi"></td>
+{% endif %}
+{% if (memberfee.getPaid() == 1) %}
+<td><input type="submit" value="Avoimeksi"></td>
+{% endif %}
 </tr>
 {% endfor %}
 
@@ -86,4 +95,5 @@
 {{ form_end(form) }}
 <form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
 <input  type="submit" value="Poista jäsen"></form>
+
 

@@ -75,7 +75,7 @@ public function showAllAction($memberid)
     ->getRepository('JYPSRegisterBundle:MemberFee')
     ->findBy(array('member_id' => $member->getId()),
              array('fee_period' => 'ASC'));
-
+  
   $form = $this->createForm(new MemberEditType(), $member, array('action' => $this->generateUrl('member', array('memberid' => $member->getMemberId())),
   ));
 
@@ -185,15 +185,17 @@ public function send_join_info_mail(Member $member, MemberFee $memberfee)
     ->findOneBy(array('id' => $intrest->getIntrestId())); 
     array_push($intrest_names,$intrest_config->getIntrestname());
   }
+  $member_age = date('Y') - $member->getBirthYear();
   $message = \Swift_Message::newInstance()
-  ->setSubject('Uusi JYPS jäsen!')
+  ->setSubject('Uusi JYPS-jäsen!')
     ->setFrom('rekisteri@jyps.fi')
     ->setTo(array('pj@jyps.fi','kaisa.m.peltonen@gmail.com','henna.breilin@toivakka.fi'))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
       array('member'=>$member,
             'memberfee'=>$memberfee,
-            'intrests'=>$intrest_names)));
+            'intrests'=>$intrest_names,
+            'age'=>$member_age)));
   $this->get('mailer')->send($message);
 }
 

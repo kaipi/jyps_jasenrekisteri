@@ -40,7 +40,7 @@ class MemberFeeController extends Controller
 		$memberfees = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:MemberFee')
 		->findBy(array('fee_period' => $year, 'paid' => 0),
-			     array('fee_period' => 'ASC'));
+			     array('member_id' => 'ASC'));
 
 		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees'=>$memberfees, 'year'=>$year));
 

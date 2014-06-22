@@ -81,13 +81,43 @@ public function showAllAction($memberid)
 
     if ($request->getMethod() == 'POST') {
       $em = $this->getDoctrine()->getEntityManager();
-      $testimonial = $em->getRepository('JYPSRegisterBundle:Member')->find($memberid);
+
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
+           $em->flush();
+           $fees = $request->get('Fees_to_be_marked');
+           $member_all_fees = $member->getMemberFees();
+           if($fees != "") {
+             foreach($member_all_fees as $member_fee) {
+                if(in_array($member_fee->getId(), $fees)) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(True);
+                  $em->flush();
+                } 
+                else {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush();
+                }
+             }
+           }
+           else {
+              foreach($member_all_fees as $member_fee) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush();
+              
+              }
+           }       
+         
+         return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
         }
     }
   return $this->render('JYPSRegisterBundle:Member:show_member.html.twig', array('member' => $member,
@@ -434,10 +464,7 @@ public function searchMembersAction()
 
   return $this->render('JYPSRegisterBundle:Member:show_members_search.html.twig', array('members' => $members));
 }
-public function updateMemberAction(Request $request) 
-{
 
-}
 public function endMemberAction()
 {
    $memberid = $this->get('request')->request->get('memberid');

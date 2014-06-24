@@ -44,10 +44,10 @@ class ReportController extends Controller
 	  		}
 	  		if(date('Y') - $member->getBirthYear() < 18) {
 	  			if ($member->getGender() == False) {
-	  				$male_juniors++;
+	  				$female_juniors++;
 	  			}
 	  			else {
-	  				$female_juniors++;
+	  				$male_juniors++;
 	  			}
 	  		}
 

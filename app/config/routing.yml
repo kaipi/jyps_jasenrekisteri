@@ -93,4 +93,8 @@ index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
+showQuickReports:
+    path:   /member/reports
+    defaults:  { _controller: JYPSRegisterBundle:Report:index}
+
 

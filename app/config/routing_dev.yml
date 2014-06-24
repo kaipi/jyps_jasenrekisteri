@@ -99,6 +99,10 @@ showClosed:
     path:   /member/history
     defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
 
+showQuickReports:
+    path:   /member/reports
+    defaults:  { _controller: JYPSRegisterBundle:Report:index}
+
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}

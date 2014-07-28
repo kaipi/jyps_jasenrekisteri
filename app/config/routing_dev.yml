@@ -103,6 +103,10 @@ showQuickReports:
     path:   /member/reports
     defaults:  { _controller: JYPSRegisterBundle:Report:index}
 
+sendReminders:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}

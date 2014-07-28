@@ -64,7 +64,7 @@ class MemberFeeController extends Controller
 		$qty = 0;
 		$error_qty=0;
 		$error_members = array();
-		$message = \Swift_Message::newInstance();
+		
 		foreach($memberfees as $memberfee) {
 			$member = $memberfee->getMemberFee();
 			if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
@@ -75,16 +75,17 @@ class MemberFeeController extends Controller
 			    $emailConstraint = new EmailConstraint();
 				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
 				if ($errors == "") {
+					$message = \Swift_Message::newInstance();
 					$message->setSubject('JYPS Ry jäsenmaksu muistutus')
 				    		->setFrom('pj@jyps.fi')
 						    ->setTo($member->getEmail())
 						    ->setBody($this->renderView(
 						      'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
-	    			//$this->get('mailer')->send($message);
+	    			$this->get('mailer')->send($message);
 	    			$qty++;
-	    		    //$em = $this->getDoctrine()->getManager();
-	    			//$member->setReminderSentDate(new \DateTime("now"));
-	    			//$em->flush();
+	    		    $em = $this->getDoctrine()->getManager();
+	    			$member->setReminderSentDate(new \DateTime("now"));
+	    			$em->flush();
     			}
     			else {
     				$error_qty++;

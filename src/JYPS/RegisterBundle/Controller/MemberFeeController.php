@@ -67,7 +67,7 @@ class MemberFeeController extends Controller
 		$message = \Swift_Message::newInstance();
 		foreach($memberfees as $memberfee) {
 			$member = $memberfee->getMemberFee();
-			if ($member->getMembershipStartDate()->format('Y-m-d') > $join_date_limit &&
+			if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
 				$member->getMembershipEndDate() > new \DateTime("now") &&
 				$member->getEmail() != "" &&
 				$member->getReminderSentDate() == NULL) {
@@ -80,11 +80,11 @@ class MemberFeeController extends Controller
 						    ->setTo($member->getEmail())
 						    ->setBody($this->renderView(
 						      'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
-	    			$this->get('mailer')->send($message);
+	    			//$this->get('mailer')->send($message);
 	    			$qty++;
-	    		    $em = $this->getDoctrine()->getManager();
-	    			$member->setReminderSentDate(new \DateTime("now"));
-	    			$em->flush();
+	    		    //$em = $this->getDoctrine()->getManager();
+	    			//$member->setReminderSentDate(new \DateTime("now"));
+	    			//$em->flush();
     			}
     			else {
     				$error_qty++;

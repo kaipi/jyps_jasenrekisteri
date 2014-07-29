@@ -77,7 +77,7 @@ class MemberFeeController extends Controller
 				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
 				if ($errors == "") {
 					$message = \Swift_Message::newInstance();
-					$message->setSubject('JYPS Ry jäsenmaksu muistutus')
+					$message->setSubject('JYPS ry jäsenmaksu muistutus')
 				    		->setFrom('pj@jyps.fi')
 						    ->setTo($member->getEmail())
 						    ->setBody($this->renderView(

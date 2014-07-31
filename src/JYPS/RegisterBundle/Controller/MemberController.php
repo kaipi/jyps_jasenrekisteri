@@ -455,7 +455,7 @@ public function searchMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term AND m.membership_end_date > :current_date')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term AND m.membership_end_date > :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )
   ->getQuery();

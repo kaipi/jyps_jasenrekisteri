@@ -81,6 +81,10 @@ showClosed:
     path:   /member/history
     defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
 
+restoreMember:
+    path:   /member/history/restore
+    defaults:  { _controller: JYPSRegisterBundle:Member:restoreMember}
+
 JYPSRegisterBundle_user:
         resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
         prefix:   /member/user

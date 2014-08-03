@@ -28,7 +28,8 @@ class MemberAddType extends AbstractType
         ->add('street_address')
         ->add('postal_code')
         ->add('city')
-        ->add('country','text',array('required'=>false,))
+        ->add('country','text',array('required'=>false,
+                                     'data'=>'Suomi'))
         ->add('email', 'text', array('required'=>false,
                                      'attr'=> array('size'=> '46')))
         ->add('telephone','text', array('required'=>false,))

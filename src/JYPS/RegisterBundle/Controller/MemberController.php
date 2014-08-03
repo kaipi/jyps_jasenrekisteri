@@ -481,4 +481,20 @@ public function endMemberAction()
    return $this->redirect($this->generateUrl('all_members'));
 
 }
+public function restoreMemberAction()
+{
+   $memberid = $this->get('request')->request->get('memberid');
+
+   $em = $this->getDoctrine()->getManager();
+
+   $member = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member')
+  ->findOneBy(array('member_id' => $memberid));
+   $enddate = NULL;
+   $member->setMembershipEndDate($enddate);
+   $em->flush();
+
+   return $this->redirect($this->generateUrl('showClosed'));
+
+}
 }

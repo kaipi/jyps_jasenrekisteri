@@ -31,6 +31,10 @@ search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
 
+searchOld:
+    path:   /member/searchOld
+    defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
+
 save_member:
     path: /member/{memberid}/save
     defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
@@ -79,7 +83,7 @@ mark_fees:
 
 showClosed:
     path:   /member/history
-    defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
+    defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
 
 restoreMember:
     path:   /member/history/restore

@@ -455,7 +455,8 @@ public function searchMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term AND m.membership_end_date > :current_date')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date > :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )
   ->getQuery();
@@ -463,6 +464,25 @@ public function searchMembersAction()
   $members = $query->getResult();
 
   return $this->render('JYPSRegisterBundle:Member:show_members_search.html.twig', array('members' => $members));
+}
+
+public function searchOldMembersAction()
+{
+  $search_term = $this->get('request')->request->get('search_name');
+
+  $repository = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date < :current_date')
+  ->setParameter('search_term',"%$search_term%")
+  ->setParameter('current_date', new \DateTime("now") )
+  ->getQuery();
+
+  $members = $query->getResult();
+
+  return $this->render('JYPSRegisterBundle:Member:show_members_old.html.twig', array('members' => $members));
 }
 
 public function endMemberAction()

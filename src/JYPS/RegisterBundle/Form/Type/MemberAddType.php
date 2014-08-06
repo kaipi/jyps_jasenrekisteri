@@ -28,8 +28,10 @@ class MemberAddType extends AbstractType
         ->add('street_address')
         ->add('postal_code')
         ->add('city')
-        ->add('country','text',array('required'=>true,))
-        ->add('email', 'text', array('required'=>false,))
+        ->add('country','text',array('required'=>false,
+                                     'data'=>'Suomi'))
+        ->add('email', 'text', array('required'=>false,
+                                     'attr'=> array('size'=> '46')))
         ->add('telephone','text', array('required'=>false,))
         ->add('magazine_preference','checkbox',array('required'=>false,))
         ->add('mailing_list_yleinen','checkbox',array('required'=>false,))
@@ -52,6 +54,8 @@ class MemberAddType extends AbstractType
     
         ->add('join_form_freeword', 'textarea',array('required' => false,))
         ->add('referer_person_name', 'text', array('required'=>false,))
+        ->add('mark_fee_paid', 'checkbox', array('required'=>false,
+                                            'mapped'=>false))
         ->add('save', 'submit');
 
     }

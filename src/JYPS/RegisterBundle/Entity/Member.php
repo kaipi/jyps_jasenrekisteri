@@ -29,7 +29,7 @@ class Member implements UserInterface, \Serializable
     */ 
     private $firstname;
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true)
     */ 
     private $second_name;
     /**
@@ -41,7 +41,7 @@ class Member implements UserInterface, \Serializable
     */ 
     private $street_address;
     /**
-    * @ORM\Column(type="integer", length=10)
+    * @ORM\Column(type="string", length=10)
     */
     private $postal_code;
     /**
@@ -49,7 +49,7 @@ class Member implements UserInterface, \Serializable
     */
     private $city;
     /**
-    * @ORM\Column(type="string", length=60)
+    * @ORM\Column(type="string", length=60, nullable=true)
     */
     private $country;
     /**
@@ -112,10 +112,14 @@ class Member implements UserInterface, \Serializable
     * @ORM\Column(type="string", nullable=true)
     */   
     private $join_form_freeword;
-      /**
+    /**
     * @ORM\Column(type="boolean")
     */   
     private $mailing_list_yleinen;
+    /**
+    * @ORM\Column(type="date", nullable=true)
+    */
+    private $reminder_sent_date;
     /**
      * @ORM\OneToMany(targetEntity="MemberFee", mappedBy="memberfee", cascade={"persist", "remove"})
      */
@@ -153,7 +157,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->salt;
     }
- /**
+    /**
      * @inheritDoc
      */
     public function getPassword()
@@ -843,4 +847,26 @@ class Member implements UserInterface, \Serializable
         return $this->second_name;
     }
 
+    /**
+     * Set reminder_sent_date
+     *
+     * @param \DateTime $reminderSentDate
+     * @return Member
+     */
+    public function setReminderSentDate($reminderSentDate)
+    {
+        $this->reminder_sent_date = $reminderSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get reminder_sent_date
+     *
+     * @return \DateTime 
+     */
+    public function getReminderSentDate()
+    {
+        return $this->reminder_sent_date;
+    }
 }

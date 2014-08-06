@@ -31,6 +31,10 @@ search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
 
+searchOld:
+    path:   /member/searchOld
+    defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
+
 save_member:
     path: /member/{memberid}/save
     defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
@@ -79,7 +83,11 @@ mark_fees:
 
 showClosed:
     path:   /member/history
-    defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
+    defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
+
+restoreMember:
+    path:   /member/history/restore
+    defaults:  { _controller: JYPSRegisterBundle:Member:restoreMember}
 
 JYPSRegisterBundle_user:
     resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
@@ -96,6 +104,14 @@ index_password:
 member_statistics:
     path:   /member/statistics
     defaults:  { _controller: JYPSRegisterBundle:Member:memberStatistics}
+
+showQuickReports:
+    path:   /member/reports
+    defaults:  { _controller: JYPSRegisterBundle:Report:index}
+
+sendReminders:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
 
 acme_blog:
     type: rest

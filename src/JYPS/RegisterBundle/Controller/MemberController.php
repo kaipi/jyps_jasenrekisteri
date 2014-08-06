@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JYPS\RegisterBundle\Entity\Member;
 use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Entity\Intrest;
+use JYPS\RegisterBundle\Entity\IntrestConfig;
 use JYPS\RegisterBundle\Entity\MemberFeeConfig;
 use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use JYPS\RegisterBundle\Form\Type\MemberAddType;
@@ -74,19 +75,49 @@ public function showAllAction($memberid)
     ->getRepository('JYPSRegisterBundle:MemberFee')
     ->findBy(array('member_id' => $member->getId()),
              array('fee_period' => 'ASC'));
-
+  
   $form = $this->createForm(new MemberEditType(), $member, array('action' => $this->generateUrl('member', array('memberid' => $member->getMemberId())),
   ));
 
     if ($request->getMethod() == 'POST') {
       $em = $this->getDoctrine()->getEntityManager();
-      $testimonial = $em->getRepository('JYPSRegisterBundle:Member')->find($memberid);
+
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
+           $em->flush();
+           $fees = $request->get('Fees_to_be_marked');
+           $member_all_fees = $member->getMemberFees();
+           if($fees != "") {
+             foreach($member_all_fees as $member_fee) {
+                if(in_array($member_fee->getId(), $fees)) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(True);
+                  $em->flush();
+                } 
+                else {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush();
+                }
+             }
+           }
+           else {
+              foreach($member_all_fees as $member_fee) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush();
+              
+              }
+           }       
+         
+         return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
         }
     }
   return $this->render('JYPSRegisterBundle:Member:show_member.html.twig', array('member' => $member,
@@ -175,6 +206,29 @@ public function generate_membership_card(Member $member)
   return $output_image;
 }
 
+public function send_join_info_mail(Member $member, MemberFee $memberfee) 
+{
+  $intrest_names = array();
+  foreach($member->getIntrests() as $intrest) {
+    $intrest_config = $this->getDoctrine()
+    ->getRepository('JYPSRegisterBundle:IntrestConfig')
+    ->findOneBy(array('id' => $intrest->getIntrestId())); 
+    array_push($intrest_names,$intrest_config->getIntrestname());
+  }
+  $member_age = date('Y') - $member->getBirthYear();
+  $message = \Swift_Message::newInstance()
+  ->setSubject('Uusi JYPS-jäsen!')
+    ->setFrom('rekisteri@jyps.fi')
+    ->setTo(array('pj@jyps.fi','kaisa.m.peltonen@gmail.com','henna.breilin@toivakka.fi'))
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'intrests'=>$intrest_names,
+            'age'=>$member_age)));
+  $this->get('mailer')->send($message);
+}
+
 public function joinSaveAction(Request $request) 
 {
 
@@ -205,6 +259,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->addIntrest($new_intrest);
  }
 }
 
@@ -225,9 +280,6 @@ if ($form->isValid()) {
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   $em->flush();
   $bankaccount = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:SystemParameter')
@@ -260,6 +312,7 @@ if ($form->isValid()) {
 
     $this->get('mailer')->send($message);
     }
+    $this->send_join_info_mail($member, $memberfee);
     return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
 }
 return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
@@ -296,6 +349,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->setIntrest($new_intrest);
  }
 }
 
@@ -329,12 +383,14 @@ if ($form->isValid()) {
     $member->setMemberType($realMemberFeeConfig);
     $memberfee->setMemo("KAMPPIS");
   }
+  if(isset($temp['mark_fee_paid'])) {
+    if($temp['mark_fee_paid'] == True) {
+      $memberfee->setPaid(True);
+    }
+  }
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   
   $em->flush();
 
@@ -361,7 +417,7 @@ if ($form->isValid()) {
       ->setTo($member->getEmail())
       ->attach(\Swift_Attachment::fromPath($membership_card))
       ->setBody($this->renderView(
-        'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
+        'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
@@ -383,6 +439,7 @@ if ($form->isValid()) {
     
     $this->get('mailer')->send($message);
   }
+  $this->send_join_info_mail($member, $memberfee);
   return $this->redirect($this->generateUrl('add_member'));
   
 }
@@ -398,7 +455,8 @@ public function searchMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term AND m.membership_end_date > :current_date')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date > :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )
   ->getQuery();
@@ -407,10 +465,26 @@ public function searchMembersAction()
 
   return $this->render('JYPSRegisterBundle:Member:show_members_search.html.twig', array('members' => $members));
 }
-public function updateMemberAction(Request $request) 
-{
 
+public function searchOldMembersAction()
+{
+  $search_term = $this->get('request')->request->get('search_name');
+
+  $repository = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date < :current_date')
+  ->setParameter('search_term',"%$search_term%")
+  ->setParameter('current_date', new \DateTime("now") )
+  ->getQuery();
+
+  $members = $query->getResult();
+
+  return $this->render('JYPSRegisterBundle:Member:show_members_old.html.twig', array('members' => $members));
 }
+
 public function endMemberAction()
 {
    $memberid = $this->get('request')->request->get('memberid');
@@ -430,5 +504,22 @@ public function endMemberAction()
 public function memberStatisticsAction() 
 {
   return $this->render('JYPSRegisterBundle:Member:member_statistics.html.twig');
+}
+
+public function restoreMemberAction()
+{
+   $memberid = $this->get('request')->request->get('memberid');
+
+   $em = $this->getDoctrine()->getManager();
+
+   $member = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member')
+  ->findOneBy(array('member_id' => $memberid));
+   $enddate = NULL;
+   $member->setMembershipEndDate($enddate);
+   $em->flush();
+
+   return $this->redirect($this->generateUrl('showClosed'));
+
 }
 }

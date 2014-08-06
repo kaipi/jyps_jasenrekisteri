@@ -1,0 +1,29 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/sent_reminder_repot.html.twig #}
+<head>
+  <title>JYPS Ry jäsenrekisteri</title>
+    <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../../member/user>Admin</a> | Jäsenmaksut| <a href=../../../member/configuration>Konfiguraatio</a> | <a href=../../member/reference_payments>Viiteaineisto</a> | <a href=logout>Logout</a>  </h3>
+<h3>Muistutukset lähetetty!</h3>
+
+<p>Muistutuksia lähetetty yhteensä: {{ reminder_qty }}</p>
+<p>Viallisia sähköpostiosoitteita oli: {{ error_qty }}</p>
+<p>Vialliset sähköpostiosoitteet jäsenillä: </p>
+<table border=1 class="gridtable">
+<th>Jäsennumero</th>
+<th>Nimi</th>
+<th>email</th>
+</tr>
+{% for error_member in error_members %}
+<td>{{ error_member.getMemberId() }}</td>
+<td>{{ error_member.getFullname() }}</td>
+<td>{{ error_member.getEmail() }}</td>
+</tr>
+{%endfor%}
+</table>
+</font>
+
+</html>

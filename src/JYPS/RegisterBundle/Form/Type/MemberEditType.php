@@ -23,12 +23,13 @@ class MemberEditType extends AbstractType
         ->add('surname','text')
         ->add('birth_year','text')
         ->add('membertype','entity', array('class'=>'JYPS\RegisterBundle\Entity\MemberFeeConfig',
-                                            'property'=>'NameWithFeeAmount'))
+                                           'property'=>'NameWithFeeAmount'))
         ->add('street_address')
         ->add('postal_code')
         ->add('city')
         ->add('country','text',array('required'=>false,))
-        ->add('email', 'text', array('required'=>false,))
+        ->add('email', 'text', array('required'=>false,
+                                    'attr'=> array('size'=> '46')))
         ->add('telephone','text', array('required'=>false,))
         ->add('magazine_preference','checkbox',array('required'=>false,))
         ->add('mailing_list_yleinen','checkbox',array('required'=>false,))
@@ -39,7 +40,7 @@ class MemberEditType extends AbstractType
                                        'required' => true,  
                                        'expanded' => false, 
                                        'multiple' => false, ))
-
+       
         ->add('save', 'submit');
 
     }

@@ -19,8 +19,17 @@ class APIController extends FOSRestController
 	*/
 	public function getMembersAction()
 	{
+		$repository = $this->getDoctrine()
+   		->getRepository('JYPSRegisterBundle:Member');
 
-		return $this->container->get('doctrine')->getRepository('JYPSRegisterBundle:Member')->findAll();
+  		$query = $repository->createQueryBuilder('m')
+   		 ->where('m.membership_end_date >= :current_date')
+    	 ->setParameter('current_date', new \DateTime("now") )
+         ->orderBy('m.surname', 'ASC')
+    	 ->getQuery();
+  
+  		 $members = $query->getResult();	
+		 return $members;
 		
 	}
 	

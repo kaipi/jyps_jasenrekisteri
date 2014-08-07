@@ -13,66 +13,36 @@
 <h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../user>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
 
 <script src="{{ asset('bundles/jypsregister/js/d3.min.js') }}"></script>
-<script>
+<script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js') }}"></script>
+<script src="http://dimplejs.org/dist/dimple.v2.1.0.min.js"></script>
 
-var width = 960,
-    height = 500,
-    radius = Math.min(width, height) / 2;
-var outerRadius = width / 2;
-var innerRadius = 0;
-var color = d3.scale.category10();
-
-var arc = d3.svg.arc()
-    .outerRadius(radius - 10)
-    .innerRadius(0);
-
-var pie = d3.layout.pie()
-    .sort(null)
-    .value(function(finalized_data) { return 693; });
-
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-d3.json("http://localhost/jyps_jasenrekisteri/web/app_dev.php/member/api/v1/members.json", function(error, data) {
-  var males = 0;
-  var females = 0;
-  data.forEach(function(d) {
-    if(d.gender==true) {
-      males++;
+<script  type="text/javascript">
+var d3js_data;
+var male = 0;
+var female = 0;
+$.getJSON( "api/v1/members.json", function( json ) {
+  
+  for(var i = 0; i < json.length; i++) {
+    if (json[i].gender === true) {
+        male++;
     }
     else {
-      females++;
-    } 
-  });
+      female++;
+    }
+}
 
-  var finalized_data = [
-    {gender:"miehet",qty:males},
-    {gender:"naiset",qty:females}];
-  
-  console.log(finalized_data);
+d3js_data = [{"gender":"female" , "qty":female},{"gender":"male","qty":male}];
+var svg = dimple.newSvg("div", 800, 600);
+var chart = new dimple.chart(svg, d3js_data);
+    chart.addCategoryAxis("x", "gender");
+    chart.addMeasureAxis("y", "qty");
+    chart.addSeries(null, dimple.plot.bar);
+    chart.draw();
+ });
 
-  var g = svg.selectAll(".arc")
-             .data(pie(finalized_data))
-             .enter().append("g")
-             .attr("class", "arc")
-            // .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");;
-             .attr("finalized_data", arc);
-
-  g.append("path")
-     // .attr("finalized_data", arc)
-      .style("fill", function(finalized_data,i) { return color(i); });
-
-  g.append("text")
-      .attr("transform", function(finalized_data) { return "translate(" + arc.centroid(finalized_data) + ")"; })
-      .attr("dy", ".35em")
-      .style("text-anchor", "middle")
-      .text(function(d) { return d.data.gender; });
-
-});
 </script>
+<center>
+<div id="graph_area">
+</div>
 </body>
 </center>

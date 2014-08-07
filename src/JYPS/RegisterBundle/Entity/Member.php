@@ -78,6 +78,7 @@ class Member implements UserInterface, \Serializable
     private $membership_start_date;
     /**
     * @ORM\Column(type="date", nullable=true)
+    * @Expose
     */
     private $membership_end_date;
     /**
@@ -130,6 +131,7 @@ class Member implements UserInterface, \Serializable
     protected $intrests;
     /**
      * @ORM\ManyToOne(targetEntity="MemberFeeConfig", cascade={"persist", "remove"})
+     * 
      */
     protected $member_type;
     

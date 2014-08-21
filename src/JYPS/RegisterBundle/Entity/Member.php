@@ -42,14 +42,17 @@ class Member implements UserInterface, \Serializable
     private $street_address;
     /**
     * @ORM\Column(type="string", length=10)
+     * @Expose
     */
     private $postal_code;
     /**
     * @ORM\Column(type="string", length=60)
+    * @Expose
     */
     private $city;
     /**
     * @ORM\Column(type="string", length=60, nullable=true)
+    * @Expose
     */
     private $country;
     /**
@@ -74,6 +77,7 @@ class Member implements UserInterface, \Serializable
     private $memo;
     /**
     * @ORM\Column(type="date")
+    * @Expose
     */
     private $membership_start_date;
     /**

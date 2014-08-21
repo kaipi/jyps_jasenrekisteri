@@ -20,7 +20,7 @@
 <option value="membertype">Jäsentyyppi</option>
 <option value="zip">Postinumero</option>
 <option value="city">Kaupungit</option>
-<option value="country">Maat</option
+<option value="country">Maat</option>
 <option value="members_per_month">Jäsenmäärän kehitys</option>
 </select>
 <div id="graph_area">
@@ -71,9 +71,9 @@ $.getJSON( "api/v1/members.json", function( json ) {
     }
   }
 
-  gender_data = [{"gender":"female" , "qty":female},{"gender":"male","qty":male}];
+ gender_data = [{"gender":"female" , "qty":female},{"gender":"male","qty":male}];
 $("#graph_area").html("");
-var svg = dimple.newSvg("#graph_area", 800, 600);
+var svg = dimple.newSvg("#graph_area", 900, 600);
     if (selection == "zip") {
         
         var chart = new dimple.chart(svg, members_by_zip);
@@ -93,17 +93,19 @@ var svg = dimple.newSvg("#graph_area", 800, 600);
     if (selection == "gender") {
         
         var chart = new dimple.chart(svg, gender_data);
-        chart.addCategoryAxis("x", "gender");
-        chart.addMeasureAxis("y", "qty");
-        chart.addSeries(null, dimple.plot.bar);
+        //chart.addCategoryAxis("x", "gender");
+        chart.addMeasureAxis("p", "qty");
+        chart.addSeries("gender", dimple.plot.pie);
+        chart.addLegend(500, 20, 90, 300, "left");
         chart.draw();
     }
     if (selection == "city") {
       
       var chart = new dimple.chart(svg, members_by_city);
-      chart.addCategoryAxis("x", "city");
-      chart.addMeasureAxis("y", "qty");
-      chart.addSeries(null, dimple.plot.bar);
+     // chart.addCategoryAxis("x", "city");
+      chart.addMeasureAxis("p", "qty");
+      chart.addSeries("city", dimple.plot.pie);
+      chart.addLegend(750, 20, 90, 300, "left");
       chart.draw();
     }
     if (selection == "country") {

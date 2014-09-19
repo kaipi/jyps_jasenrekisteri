@@ -42,7 +42,7 @@ class ReportController extends Controller
 	  		if($member->getMagazinePreference() == True) {
 	  			$e_magazine++;
 	  		}
-	  		if(date('Y') - $member->getBirthYear() < 18) {
+	  		if(date('Y') - $member->getBirthYear() < 19) {
 	  			if ($member->getGender() == False) {
 	  				$female_juniors++;
 	  			}

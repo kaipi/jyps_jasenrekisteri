@@ -10,11 +10,11 @@
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
 
-<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../user>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
+<h3><a href=../member>Jäsenet</a> | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | <a href=../member/memberfees>Jäsenmaksut</a>| <a href=../member/configuration>Konfiguraatio</a> | <a href=../member/logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
 
 <script src="{{ asset('bundles/jypsregister/js/d3.min.js') }}"></script>
 <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js') }}"></script>
-<script src="http://dimplejs.org/dist/dimple.v2.1.0.min.js"></script>
+<script src="{{ asset('bundles/jypsregister/js/dimple.v2.1.0.min.js') }}"></script>
 <select id="selectbox" onchange="displayGraph();">
 <option value="gender">Sukupuolijakauma</option>
 <option value="membertype">Jäsentyyppi</option>

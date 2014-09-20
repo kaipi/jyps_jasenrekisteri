@@ -515,7 +515,7 @@ public function restoreMemberAction()
    $member = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:Member')
   ->findOneBy(array('member_id' => $memberid));
-   $enddate = NULL;
+   $enddate = new \DateTime("2038-12-31");
    $member->setMembershipEndDate($enddate);
    $em->flush();
 

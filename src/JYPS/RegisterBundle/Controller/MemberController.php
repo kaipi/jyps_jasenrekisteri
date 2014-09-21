@@ -229,6 +229,29 @@ public function send_join_info_mail(Member $member, MemberFee $memberfee)
   $this->get('mailer')->send($message);
 }
 
+public function send_communication_mail(Request $request) 
+{
+
+ $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $members = $repository->createQueryBuilder('m')
+    ->where('m.membership_end_date <= :ui_date')
+    ->setParameter('ui_date', new \DateTime("now") )
+    ->getQuery();
+
+  foreach($member as $member) {
+    $i++;
+    $message = \Swift_Message::newInstance()
+      ->setSubject($subject)
+      ->setFrom('pj@jyps.fi')
+      ->setTo(array($member->getEmail()))
+      ->setBody($message);
+    $this->get('mailer')->send($message);
+  }
+  return $this->render('JYPSRegisterBundle:Member:communication_mail_info.html.twig');
+}
+
 public function joinSaveAction(Request $request) 
 {
 

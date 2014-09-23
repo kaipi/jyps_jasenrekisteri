@@ -244,7 +244,11 @@ public function sendCommunicationMailAction(Request $request)
  $subject = $request->get('subject');
  $from_address = $request->get('from_address');
  $ui_date = $request->get('email_date_limit');
-
+ if(empty($ui_date)) {
+  $ui_date = "1900-12-31";
+ }
+ $ok = 0;
+ $nok = 0;
  $repository = $this->getDoctrine()
    ->getRepository('JYPSRegisterBundle:Member');
 
@@ -265,7 +269,7 @@ public function sendCommunicationMailAction(Request $request)
         ->setFrom($from_address)
         ->setTo(array($member->getEmail()))
         ->setBody($message);
-        
+
       $this->get('mailer')->send($message);
     }
     else {
@@ -276,7 +280,7 @@ public function sendCommunicationMailAction(Request $request)
              'notice',
              'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
   
-  return $this->redirect($this->generateUrl('member_actions'));
+  return $this->redirect($this->generateUrl('memberActions'));
 }
 
 public function sendMagazineLinkAction(Request $request) 

@@ -119,6 +119,10 @@ magazineInfo:
     path:   /member/magazineInfo
     defaults:  { _controller: JYPSRegisterBundle:Member:sendMagazineLink}
 
+communicationMail:
+    path:   /member/communicationMail
+    defaults:  { _controller: JYPSRegisterBundle:Member:sendCommunicationMail}
+
 acme_blog:
     type: rest
     prefix: /member/api

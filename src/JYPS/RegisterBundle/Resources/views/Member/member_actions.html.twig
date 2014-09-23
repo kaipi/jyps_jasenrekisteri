@@ -33,7 +33,7 @@ Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän 
 <br/>
 <br/>
 
-<form name="member_email" method="post" action='../member/'>
+<form name="member_email" method="post" action='../member/communicationMail'>
 <label for="datepicker">Päivämäärä:</label>
 <input type="text" id="datepicker" name="email_date_limit"/>
 </br>
@@ -46,8 +46,6 @@ Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän 
 <label for="freetext">Viesti:</label>
 <textarea rows="6" cols="60" id="message" name="message"></textarea>
 </br>
-
-
 </br>
 <button type="submit" id="member_email" name='send_email'>Lähetä sähköposti</button>
 </form>

@@ -135,7 +135,7 @@ class Member implements UserInterface, \Serializable
     protected $intrests;
     /**
      * @ORM\ManyToOne(targetEntity="MemberFeeConfig", cascade={"persist", "remove"})
-     * 
+     * InversedBy=membertypes'
      */
     protected $member_type;
     

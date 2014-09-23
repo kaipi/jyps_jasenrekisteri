@@ -95,14 +95,14 @@ public function showAllAction($memberid)
                     ->getRepository('JYPSRegisterBundle:MemberFee')
                     ->findOneBy(array('id' => $member_fee->getId(),));
                   $markfee->setPaid(True);
-                  $em->flush();
+                  $em->flush($markfee);
                 } 
                 else {
                    $markfee = $this->getDoctrine()
                     ->getRepository('JYPSRegisterBundle:MemberFee')
                     ->findOneBy(array('id' => $member_fee->getId(),));
                   $markfee->setPaid(False);
-                  $em->flush();
+                  $em->flush($markfee);
                 }
              }
            }
@@ -112,7 +112,7 @@ public function showAllAction($memberid)
                     ->getRepository('JYPSRegisterBundle:MemberFee')
                     ->findOneBy(array('id' => $member_fee->getId(),));
                   $markfee->setPaid(False);
-                  $em->flush();
+                  $em->flush($markfee);
               
               }
            }       

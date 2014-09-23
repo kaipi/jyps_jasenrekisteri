@@ -206,10 +206,10 @@ private function generate_membership_card(Member $member)
   return $output_image;
 }
 
-private function send_join_info_mail(Member $member, MemberFee $memberfee) 
+public function send_join_info_mail(Member $member, MemberFee $memberfee) 
 {
   $intrest_names = array();
-  if(!empty($member->getIntrests())) {
+  if($member->getIntrests()) {
     foreach($member->getIntrests() as $intrest) {
       $intrest_config = $this->getDoctrine()
       ->getRepository('JYPSRegisterBundle:IntrestConfig')
@@ -229,7 +229,6 @@ private function send_join_info_mail(Member $member, MemberFee $memberfee)
             'intrests'=>$intrest_names,
             'age'=>$member_age)));
   $this->get('mailer')->send($message);
-  return true;
 }
 
 public function memberExtraAction()
@@ -428,6 +427,7 @@ if ($form->isValid()) {
 
     $this->get('mailer')->send($message);
     }
+    
     $this->send_join_info_mail($member, $memberfee);
 
     return $this->redirect($this->generateUrl('join_complete'),303);
@@ -559,7 +559,9 @@ if ($form->isValid()) {
     
     $this->get('mailer')->send($message);
   }
+  
   $this->send_join_info_mail($member, $memberfee);
+
   $this->get('session')->getFlashBag()->add(
              'notice',
              'Jäsen lisätty');

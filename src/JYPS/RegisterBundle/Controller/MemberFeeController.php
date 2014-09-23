@@ -55,7 +55,6 @@ class MemberFeeController extends Controller
 	}
 	public function sendReminderLetterAction(Request $request)
 	{
-		ini_set('max_execution_time', 300);
 		$join_date_limit = $request->request->get('join_date_limit');
 		
 		$memberfees = $this->getDoctrine()
@@ -132,7 +131,6 @@ class MemberFeeController extends Controller
    	}
 	public function createMemberFeesAction(Request $request)
 	{
-		ini_set('max_execution_time', 300);
 		$members = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:Member')
 		->findAll();

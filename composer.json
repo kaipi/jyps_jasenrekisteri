@@ -23,7 +23,8 @@
         "endroid/qrcode-bundle": "dev-master",
         "friendsofsymfony/rest-bundle": "@dev",
         "jms/serializer-bundle": "@dev",
-        "nelmio/api-doc-bundle": "@dev"
+        "nelmio/api-doc-bundle": "@dev",
+        "liuggio/excelbundle": "~2.0"
     },
     "scripts": {
         "post-install-cmd": [

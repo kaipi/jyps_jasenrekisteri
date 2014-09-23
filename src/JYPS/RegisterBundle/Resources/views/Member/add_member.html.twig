@@ -3,7 +3,11 @@
 	<title>JYPS Ry jäsenrekisteri - Lisää jäsen </title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
-
+{% for flashMessage in app.session.flashbag.get('notice') %}
+<div class="flash-notice">
+        {{ flashMessage }}
+</div>
+{% endfor %}
 <center>
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">

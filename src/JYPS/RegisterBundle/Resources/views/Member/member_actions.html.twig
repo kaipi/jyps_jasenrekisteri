@@ -1,0 +1,39 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/member_actions.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri</title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('bundles/jypsregister/js//jquery-ui.css')}}">
+  <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js')}}"></script>
+  <script src="{{ asset('bundles/jypsregister/js/jquery-ui.js')}}"></script>
+   <script>
+  $(function() {
+    $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  });
+  </script>
+</head>
+<center>
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+<h3><a href=../member>Jäsenet</a> | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | Jäsenmaksut| <a href=../member/configuration>Konfiguraatio</a> | <a href=logout>Logout</a>  </h3>
+<h3>Jäsenmaksujen hallinta</h3>
+
+<fieldset class='member_emails'>
+<legend>Sähköpostin lähetys jäsenille</legend>
+Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän mitä uusimmille jäsenille viestisi lähetetään. HUOM! Viallisiin osoitteisiin lähetetyt postit kimpoavat takaisin lähettäjän osoitteeseen!
+
+<form name="member_email" method="post" action='../member/'>
+<input type="text" id="datepicker" name="email_date_limit"></br>
+
+</br>
+<button type="submit" id="member_email" name='send_email'>Lähetä sähköposti</button>
+</form>
+</fieldset>
+
+<fieldset class='address_excel'>
+<legend>Osoitetarra excel</legend>
+Tästä voit tuoda excel-tiedoston jäsenien osoitteista osoitetarrojen tulostamista varten, hakuehtona kaikki jäsenet joiden lehden toimitustapana on fyysinen lehti.
+<form name="address_excel" method="post" action='../member/addressExcel'>
+<button type="submit" id="address_excel" name='export_address_excel'>Tuo tiedosto</button>
+</form>
+
+</fieldset>

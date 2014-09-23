@@ -26,7 +26,6 @@ add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
 
-
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
@@ -56,6 +55,7 @@ join_internal_save:
 join_complete:
     path: /join/joinComplete
     defaults: {_controller: JYPSRegisterBundle:Member:joinComplete}
+    methods:  [GET]
 
 configuration:
     path: /member/configuration
@@ -112,6 +112,10 @@ showQuickReports:
 sendReminders:
     path:   /member/memberfees/sendReminders
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+
+exportAddressExcel:
+    path:   /member/addressExcel
+    defaults:  { _controller: JYPSRegisterBundle:Member:AddressExcel}
 
 acme_blog:
     type: rest

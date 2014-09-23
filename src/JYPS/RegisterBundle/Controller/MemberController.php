@@ -209,11 +209,13 @@ public function generate_membership_card(Member $member)
 public function send_join_info_mail(Member $member, MemberFee $memberfee) 
 {
   $intrest_names = array();
-  foreach($member->getIntrests() as $intrest) {
-    $intrest_config = $this->getDoctrine()
-    ->getRepository('JYPSRegisterBundle:IntrestConfig')
-    ->findOneBy(array('id' => $intrest->getIntrestId())); 
-    array_push($intrest_names,$intrest_config->getIntrestname());
+  if(!empty($member->getIntrests())) {
+    foreach($member->getIntrests() as $intrest) {
+      $intrest_config = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:IntrestConfig')
+      ->findOneBy(array('id' => $intrest->getIntrestId())); 
+      array_push($intrest_names,$intrest_config->getIntrestname());
+    }
   }
   $member_age = date('Y') - $member->getBirthYear();
   $message = \Swift_Message::newInstance()
@@ -229,7 +231,7 @@ public function send_join_info_mail(Member $member, MemberFee $memberfee)
   $this->get('mailer')->send($message);
 }
 
-public function send_communication_mail(Request $request) 
+public function sendCommunicationMailAction(Request $request) 
 {
 
  $repository = $this->getDoctrine()
@@ -237,10 +239,10 @@ public function send_communication_mail(Request $request)
 
   $members = $repository->createQueryBuilder('m')
     ->where('m.membership_end_date <= :ui_date')
-    ->setParameter('ui_date', new \DateTime("now") )
+    ->setParameter('ui_date', $ui_date)
     ->getQuery();
 
-  foreach($member as $member) {
+  foreach($members as $member) {
     $i++;
     $message = \Swift_Message::newInstance()
       ->setSubject($subject)
@@ -249,7 +251,92 @@ public function send_communication_mail(Request $request)
       ->setBody($message);
     $this->get('mailer')->send($message);
   }
-  return $this->render('JYPSRegisterBundle:Member:communication_mail_info.html.twig');
+   $this->get('session')->getFlashBag()->add(
+              'notice',
+              'Sähköpostit lähetetty '.$i.'kpl');
+  return $this->redirect($this->generateUrl('member_actions'));
+}
+
+public function sendMagazineLinkAction(Request $request) 
+{
+
+ $magazine_url = $request->get('magazine_url');
+
+ $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $members = $repository->createQueryBuilder('m')
+    ->where('m.membership_end_date >= :current_date AND m.magazine_preference = 1')
+    ->setParameter('current_date', new \Datetime("now"))
+    ->getQuery();
+
+  foreach($members as $member) {
+    $i++;
+    $message = \Swift_Message::newInstance()
+      ->setSubject("JYPS Ry Jäsenlehti")
+      ->setFrom('pj@jyps.fi')
+      ->setTo(array($member->getEmail()))
+      ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:magazine_link_template.txt.twig',array('magazine_url'=>$magazine_url)));
+    
+    $this->get('mailer')->send($message);
+  }
+  $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Sähköpostit lähetetty '.$i.'kpl');
+  
+  return $this->redirect($this->generateUrl('member_actions'));
+
+}
+
+public function AddressExcelAction() 
+{
+  $i = 0;
+  $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+    ->where('m.membership_end_date >= :today_date AND m.magazine_preference = 0')
+    ->setParameter('today_date', new \Datetime("now"))
+    ->getQuery();
+  $members = $query->getResult();
+
+  $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+  $phpExcelObject->getProperties()->setCreator("JYPS Ry Jäsenrekisteri")
+           ->setLastModifiedBy("JYPS Ry Jäsenrekisteri")
+           ->setTitle("Osoitteet")
+           ->setSubject("Osoitteet")
+           ->setDescription("Aktiivisten jäsenten osoitetiedot joiden lehden toimitustapa = paperi")
+           ->setKeywords("")
+           ->setCategory("");
+ 
+  foreach($members as $member) {
+    $i++;
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(0, $i, $member->getFirstName());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(1, $i, $member->getSurname());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(2, $i, $member->getStreetAddress());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(3, $i, $member->getPostalCode());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(4, $i, $member->getCity());
+
+  }
+  $phpExcelObject->getActiveSheet()->setTitle('Osoitteet');
+  // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+  $phpExcelObject->setActiveSheetIndex(0);
+  // create the writer
+  $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
+  // create the response
+  $response = $this->get('phpexcel')->createStreamedResponse($writer);
+  // adding headers
+  $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+  $response->headers->set('Content-Disposition', 'attachment;filename=jyps_osoitteet.xls');
+  $response->headers->set('Pragma', 'public');
+  $response->headers->set('Cache-Control', 'maxage=1');
+  
+  $this->get('session')->getFlashBag()->add(
+             'notice',
+             'Excel taulukko tuotu!');
+   
+  return $this->redirect($this->generateUrl('member_actions')); 
 }
 
 public function joinSaveAction(Request $request) 
@@ -336,11 +423,15 @@ if ($form->isValid()) {
     $this->get('mailer')->send($message);
     }
     $this->send_join_info_mail($member, $memberfee);
-    return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
+
+    return $this->redirect($this->generateUrl('join_complete'),303);
 }
 return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
 }
 
+public function joinCompleteAction() {
+  return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
+}
 
 public function joinSaveInternalAction(Request $request) 
 {
@@ -463,6 +554,10 @@ if ($form->isValid()) {
     $this->get('mailer')->send($message);
   }
   $this->send_join_info_mail($member, $memberfee);
+  $this->get('session')->getFlashBag()->add(
+             'notice',
+             'Jäsen lisätty');
+
   return $this->redirect($this->generateUrl('add_member'));
   
 }

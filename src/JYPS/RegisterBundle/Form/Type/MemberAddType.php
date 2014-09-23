@@ -16,7 +16,6 @@ class MemberAddType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $conf = $options['intrest_configs'];
-        $fee_conf = $options['memberfee_configs'];
 
         $builder
         ->add('firstname','text')

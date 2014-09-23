@@ -109,7 +109,7 @@ sendReminders:
 
 exportAddressExcel:
     path:   /member/addressExcel
-    defaults:  { _controller: JYPSRegisterBundle:Member:AddressExcel}
+    defaults:  { _controller: JYPSRegisterBundle:Member:addressExcel}
 
 memberActions:
     path:   /member/memberactions

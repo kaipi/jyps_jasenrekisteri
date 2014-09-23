@@ -171,7 +171,7 @@ public function joinMemberAction(Request $request)
 
 }
 
-private function generate_membership_card(Member $member) 
+private function generateMembershipCard(Member $member) 
 {
  
   $base_image_path = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
@@ -179,8 +179,7 @@ private function generate_membership_card(Member $member)
   $output_image = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'MemberCard_'.$member->getMemberId().'.png';
   
   /* member data to image */
-  $width = imagesx($base_image);
-  $height = imagesy($base_image);
+
   $black = imagecolorallocate($base_image, 0, 0, 0);
   $memberid = $member->getMemberId();
   $join_year = $member->getMembershipStartDate()->format('Y');
@@ -325,7 +324,7 @@ public function sendMagazineLinkAction(Request $request)
 
 }
 
-public function AddressExcelAction() 
+public function addressExcelAction() 
 {
   $i = 0;
   $repository = $this->getDoctrine()
@@ -414,7 +413,7 @@ $form = $this->createForm(new MemberJoinType, $member);
 $form->handleRequest($request);
 
 if ($form->isValid()) {
-  $membership_card = $this->generate_membership_card($member);
+  $membership_card = $this->generateMembershipCard($member);
 
   //create memberfee
   $memberfee = new MemberFee();
@@ -509,7 +508,7 @@ $form = $this->createForm(new MemberAddType, $member);
 $form->handleRequest($request);
 
 if ($form->isValid()) {
-  $membership_card = $this->generate_membership_card($member);
+  $membership_card = $this->generateMembershipCard($member);
   
   //create memberfee
   $memberfee = new MemberFee();

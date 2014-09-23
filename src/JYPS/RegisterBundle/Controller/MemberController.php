@@ -170,7 +170,7 @@ public function joinMemberAction(Request $request)
 
 }
 
-public function generate_membership_card(Member $member) 
+private function generate_membership_card(Member $member) 
 {
  
   $base_image_path = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
@@ -206,7 +206,7 @@ public function generate_membership_card(Member $member)
   return $output_image;
 }
 
-public function send_join_info_mail(Member $member, MemberFee $memberfee) 
+private function send_join_info_mail(Member $member, MemberFee $memberfee) 
 {
   $intrest_names = array();
   if(!empty($member->getIntrests())) {

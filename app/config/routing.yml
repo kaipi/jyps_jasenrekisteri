@@ -34,11 +34,11 @@ searchOld:
     path:   /member/searchOld
     defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
 
-save_member:
-    path: /member/{memberid}/save
-    defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
-    requirements:
-        id:  \d+
+#save_member:
+#    path: /member/{memberid}/save
+#    defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
+#    requirements:
+#        id:  \d+
 
 join_member:
     path: /join

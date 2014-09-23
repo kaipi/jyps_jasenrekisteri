@@ -86,7 +86,7 @@ class MemberFeeController extends Controller
 	    			$qty++;
 	    		    $em = $this->getDoctrine()->getManager();
 	    			$member->setReminderSentDate(new \DateTime("now"));
-	    			$em->flush();
+	    			$em->flush($member);
     			}
     			else {
     				$error_qty++;
@@ -108,7 +108,7 @@ class MemberFeeController extends Controller
 			->getRepository('JYPSRegisterBundle:MemberFee')
 			->findOneBy(array('id' => $fee,));
 	    	$markfee->setPaid(True);
-	    	$em->flush();
+	    	$em->flush($markfee);
 	    }
 	    return $this->showUnpaidFeesAction($request);
    	}
@@ -122,7 +122,7 @@ class MemberFeeController extends Controller
 			->getRepository('JYPSRegisterBundle:MemberFee')
 			->findOneBy(array('id' => $feeid,));
 	    $markfee->setPaid(True);
-	    $em->flush();
+	    $em->flush($markfee);
 
 	    $member = $this->getDoctrine()
   			->getRepository('JYPSRegisterBundle:Member')
@@ -171,7 +171,7 @@ class MemberFeeController extends Controller
 
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($memberfee);
-				$em->flush();
+				$em->flush($memberfee);
 			}
 
 		}

@@ -27,9 +27,6 @@ class ReportController extends Controller
   		$female_juniors = 0;
   		$male_juniors = 0;
   		$e_magazine = 0;
-  		//$join_year_qty = [];
-  		//$zip_codes = [];
-  		//$membership_types = [];
   		$members = $query->getResult();
   		foreach($members as $member) {
 	  		$total_members++;

@@ -15,6 +15,7 @@ use JYPS\RegisterBundle\Form\Type\MemberAddType;
 use JYPS\RegisterBundle\Form\Type\MemberEditType;
 use Doctrine\ORM\EntityRepository;
 use Endroid\QrCode\QrCode;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 class MemberController extends Controller 
 {
@@ -234,63 +235,89 @@ private function sendJoinInfoEmail(Member $member, MemberFee $memberfee)
 public function memberExtraAction()
 {
     return $this->render('JYPSRegisterBundle:Member:member_actions.html.twig');
-
 }
+
 public function sendCommunicationMailAction(Request $request) 
 {
+
+ $message = $request->get('message');
+ $subject = $request->get('subject');
+ $from_address = $request->get('from_address');
+ $ui_date = $request->get('email_date_limit');
 
  $repository = $this->getDoctrine()
    ->getRepository('JYPSRegisterBundle:Member');
 
-  $members = $repository->createQueryBuilder('m')
-    ->where('m.membership_end_date <= :ui_date')
+  $query = $repository->createQueryBuilder('m')
+    ->where('m.membership_start_date >= :ui_date AND m.membership_end_date <= :current_date')
     ->setParameter('ui_date', $ui_date)
+    ->setParameter('current_date', new \Datetime('now'))
     ->getQuery();
+  $members = $query->getResult();
 
   foreach($members as $member) {
-    $i++;
-    $message = \Swift_Message::newInstance()
-      ->setSubject($subject)
-      ->setFrom('pj@jyps.fi')
-      ->setTo(array($member->getEmail()))
-      ->setBody($message);
-    $this->get('mailer')->send($message);
+    $emailConstraint = new EmailConstraint();
+    $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
+      $ok++;
+      $message = \Swift_Message::newInstance()
+        ->setSubject($subject)
+        ->setFrom($from_address)
+        ->setTo(array($member->getEmail()))
+        ->setBody($message);
+        
+      $this->get('mailer')->send($message);
+    }
+    else {
+      $nok++;
+    }
   }
    $this->get('session')->getFlashBag()->add(
-              'notice',
-              'Sähköpostit lähetetty '.$i.'kpl');
+             'notice',
+             'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
+  
   return $this->redirect($this->generateUrl('member_actions'));
 }
 
 public function sendMagazineLinkAction(Request $request) 
 {
-
+ $ok = 0;
+ $nok = 0;
  $magazine_url = $request->get('magazine_url');
-
+ print($magazine_url);
  $repository = $this->getDoctrine()
    ->getRepository('JYPSRegisterBundle:Member');
 
-  $members = $repository->createQueryBuilder('m')
+  $query = $repository->createQueryBuilder('m')
     ->where('m.membership_end_date >= :current_date AND m.magazine_preference = 1')
     ->setParameter('current_date', new \Datetime("now"))
     ->getQuery();
 
+  $members = $query->getResult();
+  
   foreach($members as $member) {
-    $i++;
-    $message = \Swift_Message::newInstance()
-      ->setSubject("JYPS Ry Jäsenlehti")
-      ->setFrom('pj@jyps.fi')
-      ->setTo(array($member->getEmail()))
-      ->setBody($this->renderView(
-      'JYPSRegisterBundle:Member:magazine_link_template.txt.twig',array('magazine_url'=>$magazine_url)));
-    
-    $this->get('mailer')->send($message);
+    $emailConstraint = new EmailConstraint();
+    $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
+      $ok++;
+      $message = \Swift_Message::newInstance()
+        ->setSubject("JYPS Ry Jäsenlehti")
+        ->setFrom('pj@jyps.fi')
+        ->setTo(array($member->getEmail()))
+        ->setBody($this->renderView(
+        'JYPSRegisterBundle:Member:magazine_info.txt.twig',array('magazine_url'=>$magazine_url)));
+      
+        $this->get('mailer')->send($message);
+    }
+    else {
+      $nok++;
+    }
   }
   $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Sähköpostit lähetetty '.$i.'kpl');
+             'notice',
+             'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
   
-  return $this->redirect($this->generateUrl('member_actions'));
+  return $this->redirect($this->generateUrl('memberActions'));
 
 }
 

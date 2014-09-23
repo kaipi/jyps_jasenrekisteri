@@ -115,6 +115,10 @@ memberActions:
     path:   /member/memberactions
     defaults:  { _controller: JYPSRegisterBundle:Member:memberExtra}
 
+magazineInfo:
+    path:   /member/magazineInfo
+    defaults:  { _controller: JYPSRegisterBundle:Member:sendMagazineLink}
+
 acme_blog:
     type: rest
     prefix: /member/api

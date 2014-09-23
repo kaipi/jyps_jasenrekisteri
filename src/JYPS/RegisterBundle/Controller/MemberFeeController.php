@@ -178,8 +178,4 @@ class MemberFeeController extends Controller
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
 
-	public function readReferencePayments(Request $request) 
-	{
-		
-	}
 }

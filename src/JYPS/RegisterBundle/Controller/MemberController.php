@@ -229,7 +229,9 @@ private function send_join_info_mail(Member $member, MemberFee $memberfee)
             'intrests'=>$intrest_names,
             'age'=>$member_age)));
   $this->get('mailer')->send($message);
+  return true;
 }
+
 public function memberExtraAction()
 {
     return $this->render('JYPSRegisterBundle:Member:member_actions.html.twig');

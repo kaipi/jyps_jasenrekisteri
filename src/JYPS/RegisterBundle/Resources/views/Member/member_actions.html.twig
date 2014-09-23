@@ -28,13 +28,19 @@
 <legend>Sähköpostin lähetys jäsenille</legend>
 Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän mitä uusimmille jäsenille viestisi lähetetään. HUOM! Viallisiin osoitteisiin lähetetyt postit kimpoavat takaisin lähettäjän osoitteeseen!
 <br/>
+<br/>
+
 <form name="member_email" method="post" action='../member/'>
+<label for="datepicker">Päivämäärä:</label>
 <input type="text" id="datepicker" name="email_date_limit"/>
 </br>
-<input type="text" id="from" name="from"/>
-
-<input type="text" id="subject" name="subject"/>
-
+<label for="from">Lähettäjän sähköpostiosoite:</label>
+<input type="text" id="from" name="from" size="60"/>
+<br/>
+<label for="subject">Aihe:</label>
+<input type="text" id="subject" name="subject" size="60"/>
+<br/>
+<label for="freetext">Viesti:</label>
 <textarea rows="4" cols="50" id="freetext" name="text"></textarea>
 </br>
 
@@ -50,8 +56,10 @@ Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän 
 Tästä voit lähettää ilmoituksen sähköisen lehden saatavuudesta sen tilanneille jäsenille, muista täyttää lehden URL osoite!
 <form name="address_excel" method="post" action='../member/addressExcel'>
 <br/>
-<input type="text" id="magazine_url" name="magazine_url"/>
-</br>
+<label for="magazine_url">Lehden url-osoite:</label>
+<input type="text" size="60" id="magazine_url" name="magazine_url"/>
+<br/>
+<br/>
 <button type="submit" id="address_excel" name='export_address_excel'>Lähetä ilmoitus</button>
 </form>
 </fieldset>

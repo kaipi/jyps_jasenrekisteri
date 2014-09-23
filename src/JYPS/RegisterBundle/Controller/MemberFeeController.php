@@ -112,7 +112,7 @@ class MemberFeeController extends Controller
 	    }
 	    return $this->showUnpaidFeesAction($request);
    	}
-   	public function markOneFeeAsPaid(Request $request)
+   	public function markOneFeeAsPaidAction(Request $request)
    	{
    		$feeid = $request->get('Fee_Id');
    		$memberid = $request->get("Member_id");

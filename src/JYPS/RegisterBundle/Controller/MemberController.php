@@ -206,7 +206,7 @@ private function generate_membership_card(Member $member)
   return $output_image;
 }
 
-public function send_join_info_mail(Member $member, MemberFee $memberfee) 
+private function sendJoinInfoEmail(Member $member, MemberFee $memberfee) 
 {
   $intrest_names = array();
   if($member->getIntrests()) {
@@ -427,8 +427,8 @@ if ($form->isValid()) {
 
     $this->get('mailer')->send($message);
     }
-    
-    $this->send_join_info_mail($member, $memberfee);
+
+    $this->sendJoinInfoEmail($member, $memberfee);
 
     return $this->redirect($this->generateUrl('join_complete'),303);
 }
@@ -560,7 +560,7 @@ if ($form->isValid()) {
     $this->get('mailer')->send($message);
   }
   
-  $this->send_join_info_mail($member, $memberfee);
+  $this->sendJoinInfoEmail($member, $memberfee);
 
   $this->get('session')->getFlashBag()->add(
              'notice',

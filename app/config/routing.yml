@@ -34,12 +34,6 @@ searchOld:
     path:   /member/searchOld
     defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
 
-#save_member:
-#    path: /member/{memberid}/save
-#    defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
-#    requirements:
-#        id:  \d+
-
 join_member:
     path: /join
     defaults:  { _controller: JYPSRegisterBundle:Member:joinMember}
@@ -116,6 +110,10 @@ sendReminders:
 exportAddressExcel:
     path:   /member/addressExcel
     defaults:  { _controller: JYPSRegisterBundle:Member:AddressExcel}
+
+memberActions:
+    path:   /member/memberactions
+    defaults:  { _controller: JYPSRegisterBundle:Member:memberExtra}
 
 acme_blog:
     type: rest

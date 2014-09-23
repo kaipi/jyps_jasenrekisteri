@@ -11,29 +11,61 @@
   });
   </script>
 </head>
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
 <center>
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
-<h3><a href=../member>Jäsenet</a> | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | Jäsenmaksut| <a href=../member/configuration>Konfiguraatio</a> | <a href=logout>Logout</a>  </h3>
-<h3>Jäsenmaksujen hallinta</h3>
+<h3> <a href=../member>Jäsenet</a> | Jäsentoiminnot | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | <a href=../member/memberfees>Jäsenmaksut</a> | <a href=../member/configuration>Konfiguraatio</a> | <a href=../member/reports>Raportit</a> | <a href=../member/logout>Logout</a> |Käyttäjä: {{ app.user.username }} [<a href=../member/changePassword>vaihda salasana</a>] </h3>
+
+
+<h3>Jäsentoiminnot</h3>
 
 <fieldset class='member_emails'>
 <legend>Sähköpostin lähetys jäsenille</legend>
 Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän mitä uusimmille jäsenille viestisi lähetetään. HUOM! Viallisiin osoitteisiin lähetetyt postit kimpoavat takaisin lähettäjän osoitteeseen!
-
+<br/>
 <form name="member_email" method="post" action='../member/'>
-<input type="text" id="datepicker" name="email_date_limit"></br>
+<input type="text" id="datepicker" name="email_date_limit"/>
+</br>
+<input type="text" id="from" name="from"/>
+
+<input type="text" id="subject" name="subject"/>
+
+<textarea rows="4" cols="50" id="freetext" name="text"></textarea>
+</br>
+
 
 </br>
 <button type="submit" id="member_email" name='send_email'>Lähetä sähköposti</button>
 </form>
 </fieldset>
 
+<br/>
+<fieldset class='magazine'>
+<legend>Sähköinen lehti -ilmoitus</legend>
+Tästä voit lähettää ilmoituksen sähköisen lehden saatavuudesta sen tilanneille jäsenille, muista täyttää lehden URL osoite!
+<form name="address_excel" method="post" action='../member/addressExcel'>
+<br/>
+<input type="text" id="magazine_url" name="magazine_url"/>
+</br>
+<button type="submit" id="address_excel" name='export_address_excel'>Lähetä ilmoitus</button>
+</form>
+</fieldset>
+
+<br/>
+
 <fieldset class='address_excel'>
 <legend>Osoitetarra excel</legend>
 Tästä voit tuoda excel-tiedoston jäsenien osoitteista osoitetarrojen tulostamista varten, hakuehtona kaikki jäsenet joiden lehden toimitustapana on fyysinen lehti.
 <form name="address_excel" method="post" action='../member/addressExcel'>
+<br/>
 <button type="submit" id="address_excel" name='export_address_excel'>Tuo tiedosto</button>
 </form>
 
 </fieldset>
+
+</html>

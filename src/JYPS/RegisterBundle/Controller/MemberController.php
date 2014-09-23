@@ -230,7 +230,11 @@ private function send_join_info_mail(Member $member, MemberFee $memberfee)
             'age'=>$member_age)));
   $this->get('mailer')->send($message);
 }
+public function memberExtraAction()
+{
+    return $this->render('JYPSRegisterBundle:Member:member_actions.html.twig');
 
+}
 public function sendCommunicationMailAction(Request $request) 
 {
 
@@ -335,8 +339,8 @@ public function AddressExcelAction()
   $this->get('session')->getFlashBag()->add(
              'notice',
              'Excel taulukko tuotu!');
-   
-  return $this->redirect($this->generateUrl('member_actions')); 
+ return $response;  
+
 }
 
 public function joinSaveAction(Request $request) 

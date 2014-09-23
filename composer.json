@@ -23,7 +23,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "dev-master",
         "endroid/qrcode-bundle": "dev-master",
-        "friendsofsymfony/rest-bundle": "@dev",
+        "friendsofsymfony/rest-bundle[1.5.x-dev]": "@dev",
         "jms/serializer-bundle": "@dev",
         "nelmio/api-doc-bundle": "@dev",
         "liuggio/excelbundle": "~2.0"

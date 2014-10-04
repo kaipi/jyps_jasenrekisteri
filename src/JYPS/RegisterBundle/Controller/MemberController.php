@@ -243,7 +243,8 @@ public function sendCommunicationMailAction(Request $request)
  $subject = $request->get('subject');
  $from_address = $request->get('from_address');
  $ui_date = $request->get('email_date_limit');
- if(empty($ui_date)) {
+
+ if($ui_date === "") {
   $ui_date = "1900-12-31";
  }
  $ok = 0;
@@ -259,20 +260,24 @@ public function sendCommunicationMailAction(Request $request)
   $members = $query->getResult();
 
   foreach($members as $member) {
+    if($member->getEmail() == "") {
+      continue;
+    }
     $emailConstraint = new EmailConstraint();
+    $errors = "";
     $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
+    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "")  {
       $ok++;
       $message = \Swift_Message::newInstance()
         ->setSubject($subject)
         ->setFrom($from_address)
         ->setTo(array($member->getEmail()))
         ->setBody($message);
-
       $this->get('mailer')->send($message);
     }
     else {
       $nok++;
+
     }
   }
    $this->get('session')->getFlashBag()->add(
@@ -299,6 +304,7 @@ public function sendMagazineLinkAction(Request $request)
   $members = $query->getResult();
   
   foreach($members as $member) {
+    $errors = "";
     $emailConstraint = new EmailConstraint();
     $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
     if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
@@ -366,10 +372,7 @@ public function addressExcelAction()
   $response->headers->set('Content-Disposition', 'attachment;filename=jyps_osoitteet.xls');
   $response->headers->set('Pragma', 'public');
   $response->headers->set('Cache-Control', 'maxage=1');
-  
-  $this->get('session')->getFlashBag()->add(
-             'notice',
-             'Excel taulukko tuotu!');
+
  return $response;  
 
 }
@@ -550,6 +553,7 @@ if ($form->isValid()) {
 
   $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
                     '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
+                    
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {

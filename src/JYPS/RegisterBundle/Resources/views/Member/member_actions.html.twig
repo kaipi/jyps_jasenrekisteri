@@ -14,11 +14,13 @@
   });
   </script>
 </head>
+<html>
 {% for flashMessage in app.session.flashbag.get('notice') %}
     <div class="flash-notice">
         {{ flashMessage }}
     </div>
 {% endfor %}
+
 <center>
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
@@ -27,7 +29,7 @@
 
 <h3>Jäsentoiminnot</h3>
 
-<fieldset class='member_emails'>
+<!---<fieldset class='member_emails'>
 <legend>Sähköpostin lähetys jäsenille</legend>
 Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän mitä uusimmille jäsenille viestisi lähetetään. HUOM! Viallisiin osoitteisiin lähetetyt postit kimpoavat takaisin lähettäjän osoitteeseen!
 <br/>
@@ -53,6 +55,7 @@ Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän 
 <button type="submit" id="member_email" name='send_email'>Lähetä sähköposti</button>
 </form>
 </fieldset>
+-->
 
 <br/>
 <fieldset class='magazine'>

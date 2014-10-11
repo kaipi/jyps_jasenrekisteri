@@ -64,13 +64,17 @@ class MemberFeeController extends Controller
 		$qty = 0;
 		$error_qty=0;
 		$error_members = array();
-		
+		//1month treshold from previous reminder
+		$treshold_date = new \Datetime("now");
+		$treshold_date->sub(new \DateInterval('P1M'));
+
 		foreach($memberfees as $memberfee) {
 			$member = $memberfee->getMemberFee();
 			if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
 				$member->getMembershipEndDate() > new \DateTime("now") &&
 				$member->getEmail() != "" &&
-				$member->getReminderSentDate() == NULL) {
+				($member->getReminderSentDate() <= $treshold_date ||
+				 $member->getReminderSentDate() == NULL )) {
 				$errors = "";
 			    $emailConstraint = new EmailConstraint();
 				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);

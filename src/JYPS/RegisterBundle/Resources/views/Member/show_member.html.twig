@@ -8,7 +8,7 @@
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
 
-<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../user>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
+<h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../user>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | <a href=../logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
 
 
 <h3>Henkilötiedot</h3>
@@ -21,11 +21,7 @@
   <th>Katuosoite</th>
   <th>Postinumero</th>
   <th>Kaupunki</th>
-  <th>Maa</th>
-  <th>Sähköposti</th>
-  <th>Puhelin</th>
-  <th>Syntymävuosi</th> 
-  <th>Sukupuoli</th>
+  
   </tr>
   <td> {{ form_widget(form.firstname) }}</td>
   <td> {{ form_widget(form.second_name) }}</td>
@@ -33,11 +29,19 @@
   <td> {{ form_widget(form.street_address) }} </td>
   <td> {{ form_widget(form.postal_code) }}</td>
   <td> {{ form_widget(form.city) }}</td>
-  <td> {{ form_widget(form.country) }} </td>
-  <td> {{ form_widget(form.email) }}</td>
+
+  </tr>
+  <th>Maa</th>
+  <th colspan="2">Sähköposti</th>
+  <th>Puhelin</th>
+  <th>Syntymävuosi</th> 
+  <th>Sukupuoli</th>
+  </tr>
+   <td> {{ form_widget(form.country) }} </td>
+  <td colspan="2"> {{ form_widget(form.email) }}</td>
   <td> {{ form_widget(form.telephone) }}</td>
   <td> {{ form_widget(form.birth_year) }}</td>
-   <td> {{ form_widget(form.gender) }}</td>
+  <td> {{ form_widget(form.gender) }}</td>
 </table>
 
 <h3>Muut tiedot</h3>
@@ -57,31 +61,32 @@
 <table class="gridtable">
 <th>Jäsenkausi</th>
 <th>Viite</th>
-<th>Maksettu</th>
 <th>Eräpäivä</th>
 <th>Summa</th>
 <th>Memo</th>
+<th>Maksun tila</th>
 </tr>
 {% for memberfee in memberfees %}
 <td>{{ memberfee.getFeePeriod() }}</td>
 <td>{{ memberfee.getReferenceNumber() }}</td>
-{% if (memberfee.getPaid() == 1) %}
-<td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_193_circle_ok.png')}}"></td>
-{% endif %}
-{% if (memberfee.getPaid() == 0) %}
-<td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_192_circle_remove.png')}}"></td>
-{% endif %}
 <td>{{ memberfee.getDueDate()|date('Y-m-d') }}</td>
 <td>{{ memberfee.getFeeAmountWithVat() }}</td>
 <td>{{ memberfee.getMemo() }}</td>
-
+{% if (memberfee.getPaid() == 0) %}
+<td><input name="Fees_to_be_marked[]" type="checkbox" value="{{memberfee.getId()}}"></td>
+{% endif %}
+{% if (memberfee.getPaid() == 1) %}
+<td><input name="Fees_to_be_marked[]" type="checkbox" value="{{memberfee.getId()}}" checked></td>
+{% endif %}
 </tr>
 {% endfor %}
 
 </table>
 </br>
-{{ form_widget(form.save) }}
+{{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
 
 {{ form_end(form) }}
+<form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
+<input  type="submit" value="Poista jäsen"></form>
 
 

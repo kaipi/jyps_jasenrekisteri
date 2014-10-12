@@ -1,0 +1,127 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/show_member.html.twig #}
+<head>
+	<title>JYPS Ry jäsenrekisteri - Raportit </title>
+	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+<center>
+
+<body>
+
+<h2>JYPS Ry</h2>
+<font face="Lucida Grande" size="1.5">
+
+<h3><a href=../member>Jäsenet</a> | <a href=../member/add>Lisää jäsen</a> | <a href=../member/user>Admin</a> | <a href=../member/memberfees>Jäsenmaksut</a>| <a href=../member/configuration>Konfiguraatio</a> | <a href=../member/logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
+
+<script src="{{ asset('bundles/jypsregister/js/d3.min.js') }}"></script>
+<script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js') }}"></script>
+<script src="{{ asset('bundles/jypsregister/js/dimple.v2.1.0.min.js') }}"></script>
+<select id="selectbox" onchange="displayGraph();">
+<option value="gender">Sukupuolijakauma</option>
+<option value="membertype">Jäsentyyppi</option>
+<option value="zip">Postinumero</option>
+<option value="city">Kaupungit</option>
+<option value="country">Maat</option>
+<option value="members_per_month">Jäsenmäärän kehitys</option>
+</select>
+<div id="graph_area">
+</div>
+<script  type="text/javascript">
+//analyzed data variables
+var date = {};
+var zipdata = {};
+var countrydata = {};
+var citydata = {};
+
+function displayGraph() {
+  var selectBox = document.getElementById("selectbox");
+  var selection = selectBox.options[selectBox.selectedIndex].value;
+
+  var gender_data = [];
+  var male = 0;
+  var female = 0;
+$.getJSON( "api/v1/members.json", function( json ) {
+  
+  var members_by_date = [];
+  var members_by_zip = [];
+  var members_by_city = [];
+  var members_by_country = [];
+
+  for(var i = 0; i < json.length; i++) {
+    if (json[i].gender === true) {
+        male++;
+    }
+    else {
+        female++;
+    } 
+    if(json[i].membership_start_date !== undefined ){
+      date = {"date":json[i].membership_start_date, "qty":1}
+      members_by_date.push(date);
+    }
+    if(json[i].postal_code !== undefined ){
+      zipdata = {"zip":json[i].postal_code, "qty":1}
+      members_by_zip.push(zipdata);
+    }
+    if(json[i].city !== undefined ){
+      citydata = {"city":json[i].city, "qty":1}
+      members_by_city.push(citydata);
+    }
+    if(json[i].country !== undefined ){
+      countrydata = {"country":json[i].country, "qty":1}
+      members_by_country.push(countrydata);
+    }
+  }
+
+ gender_data = [{"gender":"female" , "qty":female},{"gender":"male","qty":male}];
+$("#graph_area").html("");
+var svg = dimple.newSvg("#graph_area", 900, 600);
+    if (selection == "zip") {
+        
+        var chart = new dimple.chart(svg, members_by_zip);
+        chart.addCategoryAxis("x", "zip");
+        chart.addMeasureAxis("y", "qty");
+        chart.addSeries(null, dimple.plot.bar);
+        chart.draw();
+    }
+    if (selection == "members_per_month") {
+        
+        var chart = new dimple.chart(svg, members_by_date);
+        chart.addCategoryAxis("x", "date");
+        chart.addMeasureAxis("y", "qty");
+        chart.addSeries(null, dimple.plot.line);
+        chart.draw();
+    }
+    if (selection == "gender") {
+        
+        var chart = new dimple.chart(svg, gender_data);
+        //chart.addCategoryAxis("x", "gender");
+        chart.addMeasureAxis("p", "qty");
+        chart.addSeries("gender", dimple.plot.pie);
+        chart.addLegend(500, 20, 90, 300, "left");
+        chart.draw();
+    }
+    if (selection == "city") {
+      
+      var chart = new dimple.chart(svg, members_by_city);
+     // chart.addCategoryAxis("x", "city");
+      chart.addMeasureAxis("p", "qty");
+      chart.addSeries("city", dimple.plot.pie);
+      chart.addLegend(750, 20, 90, 300, "left");
+      chart.draw();
+    }
+    if (selection == "country") {
+      
+      var chart = new dimple.chart(svg, members_by_country);
+      chart.addCategoryAxis("x", "country");
+      chart.addMeasureAxis("y", "qty");
+      chart.addSeries(null, dimple.plot.bar);
+      chart.draw();
+    }
+});
+
+}
+</script>
+
+<center>
+
+</body>
+</center>

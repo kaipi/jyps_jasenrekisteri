@@ -8,12 +8,14 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JYPS\RegisterBundle\Entity\Member;
 use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Entity\Intrest;
+use JYPS\RegisterBundle\Entity\IntrestConfig;
 use JYPS\RegisterBundle\Entity\MemberFeeConfig;
 use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use JYPS\RegisterBundle\Form\Type\MemberAddType;
 use JYPS\RegisterBundle\Form\Type\MemberEditType;
 use Doctrine\ORM\EntityRepository;
 use Endroid\QrCode\QrCode;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 class MemberController extends Controller 
 {
@@ -74,19 +76,49 @@ public function showAllAction($memberid)
     ->getRepository('JYPSRegisterBundle:MemberFee')
     ->findBy(array('member_id' => $member->getId()),
              array('fee_period' => 'ASC'));
-
+  
   $form = $this->createForm(new MemberEditType(), $member, array('action' => $this->generateUrl('member', array('memberid' => $member->getMemberId())),
   ));
 
     if ($request->getMethod() == 'POST') {
       $em = $this->getDoctrine()->getEntityManager();
-      $testimonial = $em->getRepository('JYPSRegisterBundle:Member')->find($memberid);
+
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
+           $em->flush();
+           $fees = $request->get('Fees_to_be_marked');
+           $member_all_fees = $member->getMemberFees();
+           if($fees != "") {
+             foreach($member_all_fees as $member_fee) {
+                if(in_array($member_fee->getId(), $fees)) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(True);
+                  $em->flush($markfee);
+                } 
+                else {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush($markfee);
+                }
+             }
+           }
+           else {
+              foreach($member_all_fees as $member_fee) {
+                   $markfee = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:MemberFee')
+                    ->findOneBy(array('id' => $member_fee->getId(),));
+                  $markfee->setPaid(False);
+                  $em->flush($markfee);
+              
+              }
+           }       
+         
+         return $this->redirect($this->generateUrl('member',array('memberid' => $memberid)));
         }
     }
   return $this->render('JYPSRegisterBundle:Member:show_member.html.twig', array('member' => $member,
@@ -139,7 +171,7 @@ public function joinMemberAction(Request $request)
 
 }
 
-public function generate_membership_card(Member $member) 
+private function generateMembershipCard(Member $member) 
 {
  
   $base_image_path = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
@@ -147,8 +179,7 @@ public function generate_membership_card(Member $member)
   $output_image = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'MemberCard_'.$member->getMemberId().'.png';
   
   /* member data to image */
-  $width = imagesx($base_image);
-  $height = imagesy($base_image);
+
   $black = imagecolorallocate($base_image, 0, 0, 0);
   $memberid = $member->getMemberId();
   $join_year = $member->getMembershipStartDate()->format('Y');
@@ -173,6 +204,177 @@ public function generate_membership_card(Member $member)
   imagepng($base_image,$output_image);
   
   return $output_image;
+}
+
+private function sendJoinInfoEmail(Member $member, MemberFee $memberfee) 
+{
+  $intrest_names = array();
+  if($member->getIntrests()) {
+    foreach($member->getIntrests() as $intrest) {
+      $intrest_config = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:IntrestConfig')
+      ->findOneBy(array('id' => $intrest->getIntrestId())); 
+      array_push($intrest_names,$intrest_config->getIntrestname());
+    }
+  }
+  $member_age = date('Y') - $member->getBirthYear();
+  $message = \Swift_Message::newInstance()
+  ->setSubject('Uusi JYPS-jäsen!')
+    ->setFrom('rekisteri@jyps.fi')
+    ->setTo(array('pj@jyps.fi','kaisa.m.peltonen@gmail.com','henna.breilin@toivakka.fi'))
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
+      array('member'=>$member,
+            'memberfee'=>$memberfee,
+            'intrests'=>$intrest_names,
+            'age'=>$member_age)));
+  $this->get('mailer')->send($message);
+}
+
+public function memberExtraAction()
+{
+    return $this->render('JYPSRegisterBundle:Member:member_actions.html.twig');
+}
+
+public function sendCommunicationMailAction(Request $request) 
+{
+
+ $message = $request->get('message');
+ $subject = $request->get('subject');
+ $from_address = $request->get('from_address');
+ $ui_date = $request->get('email_date_limit');
+
+ if($ui_date === "") {
+  $ui_date = "1900-12-31";
+ }
+ $ok = 0;
+ $nok = 0;
+ $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+    ->where('m.membership_start_date >= :ui_date AND m.membership_end_date <= :current_date')
+    ->setParameter('ui_date', $ui_date)
+    ->setParameter('current_date', new \Datetime('now'))
+    ->getQuery();
+  $members = $query->getResult();
+
+  foreach($members as $member) {
+    if($member->getEmail() == "") {
+      continue;
+    }
+    $emailConstraint = new EmailConstraint();
+    $errors = "";
+    $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "")  {
+      $ok++;
+      $message = \Swift_Message::newInstance()
+        ->setSubject($subject)
+        ->setFrom($from_address)
+        ->setTo(array($member->getEmail()))
+        ->setBody($message);
+      $this->get('mailer')->send($message);
+    }
+    else {
+      $nok++;
+
+    }
+  }
+   $this->get('session')->getFlashBag()->add(
+             'notice',
+             'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
+  
+  return $this->redirect($this->generateUrl('memberActions'));
+}
+
+public function sendMagazineLinkAction(Request $request) 
+{
+ $ok = 0;
+ $nok = 0;
+ $magazine_url = $request->get('magazine_url');
+ print($magazine_url);
+ $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+    ->where('m.membership_end_date >= :current_date AND m.magazine_preference = 1')
+    ->setParameter('current_date', new \Datetime("now"))
+    ->getQuery();
+
+  $members = $query->getResult();
+  
+  foreach($members as $member) {
+    $errors = "";
+    $emailConstraint = new EmailConstraint();
+    $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+    if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
+      $ok++;
+      $message = \Swift_Message::newInstance()
+        ->setSubject("JYPS Ry Jäsenlehti")
+        ->setFrom('pj@jyps.fi')
+        ->setTo(array($member->getEmail()))
+        ->setBody($this->renderView(
+        'JYPSRegisterBundle:Member:magazine_info.txt.twig',array('magazine_url'=>$magazine_url)));
+      
+        $this->get('mailer')->send($message);
+    }
+    else {
+      $nok++;
+    }
+  }
+  $this->get('session')->getFlashBag()->add(
+             'notice',
+             'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
+  
+  return $this->redirect($this->generateUrl('memberActions'));
+
+}
+
+public function addressExcelAction() 
+{
+  $i = 0;
+  $repository = $this->getDoctrine()
+   ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+    ->where('m.membership_end_date >= :today_date AND m.magazine_preference = 0')
+    ->setParameter('today_date', new \Datetime("now"))
+    ->getQuery();
+  $members = $query->getResult();
+
+  $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+  $phpExcelObject->getProperties()->setCreator("JYPS Ry Jäsenrekisteri")
+           ->setLastModifiedBy("JYPS Ry Jäsenrekisteri")
+           ->setTitle("Osoitteet")
+           ->setSubject("Osoitteet")
+           ->setDescription("Aktiivisten jäsenten osoitetiedot joiden lehden toimitustapa = paperi")
+           ->setKeywords("")
+           ->setCategory("");
+ 
+  foreach($members as $member) {
+    $i++;
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(0, $i, $member->getFirstName());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(1, $i, $member->getSurname());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(2, $i, $member->getStreetAddress());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(3, $i, $member->getPostalCode());
+    $phpExcelObject->getActiveSheet()->setCellValueByColumnAndRow(4, $i, $member->getCity());
+
+  }
+  $phpExcelObject->getActiveSheet()->setTitle('Osoitteet');
+  // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+  $phpExcelObject->setActiveSheetIndex(0);
+  // create the writer
+  $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
+  // create the response
+  $response = $this->get('phpexcel')->createStreamedResponse($writer);
+  // adding headers
+  $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+  $response->headers->set('Content-Disposition', 'attachment;filename=jyps_osoitteet.xls');
+  $response->headers->set('Pragma', 'public');
+  $response->headers->set('Cache-Control', 'maxage=1');
+
+ return $response;  
+
 }
 
 public function joinSaveAction(Request $request) 
@@ -205,6 +407,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->addIntrest($new_intrest);
  }
 }
 
@@ -213,7 +416,7 @@ $form = $this->createForm(new MemberJoinType, $member);
 $form->handleRequest($request);
 
 if ($form->isValid()) {
-  $membership_card = $this->generate_membership_card($member);
+  $membership_card = $this->generateMembershipCard($member);
 
   //create memberfee
   $memberfee = new MemberFee();
@@ -225,9 +428,6 @@ if ($form->isValid()) {
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   $em->flush();
   $bankaccount = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:SystemParameter')
@@ -260,11 +460,17 @@ if ($form->isValid()) {
 
     $this->get('mailer')->send($message);
     }
-    return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
+
+    $this->sendJoinInfoEmail($member, $memberfee);
+
+    return $this->redirect($this->generateUrl('join_complete'),303);
 }
 return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
 }
 
+public function joinCompleteAction() {
+  return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
+}
 
 public function joinSaveInternalAction(Request $request) 
 {
@@ -296,6 +502,7 @@ if(!empty($intrests)) {
    $new_intrest = new Intrest();
    $new_intrest->setIntrestId($intrest);
    $new_intrest->setIntrest($member);
+   $member->setIntrest($new_intrest);
  }
 }
 
@@ -304,7 +511,7 @@ $form = $this->createForm(new MemberAddType, $member);
 $form->handleRequest($request);
 
 if ($form->isValid()) {
-  $membership_card = $this->generate_membership_card($member);
+  $membership_card = $this->generateMembershipCard($member);
   
   //create memberfee
   $memberfee = new MemberFee();
@@ -329,12 +536,14 @@ if ($form->isValid()) {
     $member->setMemberType($realMemberFeeConfig);
     $memberfee->setMemo("KAMPPIS");
   }
+  if(isset($temp['mark_fee_paid'])) {
+    if($temp['mark_fee_paid'] == True) {
+      $memberfee->setPaid(True);
+    }
+  }
   $em = $this->getDoctrine()->getManager();
   $em->persist($member);
   $em->persist($memberfee);
-  if(!empty($intrests)) {
-    $em->persist($new_intrest);
-  }
   
   $em->flush();
 
@@ -344,6 +553,7 @@ if ($form->isValid()) {
 
   $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
                     '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
+                    
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {
@@ -361,7 +571,7 @@ if ($form->isValid()) {
       ->setTo($member->getEmail())
       ->attach(\Swift_Attachment::fromPath($membership_card))
       ->setBody($this->renderView(
-        'JYPSRegisterBundle:Member:join_member_email_internal_campaign_base.txt.twig',
+        'JYPSRegisterBundle:Member:join_member_email_internal_base.txt.twig',
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
@@ -383,6 +593,13 @@ if ($form->isValid()) {
     
     $this->get('mailer')->send($message);
   }
+  
+  $this->sendJoinInfoEmail($member, $memberfee);
+
+  $this->get('session')->getFlashBag()->add(
+             'notice',
+             'Jäsen lisätty');
+
   return $this->redirect($this->generateUrl('add_member'));
   
 }
@@ -398,7 +615,8 @@ public function searchMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term AND m.membership_end_date > :current_date')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date > :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )
   ->getQuery();
@@ -407,10 +625,26 @@ public function searchMembersAction()
 
   return $this->render('JYPSRegisterBundle:Member:show_members_search.html.twig', array('members' => $members));
 }
-public function updateMemberAction(Request $request) 
-{
 
+public function searchOldMembersAction()
+{
+  $search_term = $this->get('request')->request->get('search_name');
+
+  $repository = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member');
+
+  $query = $repository->createQueryBuilder('m')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->andWhere('m.membership_end_date < :current_date')
+  ->setParameter('search_term',"%$search_term%")
+  ->setParameter('current_date', new \DateTime("now") )
+  ->getQuery();
+
+  $members = $query->getResult();
+
+  return $this->render('JYPSRegisterBundle:Member:show_members_old.html.twig', array('members' => $members));
 }
+
 public function endMemberAction()
 {
    $memberid = $this->get('request')->request->get('memberid');
@@ -425,6 +659,27 @@ public function endMemberAction()
    $em->flush();
 
    return $this->redirect($this->generateUrl('all_members'));
+
+}
+public function memberStatisticsAction() 
+{
+  return $this->render('JYPSRegisterBundle:Member:member_statistics.html.twig');
+}
+
+public function restoreMemberAction()
+{
+   $memberid = $this->get('request')->request->get('memberid');
+
+   $em = $this->getDoctrine()->getManager();
+
+   $member = $this->getDoctrine()
+  ->getRepository('JYPSRegisterBundle:Member')
+  ->findOneBy(array('member_id' => $memberid));
+   $enddate = new \DateTime("2038-12-31");
+   $member->setMembershipEndDate($enddate);
+   $em->flush();
+
+   return $this->redirect($this->generateUrl('showClosed'));
 
 }
 }

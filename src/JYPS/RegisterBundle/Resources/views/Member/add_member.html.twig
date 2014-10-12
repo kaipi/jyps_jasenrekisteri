@@ -3,12 +3,16 @@
 	<title>JYPS Ry jäsenrekisteri - Lisää jäsen </title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
-
+{% for flashMessage in app.session.flashbag.get('notice') %}
+<div class="flash-notice">
+        {{ flashMessage }}
+</div>
+{% endfor %}
 <center>
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
 
-<h3><a href=../member>Jäsenet</a> | Lisää jäsen | <a href=../member/user>Admin</a> | <a href=memberfees>Jäsenmaksut</a>| <a href=configuration>Konfiguraatio</a> | Viiteaineisto | <a href=../member/logout>Logout</a>  </h3>
+<h3><a href=../member>Jäsenet</a> | Lisää jäsen | <a href=../member/user>Admin</a> | <a href=memberfees>Jäsenmaksut</a>| <a href=configuration>Konfiguraatio</a> | <a href=../member/logout>Logout</a>  </h3>
 
 
 <h3>Henkilötiedot</h3>
@@ -21,11 +25,6 @@
   <th>Katuosoite</th>
   <th>Postinumero</th>
   <th>Kaupunki</th>
-  <th>Maa</th>
-  <th>Sähköposti</th>
-  <th>Puhelin</th>
-  <th>Syntymävuosi</th> 
-  <th>Sukupuoli</th>
   </tr>
   <td> {{ form_widget(form.firstname) }}</td>
   <td> {{ form_widget(form.second_name) }}</td>
@@ -33,11 +32,18 @@
   <td> {{ form_widget(form.street_address) }} </td>
   <td> {{ form_widget(form.postal_code) }}</td>
   <td> {{ form_widget(form.city) }}</td>
+  </tr>
+  <th>Maa</th>
+  <th colspan="2">Sähköposti</th>
+  <th>Puhelin</th>
+  <th>Syntymävuosi</th> 
+  <th>Sukupuoli</th>
+  </tr>
   <td> {{ form_widget(form.country) }} </td>
-  <td> {{ form_widget(form.email) }}</td>
+  <td colspan="2"> {{ form_widget(form.email) }}</td>
   <td> {{ form_widget(form.telephone) }}</td>
   <td> {{ form_widget(form.birth_year) }}</td>
-   <td> {{ form_widget(form.gender) }}</td>
+  <td> {{ form_widget(form.gender) }}</td>
 </table>
 
 <h3>Muut tiedot</h3>
@@ -59,14 +65,14 @@
 <table class="gridtable">
 <th>Suosittelija</th>
 <th>Kiinnostuksen kohteet</th>
-
 <th>Vapaa sana</th>
+<th>Merkitse jäsenmaksu heti maksetuksi</th>
 </tr>
 <td> {{ form_widget(form.referer_person_name) }}</td>
 <td> {{ form_widget(form.intrests) }} </td>
-
 <td> {{form_widget(form.join_form_freeword) }}</td>
+<td> {{form_widget(form.mark_fee_paid) }}</td>
 </table>
-{{ form_widget(form.save) }}
+{{ form_widget(form.save, { 'label': 'Lisää jäsen' }) }}
 {{ form_end(form) }}
 

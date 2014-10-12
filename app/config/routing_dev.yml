@@ -91,25 +91,36 @@ mark_fees:
     path:   /member/memberfees/markUnpaidFees
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:markFeesPaid}
 
+mark_one_fee:
+    path:   /member/memberfees/markOneFeeAsPaid
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:markOneFeeAsPaid}
+
 showClosed:
     path:   /member/history
     defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
+
+showQuickReports:
+    path:   /member/reports
+    defaults:  { _controller: JYPSRegisterBundle:Report:index}
+
+sendReminders:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
 
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
 JYPSRegisterBundle_user:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
-        prefix:   /member/user
+    resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
+    prefix:   /member/user
 
 JYPSRegisterBundle_member_intrestconfig:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
-        prefix:   /member/intrestconfig
+    resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
+    prefix:   /member/intrestconfig
 
 EndroidQrCodeBundle:
     resource:   "@EndroidQrCodeBundle/Controller/"
     type:       annotation
     prefix:     /member/qrcode
-
 

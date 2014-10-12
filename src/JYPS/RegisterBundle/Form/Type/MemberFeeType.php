@@ -6,7 +6,7 @@ namespace JYPS\RegisterBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use JYPS\RegisterBundle\Entity\IntrestConfig;
+use JYPS\RegisterBundle\Entity\MemberFee;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -18,11 +18,9 @@ class MemberFeeType extends AbstractType
 
         $builder
         ->add('memberid','integer')
-        ->add('firstname','text')
-        ->add('surname','text')
         ->add('memberfee_amount','checkbox', array('required'=>false))
         ->add('memo')
-        ->add('paid')
+        ->add('paid','checkbox')
         ->add('save', 'submit');
 
     }

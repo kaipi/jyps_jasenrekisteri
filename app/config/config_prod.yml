@@ -23,3 +23,6 @@ monolog:
             level: debug
         console:
             type:  console
+fos_rest:
+    view:
+        view_response_listener: true

@@ -1,0 +1,21 @@
+Uusi jäsen!
+
+Nimi: {{member.getFullName}}
+Ikä/Syntymävuosi: {{age}}/{{member.getbirthYear}}
+Jäsentyyppi: {{member.getMemberType}} 
+Email: {{member.getEmail}}
+Puhelin: {{member.getTelePhone}}
+Osoite: {{member.getFullAddress}}
+Kiinnostuksen kohteet: 
+{%for intrest in intrests %}
+	{{intrest}}
+{% endfor %}
+Vapaa sana: {{member.getJoinFormFreeword}}
+Suosittelija: {{member.getRefererPersonName}}
+
+-------------------
+
+Liittymisaika: {{member.getMembershipStartDate|date('Y-m-d ')}}
+
+
+JYPS Ry jäsenrekisteri.

@@ -1,0 +1,5 @@
+acme_blog_Page:
+    type: rest
+    prefix: /v1
+    resource: "JYPS\RegisterBundle\Controller\APIController"
+    name_prefix:  api_1_ # naming collision

@@ -7,21 +7,24 @@
 {{ form_start(form) }}
 {{ form_errors(form) }}
 <br/>
-<fieldset>
+
+<p>Tähdellä (*) merkityt kentät ovat pakollisia!</p>
+</br>
+<fieldset class="join">
 <legend>Henkilötiedot:</legend>
-<p>{{ form_label(form.firstname, 'Etunimi') }} {{ form_widget(form.firstname) }}</p>
+<p>{{ form_label(form.firstname, 'Etunimi *') }} {{ form_widget(form.firstname) }}</p>
 <p>{{ form_label(form.second_name, 'Muut nimet') }} {{ form_widget(form.second_name) }}</p>
-<p>{{ form_label(form.surname, 'Sukunimi') }} {{ form_widget(form.surname) }}</p>
-<p>{{ form_label(form.birth_year, 'Syntymävuosi') }} {{ form_widget(form.birth_year) }}</p>
+<p>{{ form_label(form.surname, 'Sukunimi *') }} {{ form_widget(form.surname) }}</p>
+<p>{{ form_label(form.birth_year, 'Syntymävuosi *') }} {{ form_widget(form.birth_year) }}</p>
 <p>{{ form_label(form.gender, 'Sukupuoli') }} {{ form_widget(form.gender) }}</p>
 <p>{{ form_label(form.membertype, 'Jäsenyyden tyyppi') }} {{ form_widget(form.membertype) }}</p>
 </fieldset>
 <br/>
 <fieldset>
 <legend>Yhteystiedot:</legend>
-<p>{{ form_label(form.street_address, 'Katuosoite') }} {{ form_widget(form.street_address) }}</p>
-<p>{{ form_label(form.postal_code, 'Postinumero') }} {{ form_widget(form.postal_code) }}</p>
-<p>{{ form_label(form.city, 'Postitoimipaikka/Kaupunki') }} {{ form_widget(form.city) }}</p>
+<p>{{ form_label(form.street_address, 'Katuosoite *') }} {{ form_widget(form.street_address) }}</p>
+<p>{{ form_label(form.postal_code, 'Postinumero *') }} {{ form_widget(form.postal_code) }}</p>
+<p>{{ form_label(form.city, 'Postitoimipaikka/Kaupunki *') }} {{ form_widget(form.city) }}</p>
 <p>{{ form_label(form.country, 'Maa') }} {{ form_widget(form.country) }}</p>
 <p>{{ form_label(form.email, 'Email') }} {{ form_widget(form.email) }}</p>
 <p>{{ form_label(form.telephone, 'Puhelinnumero') }} {{ form_widget(form.telephone) }}</p>
@@ -59,7 +62,7 @@
 <br/>
 
 <fieldset >
-Liittymisen jälkeen saat jäsenmaksutiedot välittömästi antaamaasi sähköpostiosoitteeseen. Jos tietoja ei kuulu, ota yhteyttä jäsensihteeriin (breilinhenna (ät) gmail.com) tai www-vastaavaan (timo.kaipiainen (ät) gmail.com). Olethan huolellinen täyttäessäsi tiedot!
+Liittymisen jälkeen saat jäsenmaksutiedot välittömästi antaamaasi sähköpostiosoitteeseen. Jos tietoja ei kuulu, ota yhteyttä jäsensihteeriin (henna piste breilin (ät) toivakka.fi) tai www-vastaavaan (timo.kaipiainen (ät) gmail.com). Olethan huolellinen täyttäessäsi tiedot!
 </fieldset>
  {{ form_widget(form.save, { 'label': 'Lähetä lomake' }) }}
 {{ form_end(form) }}

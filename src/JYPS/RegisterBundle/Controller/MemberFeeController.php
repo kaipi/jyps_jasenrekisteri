@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use JYPS\RegisterBundle\Entity\MemberFee;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use JYPS\RegisterBundle\Form\Type\MemberFeeType;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 class MemberFeeController extends Controller
 {	
@@ -40,10 +41,64 @@ class MemberFeeController extends Controller
 		$memberfees = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:MemberFee')
 		->findBy(array('fee_period' => $year, 'paid' => 0),
-			     array('fee_period' => 'ASC'));
+			     array('member_id' => 'ASC'));
+		$ok_fees = array();
+		foreach($memberfees as $memberfee) {
+			$member = $memberfee->getMemberFee();
 
-		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees'=>$memberfees, 'year'=>$year));
+			if ($member->getMembershipEndDate() > new \DateTime("now")) {
+				$ok_fees[] = $memberfee;
+			}
+		}
+		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees'=>$ok_fees, 'year'=>$year));
 
+	}
+	public function sendReminderLetterAction(Request $request)
+	{
+		$join_date_limit = $request->request->get('join_date_limit');
+		
+		$memberfees = $this->getDoctrine()
+		->getRepository('JYPSRegisterBundle:MemberFee')
+		->findBy(array('paid' => 0),
+			     array('member_id' => 'ASC'));
+		$qty = 0;
+		$error_qty=0;
+		$error_members = array();
+		//1month treshold from previous reminder
+		$treshold_date = new \Datetime("now");
+		$treshold_date->sub(new \DateInterval('P1M'));
+
+		foreach($memberfees as $memberfee) {
+			$member = $memberfee->getMemberFee();
+			if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
+				$member->getMembershipEndDate() > new \DateTime("now") &&
+				$member->getEmail() != "" &&
+				($member->getReminderSentDate() <= $treshold_date ||
+				 $member->getReminderSentDate() == NULL )) {
+				$errors = "";
+			    $emailConstraint = new EmailConstraint();
+				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+				if ($errors == "") {
+					$message = \Swift_Message::newInstance();
+					$message->setSubject('JYPS ry jäsenmaksu muistutus')
+				    		->setFrom('pj@jyps.fi')
+						    ->setTo($member->getEmail())
+						    ->setBody($this->renderView(
+						      'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
+	    			$this->get('mailer')->send($message);
+	    			$qty++;
+	    		    $em = $this->getDoctrine()->getManager();
+	    			$member->setReminderSentDate(new \DateTime("now"));
+	    			$em->flush($member);
+    			}
+    			else {
+    				$error_qty++;
+    				$error_members[] = $member;
+    			}
+			} 
+		}
+		
+		return $this->render('JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig', array('reminder_qty'=>$qty, 'error_qty'=>$error_qty, 'error_members'=>$error_members));
 	}
 	public function markFeesPaidAction(Request $request)
 	{
@@ -56,13 +111,30 @@ class MemberFeeController extends Controller
 			->getRepository('JYPSRegisterBundle:MemberFee')
 			->findOneBy(array('id' => $fee,));
 	    	$markfee->setPaid(True);
-	    	$em->flush();
+	    	$em->flush($markfee);
 	    }
 	    return $this->showUnpaidFeesAction($request);
    	}
+   	public function markOneFeeAsPaidAction(Request $request)
+   	{
+   		$feeid = $request->get('Fee_Id');
+   		$memberid = $request->get("Member_id");
+   		
+   		$em = $this->getDoctrine()->getManager();
+   		$markfee = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('id' => $feeid,));
+	    $markfee->setPaid(True);
+	    $em->flush($markfee);
+
+	    $member = $this->getDoctrine()
+  			->getRepository('JYPSRegisterBundle:Member')
+  			->findOneBy(array('member_id' => $memberid));
+
+	    return $member->showAllAction($memberid);
+   	}
 	public function createMemberFeesAction(Request $request)
 	{
-		ini_set('max_execution_time', 300);
 		$members = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:Member')
 		->findAll();
@@ -101,15 +173,11 @@ class MemberFeeController extends Controller
 
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($memberfee);
-				$em->flush();
+				$em->flush($memberfee);
 			}
 
 		}
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
 
-	public function readReferencePayments(Request $request) 
-	{
-		
-	}
 }

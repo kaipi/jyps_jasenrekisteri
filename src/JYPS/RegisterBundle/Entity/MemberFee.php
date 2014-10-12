@@ -340,4 +340,5 @@ class MemberFee implements UserInterface, \Serializable
         return $this;
     }
 
+
 }

@@ -5,11 +5,16 @@ namespace JYPS\RegisterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
 /**
  * User
  *
  * @ORM\Table()
  * @ORM\Entity
+ *
+ * @ExclusionPolicy("all")
  */
 class Member implements UserInterface, \Serializable
 {
@@ -24,7 +29,7 @@ class Member implements UserInterface, \Serializable
     */ 
     private $firstname;
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true)
     */ 
     private $second_name;
     /**
@@ -36,15 +41,18 @@ class Member implements UserInterface, \Serializable
     */ 
     private $street_address;
     /**
-    * @ORM\Column(type="integer", length=10)
+    * @ORM\Column(type="string", length=10)
+     * @Expose
     */
     private $postal_code;
     /**
     * @ORM\Column(type="string", length=60)
+    * @Expose
     */
     private $city;
     /**
-    * @ORM\Column(type="string", length=60)
+    * @ORM\Column(type="string", length=60, nullable=true)
+    * @Expose
     */
     private $country;
     /**
@@ -69,19 +77,23 @@ class Member implements UserInterface, \Serializable
     private $memo;
     /**
     * @ORM\Column(type="date")
+    * @Expose
     */
     private $membership_start_date;
     /**
     * @ORM\Column(type="date", nullable=true)
+    * @Expose
     */
     private $membership_end_date;
     /**
     * @ORM\Column(type="integer", nullable=true)
+    * @Expose
     */
     private $birth_year;
     /**
     * @ORM\Column(type="integer",unique=true)
     * @ORM\GeneratedValue(strategy="AUTO")
+    * @Expose
     */
     private $member_id;
     /**
@@ -90,6 +102,7 @@ class Member implements UserInterface, \Serializable
     private $telephone;
     /**
     * @ORM\Column(type="boolean", nullable=true)
+    * @Expose
     */   
     private $gender;
     /**
@@ -104,10 +117,14 @@ class Member implements UserInterface, \Serializable
     * @ORM\Column(type="string", nullable=true)
     */   
     private $join_form_freeword;
-      /**
+    /**
     * @ORM\Column(type="boolean")
     */   
     private $mailing_list_yleinen;
+    /**
+    * @ORM\Column(type="date", nullable=true)
+    */
+    private $reminder_sent_date;
     /**
      * @ORM\OneToMany(targetEntity="MemberFee", mappedBy="memberfee", cascade={"persist", "remove"})
      */
@@ -117,7 +134,8 @@ class Member implements UserInterface, \Serializable
      */
     protected $intrests;
     /**
-     * @ORM\ManyToOne(targetEntity="MemberFeeConfig", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="MemberFeeConfig", inversedBy="membertypes", cascade={"persist", "remove"})
+     * '
      */
     protected $member_type;
     
@@ -145,7 +163,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->salt;
     }
- /**
+    /**
      * @inheritDoc
      */
     public function getPassword()
@@ -835,4 +853,26 @@ class Member implements UserInterface, \Serializable
         return $this->second_name;
     }
 
+    /**
+     * Set reminder_sent_date
+     *
+     * @param \DateTime $reminderSentDate
+     * @return Member
+     */
+    public function setReminderSentDate($reminderSentDate)
+    {
+        $this->reminder_sent_date = $reminderSentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get reminder_sent_date
+     *
+     * @return \DateTime 
+     */
+    public function getReminderSentDate()
+    {
+        return $this->reminder_sent_date;
+    }
 }

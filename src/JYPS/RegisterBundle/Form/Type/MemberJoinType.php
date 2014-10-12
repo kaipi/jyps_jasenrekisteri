@@ -35,7 +35,7 @@ class MemberJoinType extends AbstractType
         ->add('street_address','text',array('attr'=> array('size'=> '63')))
         ->add('postal_code','text', array('attr'=> array('size'=> '63')))
         ->add('city','text', array('attr'=> array('size'=> '63')))
-        ->add('country','text',array('required'=>true,
+        ->add('country','text',array('required'=>false,
                                      'attr'=> array('size'=> '63')))
         ->add('email', 'text', array('required'=>false,
                                      'attr'=> array('size'=> '63')))

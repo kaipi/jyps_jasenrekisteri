@@ -26,16 +26,13 @@ add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
 
-
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
 
-save_member:
-    path: /member/{memberid}/save
-    defaults:  { _controller: JYPSRegisterBundle:Member:saveMember }
-    requirements:
-        id:  \d+
+searchOld:
+    path:   /member/searchOld
+    defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
 
 join_member:
     path: /join
@@ -52,6 +49,7 @@ join_internal_save:
 join_complete:
     path: /join/joinComplete
     defaults: {_controller: JYPSRegisterBundle:Member:joinComplete}
+    methods:  [GET]
 
 configuration:
     path: /member/configuration
@@ -79,18 +77,53 @@ mark_fees:
 
 showClosed:
     path:   /member/history
-    defaults:  { _controller: JYPSRegisterBundle:Member:showCLosed}
+    defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
+
+restoreMember:
+    path:   /member/history/restore
+    defaults:  { _controller: JYPSRegisterBundle:Member:restoreMember}
 
 JYPSRegisterBundle_user:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
-        prefix:   /member/user
+    resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
+    prefix:   /member/user
 
 JYPSRegisterBundle_member_intrestconfig:
-        resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
-        prefix:   /member/intrestconfig
+    resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
+    prefix:   /member/intrestconfig
 
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
 
+member_statistics:
+    path:   /member/statistics
+    defaults:  { _controller: JYPSRegisterBundle:Member:memberStatistics}
 
+showQuickReports:
+    path:   /member/reports
+    defaults:  { _controller: JYPSRegisterBundle:Report:index}
+
+sendReminders:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+
+exportAddressExcel:
+    path:   /member/addressExcel
+    defaults:  { _controller: JYPSRegisterBundle:Member:addressExcel}
+
+memberActions:
+    path:   /member/memberactions
+    defaults:  { _controller: JYPSRegisterBundle:Member:memberExtra}
+
+magazineInfo:
+    path:   /member/magazineInfo
+    defaults:  { _controller: JYPSRegisterBundle:Member:sendMagazineLink}
+
+communicationMail:
+    path:   /member/communicationMail
+    defaults:  { _controller: JYPSRegisterBundle:Member:sendCommunicationMail}
+
+acme_blog:
+    type: rest
+    prefix: /member/api
+    resource: "@JYPSRegisterBundle/Resources/config/routes.yml"  

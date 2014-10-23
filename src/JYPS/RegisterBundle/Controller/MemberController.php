@@ -236,6 +236,34 @@ public function memberExtraAction()
     return $this->render('JYPSRegisterBundle:Member:member_actions.html.twig');
 }
 
+public function sendMembershipCardAction(Request $request)
+{
+   
+
+    $memberid = $this->get('request')->request->get('memberid');
+
+    $em = $this->getDoctrine()->getManager();
+
+    $member = $this->getDoctrine()
+    ->getRepository('JYPSRegisterBundle:Member')
+    ->findOneBy(array('member_id' => $memberid));
+    $membership_card = $this->generateMembershipCard($member);
+    $message = \Swift_Message::newInstance()
+    ->setSubject('JYPS ry:n jäsenkorttisi')
+    ->setFrom('pj@jyps.fi')
+    ->setTo($member->getEmail())
+    ->attach(\Swift_Attachment::fromPath($membership_card))
+    ->setBody($this->renderView(
+      'JYPSRegisterBundle:Member:membercard_resend.txt.twig',array()));
+
+    $this->get('mailer')->send($message);
+
+    $this->get('session')->getFlashBag()->add(
+               'notice',
+               'Jäsenkortti lähetty');
+  
+  return $this->redirect($this->generateUrl('member',array("memberid"=>$memberid)));
+}
 public function sendCommunicationMailAction(Request $request) 
 {
 

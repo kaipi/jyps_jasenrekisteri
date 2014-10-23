@@ -3,6 +3,12 @@
 	<title>JYPS Ry jäsenrekisteri - Lisää jäsen </title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
+<html>
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
 
 <center>
 <h2>JYPS Ry</h2>
@@ -86,7 +92,10 @@
 {{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
 
 {{ form_end(form) }}
+<form action="../send_membership_card" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
+<input  type="submit" value="Lähetä jäsenkortti"></form>
+
 <form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
 <input  type="submit" value="Poista jäsen"></form>
-
+</html>
 

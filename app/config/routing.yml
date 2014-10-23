@@ -123,6 +123,10 @@ communicationMail:
     path:   /member/communicationMail
     defaults:  { _controller: JYPSRegisterBundle:Member:sendCommunicationMail}
 
+sendCard:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+
 acme_blog:
     type: rest
     prefix: /member/api

@@ -107,9 +107,13 @@ sendReminders:
     path:   /member/memberfees/sendReminders
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
 
+sendCard:
+    path:   /member/memberfees/sendReminders
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+
 index_password:
-    path:   /member/changePassword
-    defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}
+    path:   /member/send_membership_card
+    defaults:  { _controller: JYPSRegisterBundle:Member:sendMembershipCard}
 
 JYPSRegisterBundle_user:
     resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"

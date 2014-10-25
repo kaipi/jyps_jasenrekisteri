@@ -643,7 +643,7 @@ public function searchMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term OR m.email LIKE :search_term')
   ->andWhere('m.membership_end_date > :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )
@@ -662,7 +662,7 @@ public function searchOldMembersAction()
   ->getRepository('JYPSRegisterBundle:Member');
 
   $query = $repository->createQueryBuilder('m')
-  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term')
+  ->where('m.firstname LIKE :search_term OR m.surname LIKE :search_term OR m.city LIKE :search_term OR m.postal_code LIKE :search_term OR m.email LIKE :search_term')
   ->andWhere('m.membership_end_date < :current_date')
   ->setParameter('search_term',"%$search_term%")
   ->setParameter('current_date', new \DateTime("now") )

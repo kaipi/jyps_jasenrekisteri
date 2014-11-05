@@ -19,7 +19,7 @@
   {% for memberfee in memberfees %}
 
   <td>{{memberfee.getMemberfee().getMemberId()}}</td>
-  <td>{{memberfee.getMemberfee().getFullName()}}</td>
+  <td><a href="../../member/show/{{memberfee.getMemberfee().getMemberid()}}">{{memberfee.getMemberfee().getFullName()}}</a></td>
   <td>{{memberfee.getFeeAmountWithVat() }}</td>
   <td>{{memberfee.getMemo() }}</td>
   <td><input type="checkbox" name="Fees_to_be_marked[]" value="{{memberfee.getId()}}"> <input type="hidden" name="year" value="{{year}}"></td>

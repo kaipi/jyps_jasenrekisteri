@@ -39,7 +39,7 @@ class MemberEditType extends AbstractType
                                        'required' => true,  
                                        'expanded' => false, 
                                        'multiple' => false, ))
-       
+        ->add('next_memberfee_paid','checkbox',array('required'=>false,))      
         ->add('save', 'submit');
 
     }

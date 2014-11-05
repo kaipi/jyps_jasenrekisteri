@@ -149,6 +149,7 @@ class MemberFeeController extends Controller
 			if( $memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
 				continue;
 			}
+
 			//Check that fee does not exists fe. already joined members who get fee when joining.
 			$createfee = TRUE;
 			$fees = $member->getMemberFees();
@@ -157,6 +158,14 @@ class MemberFeeController extends Controller
 					$createfee = FALSE;
 					break;
 				}
+			}
+			//Fee is prepaid, create fee and mark paid, unmark member prepaid status
+			if($member->getNextMemberfeePaid == TRUE) {
+				$memberfee_prepaid = TRUE;
+				$member->setNextMemberfeePaid(FALSE);
+			}
+			else {
+				$memberfee_prepaid = FALSE;
 			}
 			$duedate = new \DateTime('now');
 			$duedate->add(new \DateInterval('P10D'));
@@ -170,6 +179,7 @@ class MemberFeeController extends Controller
 	            $memberfee->setDueDate($duedate);
 	            $memberfee->setMemberFee($member);
 	            $memberfee->setFeePeriod(date('Y'));
+	            $memberfee->setPaid($memberfee_prepaid);
 
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($memberfee);

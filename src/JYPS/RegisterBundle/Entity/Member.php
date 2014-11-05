@@ -126,6 +126,10 @@ class Member implements UserInterface, \Serializable
     */
     private $reminder_sent_date;
     /**
+    * @ORM\Column(type="boolean")
+    */   
+    private $next_memberfee_paid;
+    /**
      * @ORM\OneToMany(targetEntity="MemberFee", mappedBy="memberfee", cascade={"persist", "remove"})
      */
     protected $memberfees;
@@ -542,15 +546,7 @@ class Member implements UserInterface, \Serializable
     {
         return $this->membership_end_date;
     }
-    /**
-     * Get memberid
-     *
-     * @return integer 
-     */
-    public function getMemberid()
-    {
-        return $this->member_id;
-    }
+
 
     /**
      * Set selfcare_password
@@ -874,5 +870,38 @@ class Member implements UserInterface, \Serializable
     public function getReminderSentDate()
     {
         return $this->reminder_sent_date;
+    }
+
+    /**
+     * Get member_id
+     *
+     * @return integer 
+     */
+    public function getMemberId()
+    {
+        return $this->member_id;
+    }
+
+    /**
+     * Set next_memberfee_paid
+     *
+     * @param boolean $nextMemberfeePaid
+     * @return Member
+     */
+    public function setNextMemberfeePaid($nextMemberfeePaid)
+    {
+        $this->next_memberfee_paid = $nextMemberfeePaid;
+
+        return $this;
+    }
+
+    /**
+     * Get next_memberfee_paid
+     *
+     * @return boolean 
+     */
+    public function getNextMemberfeePaid()
+    {
+        return $this->next_memberfee_paid;
     }
 }

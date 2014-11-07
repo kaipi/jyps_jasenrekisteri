@@ -163,6 +163,9 @@ class MemberFeeController extends Controller
 			if($member->getNextMemberfeePaid == TRUE) {
 				$memberfee_prepaid = TRUE;
 				$member->setNextMemberfeePaid(FALSE);
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($member);
+				$em->flush($member);
 			}
 			else {
 				$memberfee_prepaid = FALSE;

@@ -126,7 +126,7 @@ class Member implements UserInterface, \Serializable
     */
     private $reminder_sent_date;
     /**
-    * @ORM\Column(type="boolean")
+    * @ORM\Column(type="boolean", nullable=true)
     */   
     private $next_memberfee_paid;
     /**

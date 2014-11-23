@@ -320,7 +320,7 @@ public function sendMagazineLinkAction(Request $request)
  $ok = 0;
  $nok = 0;
  $magazine_url = $request->get('magazine_url');
- print($magazine_url);
+
  $repository = $this->getDoctrine()
    ->getRepository('JYPSRegisterBundle:Member');
 
@@ -337,12 +337,20 @@ public function sendMagazineLinkAction(Request $request)
     $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
     if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
       $ok++;
+      /* check if the fee is paid for current year */
+      if ($member->isMemberFeePaid(date('Y')) == True) {
+        $magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
+      }
+      else {
+        $magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';
+      }
+
       $message = \Swift_Message::newInstance()
         ->setSubject("JYPS Ry Jäsenlehti")
         ->setFrom('pj@jyps.fi')
         ->setTo(array($member->getEmail()))
         ->setBody($this->renderView(
-        'JYPSRegisterBundle:Member:magazine_info.txt.twig',array('magazine_url'=>$magazine_url)));
+        $magazine_template, array('magazine_url'=>$magazine_url)));
       
         $this->get('mailer')->send($message);
     }
@@ -352,7 +360,7 @@ public function sendMagazineLinkAction(Request $request)
   }
   $this->get('session')->getFlashBag()->add(
              'notice',
-             'Sähköpostit lähetetty, ok: '.$ok.'kpl, not ok:'.$nok.'kpl');
+             'Sähköpostit lähetetty, ok: '.$ok.'kpl, virheellisiä: '.$nok.'kpl');
   
   return $this->redirect($this->generateUrl('memberActions'));
 

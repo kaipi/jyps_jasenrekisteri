@@ -904,4 +904,21 @@ class Member implements UserInterface, \Serializable
     {
         return $this->next_memberfee_paid;
     }
+    /**
+    * Check if the memberfee is paid for the current year
+    * @param integer $year
+    * @return boolean
+    */
+    public function isMemberFeePaid($year) 
+    {
+        $all_fees = $this->getMemberfees();
+
+        foreach ($all_fees as $fee) {
+            if($fee->getFeePeriod() == $year && 
+               $fee->getPaid() == True) {
+                return True;
+            }
+        }
+        return false;
+    }
 }

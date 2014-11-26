@@ -84,3 +84,6 @@ html, body {
 	height: auto;
 	padding-bottom: 0px;
 }
+div.table-container {
+        width: 80%;
+    }

@@ -41,6 +41,25 @@ table.gridtable td.a {
 	visited { color: #551a8b; }
 	hover { color: #06e; }​
 }
+
+
+table.gridtable-intrests {
+	font-family: Tahoma;
+	font-size:small;
+	color:#333333;
+	border-width: 0px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table#members {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+
 .content {
 	min-height: 100%;
 	position: relative;
@@ -176,3 +195,7 @@ background: #0357B1;
 border: 0px solid #0357B1;
 padding: 2px 6px
 } 
+div#table-container {
+        width: 50%;
+}
+.dataTables_filter input { width: 200px; padding-right:0px; }

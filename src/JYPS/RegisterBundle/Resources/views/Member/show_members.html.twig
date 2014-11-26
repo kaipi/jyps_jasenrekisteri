@@ -1,6 +1,10 @@
 
 {# src/JYPS/RegisterBundle/Resources/views/Member/show_members.html.twig #}
 
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.js"></script>
+
 
 <head>
 	<title>JYPS Ry jäsenrekisteri</title>
@@ -18,26 +22,54 @@
 <h3>Jäsenet | <a href=member/memberactions> Jäsentoiminnot</a> | <a href=member/add>Lisää jäsen</a> | <a href=member/user>Admin</a> | <a href=member/memberfees>Jäsenmaksut</a> | <a href=member/configuration>Konfiguraatio</a> | <a href=member/reports>Raportit</a> | <a href=member/logout>Logout</a> |Käyttäjä: {{ app.user.username }} [<a href=member/changePassword>vaihda salasana</a>] </h3>
 
 <h3>Kaikki jäsenet</h3>
-<form action="member/search" method="post">
-  <input type="text" name="search_name">
- 
-  <input type="submit" value="Haku">   <a href=member>Näytä kaikki</a>|<a href=member/history>Näytä vanhat</a>
-</form>
-<table border=1 class="gridtable">
+<a href=member>Näytä kaikki</a>|<a href=member/history>Näytä vanhat</a>
+<script type="text/javascript">
+$(document).ready( function() {
+  $('#members').dataTable( {
+    "iDisplayLength": 25,
+    "oLanguage": {
+         "sSearch": "Haku:"
+     },    
+     language: {
+        searchPlaceholder: "Hakusana"
+    }
+  } );
+} )
+
+</script>
+<div id="table-container">
+<table width="100%" id="members" class="display">
+  <thead>
+  <tr>
   <th>Jäsennumero</th>
   <th>Nimi</th>
-  <th>Toiminnot</th>
+  <th>Syntymävuosi</th>
+  <th>Katuosoite</th>
+  <th>Postinumero</th>
+  <th>Postitoimipaikka</th>
+  <th>Liittymisvuosi</th>
+  <th>Memo</th>
   </tr>
+  </thead>
+  <tbody>
   {% for member in members %}
-
+  <tr>
   <td>{{member.getMemberid()}}</td>
   <td><a href=member/show/{{member.getMemberId}}>{{ member.getFullNameSurnameFirst() }}</a>  </td>
-  <td><form action="member/end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
-<input type="submit" value="Poista"></form> </td>
+  <td>{{member.getBirthYear()}}</td>
+  <td>{{member.getStreetAddress()}}</td>
+  <td>{{member.getPostalCode()}}</td>
+  <td>{{member.getCity()}}</td>
+  <td>{{member.getMembershipStartDate()|date('Y')}}</td>
+  <td>{{member.getMemo()}}</td>
+  <!--<td><form action="member/end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
+<input type="submit" value="Poista"></form> </td>-->
 
   </tr>
   {%endfor%}
+</tbody>
 </table>
+</div>
 </br>
 
 </font>

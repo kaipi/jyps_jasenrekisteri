@@ -36,6 +36,7 @@ table.gridtable td {
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
+	word-break: keep-all
 }
 table.gridtable td.a {
 	visited { color: #551a8b; }
@@ -59,7 +60,6 @@ table#members {
 	border-color: #666666;
 	border-collapse: collapse;
 }
-
 .content {
 	min-height: 100%;
 	position: relative;
@@ -196,6 +196,5 @@ border: 0px solid #0357B1;
 padding: 2px 6px
 } 
 div#table-container {
-        width: 50%;
+        width: 70%;
 }
-.dataTables_filter input { width: 200px; padding-right:0px; }

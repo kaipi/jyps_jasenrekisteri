@@ -130,6 +130,10 @@ class Member implements UserInterface, \Serializable
     */   
     private $next_memberfee_paid;
     /**
+    * @ORM\Column(type="date", nullable=true)
+    */
+    private $member_fee_email_sent;
+    /**
      * @ORM\OneToMany(targetEntity="MemberFee", mappedBy="memberfee", cascade={"persist", "remove"})
      */
     protected $memberfees;

@@ -63,6 +63,20 @@ class MemberFee implements UserInterface, \Serializable
      /**
      * @inheritDoc
      */
+    private function referenceNumber($orderid) {
+        $orderid = strval($orderid);
+        $paino = array(7, 3, 1);
+        $summa = 0;
+        for($i=strlen($orderid)-1, $j=0; $i>=0; $i--,$j++){
+            $summa += (int) $orderid[$i] * (int) $paino[$j%3];
+        }
+        $tarkiste = (10-($summa%10))%10;
+        return $orderid.$tarkiste;
+    }
+
+     /**
+     * @inheritDoc
+     */
     public function getUsername()
     {
         return $this->username;
@@ -266,7 +280,7 @@ class MemberFee implements UserInterface, \Serializable
      */
     public function setReferenceNumber($referenceNumber)
     {
-        $this->reference_number = $referenceNumber;
+        $this->reference_number = $this->referenceNumber($referenceNumber);
 
         return $this;
     }
@@ -339,6 +353,15 @@ class MemberFee implements UserInterface, \Serializable
 
         return $this;
     }
-
+     /**
+     * Get virtual barcode
+     *
+     * @return string 
+     */
+     public function getVirtualBarCode() {
+        $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
+                    '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
+        return $virtualbarcode;
+     }
 
 }

@@ -142,7 +142,8 @@ class MemberFeeController extends Controller
 		$total_qty = 0;
 
 		foreach($members as $member) {
-		    
+		    /*from junior to adult member if needed*/
+
 			$memberFeeConfig = $member->getMemberType();
 
 			//Do not create fees for membertypes where it's prevented
@@ -160,7 +161,7 @@ class MemberFeeController extends Controller
 				}
 			}
 			//Fee is prepaid, create fee and mark paid, unmark member prepaid status
-			if($member->getNextMemberfeePaid == TRUE) {
+			if($member->getNextMemberfeePaid() == TRUE) {
 				$memberfee_prepaid = TRUE;
 				$member->setNextMemberfeePaid(FALSE);
 				$em = $this->getDoctrine()->getManager();
@@ -170,6 +171,8 @@ class MemberFeeController extends Controller
 			else {
 				$memberfee_prepaid = FALSE;
 			}
+			/*from junior to adult member if needed*/
+
 			$duedate = new \DateTime('now');
 			$duedate->add(new \DateInterval('P10D'));
 			if ($createfee == TRUE) {

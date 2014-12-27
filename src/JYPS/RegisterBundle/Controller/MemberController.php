@@ -469,9 +469,6 @@ if ($form->isValid()) {
   ->getRepository('JYPSRegisterBundle:SystemParameter')
   ->findOneBy(array('key' => 'BankAccount'));
 
-  $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
-                    '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
-  
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {
@@ -492,7 +489,7 @@ if ($form->isValid()) {
       array('member'=>$member,
             'memberfee'=>$memberfee,
             'bankaccount'=>$bankaccount,
-            'virtualbarcode'=>$virtualbarcode)));
+            'virtualbarcode'=>$memberfee->getVirtualBarCode())));
 
     $this->get('mailer')->send($message);
     }

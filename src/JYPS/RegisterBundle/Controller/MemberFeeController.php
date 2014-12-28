@@ -171,10 +171,9 @@ class MemberFeeController extends Controller
 			else {
 				$memberfee_prepaid = FALSE;
 			}
-			/*from junior to adult member if needed*/
-
-			$duedate = new \DateTime('now');
-			$duedate->add(new \DateInterval('P10D'));
+				
+			$duedate = new \DateTime('31-03-'.date('Y'));
+			
 			if ($createfee == TRUE) {
 				$total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
 				$total_qty    = $total_qty + 1;

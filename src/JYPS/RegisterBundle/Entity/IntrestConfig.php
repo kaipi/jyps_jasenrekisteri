@@ -39,7 +39,7 @@ class IntrestConfig implements UserInterface, \Serializable
     {
         return $this->salt;
     }
- /**
+    /**
      * @inheritDoc
      */
     public function getPassword()

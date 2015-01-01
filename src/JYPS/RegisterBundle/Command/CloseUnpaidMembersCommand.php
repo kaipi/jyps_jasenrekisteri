@@ -13,7 +13,7 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 
 
 
-class TaskProcessorCommand extends ContainerAwareCommand
+class CloseUnpaidMembersCommand extends ContainerAwareCommand
 {
   protected function configure()
     {

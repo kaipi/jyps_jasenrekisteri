@@ -142,10 +142,18 @@ class MemberFeeController extends Controller
 		$total_qty = 0;
 
 		foreach($members as $member) {
-		    /*from junior to adult member if needed*/
-
+		    
 			$memberFeeConfig = $member->getMemberType();
+			/*from junior to adult member if needed*/
+            if($memberFeeConfig->getMembertype() == 2 &&
+               date('Y') - $member->getBirthYear() > 17) {
+			   $member->setMemberType(1);
+			   $em = $this->getDoctrine()->getManager();
+			   $em->persist($member);
+			   $em->flush($member);
+            }
 
+			
 			//Do not create fees for membertypes where it's prevented
 			if( $memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
 				continue;
@@ -194,5 +202,7 @@ class MemberFeeController extends Controller
 		}
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
-
+	public function sendMemberFeeEmails(Request $request) {
+		
+	}
 }

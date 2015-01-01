@@ -929,8 +929,8 @@ class Member implements UserInterface, \Serializable
     }
     
     public function closeMemberWithEmail($email_template, $subject, $from) {
-        $this->sendEmail($email_template,$subject,$from)        
-        $this->setMembershipEndDate(new \DateTime('NOW'));
+        $this->sendEmail($email_template,$subject,$from);        
+        $this->setMembershipEndDate(new \DateTime('now'));
         return true;
     }
 

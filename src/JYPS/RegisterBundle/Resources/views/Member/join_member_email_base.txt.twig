@@ -4,8 +4,8 @@ Tervetuloa JYPS:in jäseneksi! Sinut on lisätty jäsenrekisteriimme.
 Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallentaa matkapuhelimeesi, saat kortilla mm. alennuksia useista eri liikkeistä (katso lisää http://www.jyps.fi/seura/jasenyys-ja-maksut/jasenedut).
 
 Jäsennumerosi on: {{member.getMemberId()}}
-Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}}, viitteellä {{}} eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
-Virtuaaliviivakoodi: {{}}
+Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}} , viitteellä {{memberfee.getReferenceNumber()}} eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
+Virtuaaliviivakoodi: {{virtualbarcode}}
 Kirjoita viestiosaan "Uusi jäsen" ja nimesi millä rekisteröidyit!
 
 Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B9NuDzod6jHac21nZ1RzenlWM0E/edit?usp=sharing

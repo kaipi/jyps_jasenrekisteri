@@ -185,8 +185,9 @@ private function generateMembershipCard(Member $member)
   $join_year = $member->getMembershipStartDate()->format('Y');
   $font = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/fonts/LucidaGrande.ttf');
   
-  imagettftext($base_image, 38, 0, 390, 505, $black, $font, $memberid);
-  imagettftext($base_image, 38, 0, 390, 570, $black, $font, $join_year);
+  imagettftext($base_image, 38, 0, 190, 500, $black, $font, $member->getFullName());
+  imagettftext($base_image, 38, 0, 390, 555, $black, $font, $memberid);
+  imagettftext($base_image, 38, 0, 390, 610, $black, $font, $join_year);
   
   /*qr code to image & serialize json for qr code*/ 
   $member_data = array('member_id'=>$member->getMemberId(),
@@ -465,10 +466,11 @@ if ($form->isValid()) {
   $em->persist($member);
   $em->persist($memberfee);
   $em->flush();
+
   $bankaccount = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:SystemParameter')
   ->findOneBy(array('key' => 'BankAccount'));
-
+  
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {
@@ -486,10 +488,10 @@ if ($form->isValid()) {
     ->attach(\Swift_Attachment::fromPath($membership_card))
     ->setBody($this->renderView(
       'JYPSRegisterBundle:Member:join_member_email_base.txt.twig',
-      array('member'=>$member,
-            'memberfee'=>$memberfee,
-            'bankaccount'=>$bankaccount,
-            'virtualbarcode'=>$memberfee->getVirtualBarCode())));
+       array('member'=>$member,
+              'memberfee'=>$memberfee,
+              'bankaccount'=>$bankaccount,
+              'virtualbarcode'=>$memberfee->getVirtualBarcode($bankaccount))));
 
     $this->get('mailer')->send($message);
     }

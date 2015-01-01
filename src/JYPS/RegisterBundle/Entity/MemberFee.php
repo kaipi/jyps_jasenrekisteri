@@ -358,9 +358,9 @@ class MemberFee implements UserInterface, \Serializable
      *
      * @return string 
      */
-     public function getVirtualBarCode() {
-        $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
-                    '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
+     public function getVirtualBarCode($bankaccount) {
+        $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($this->getFeeAmountWithVat(),strlen($this->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
+                    '00'.'000'.date_format($this->getDueDate(),'ymd');
         return $virtualbarcode;
      }
 

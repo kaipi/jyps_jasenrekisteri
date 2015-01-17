@@ -127,7 +127,13 @@ sendCard:
     path:   /member/send_membership_card
     defaults:  { _controller: JYPSRegisterBundle:Member:sendMembershipCard}
 
+addChildMember:
+    path: /member/addChildMember
+    defaults: {_controller: JYPSRegisterBundle:Member:addChildMember}
 
+removeChildMember:
+    path: /member/removeChildMember
+    defaults: {_controller: JYPSRegisterBundle:Member:removeChildMember }
 acme_blog:
     type: rest
     prefix: /member/api

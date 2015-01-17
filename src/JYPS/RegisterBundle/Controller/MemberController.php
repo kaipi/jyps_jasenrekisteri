@@ -581,14 +581,10 @@ if ($form->isValid()) {
   $em->persist($memberfee);
   
   $em->flush();
-
   $bankaccount = $this->getDoctrine()
   ->getRepository('JYPSRegisterBundle:SystemParameter')
   ->findOneBy(array('key' => 'BankAccount'));
 
-  $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($memberfee->getFeeAmountWithVat(),strlen($memberfee->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
-                    '00'.'000'.date_format($memberfee->getDueDate(),'ymd');
-                    
   //Send mail here, if user exits confirmation page too fast no mail is sent.
   //1) List join
   if($member->getEmail() != "") {
@@ -610,7 +606,7 @@ if ($form->isValid()) {
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
-              'virtualbarcode'=>$virtualbarcode)));
+              'virtualbarcode'=>$memberfee->getVirtualBarcode())));
     } 
     else {            
       $message = \Swift_Message::newInstance()
@@ -623,7 +619,7 @@ if ($form->isValid()) {
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
-              'virtualbarcode'=>$virtualbarcode)));
+              'virtualbarcode'=>$memberfee->getVirtualBarcode())));
     }
     
     $this->get('mailer')->send($message);
@@ -717,4 +713,45 @@ public function restoreMemberAction()
    return $this->redirect($this->generateUrl('showClosed'));
 
 }
+public function addChildMemberAction(Request $request) {
+   $member_id = $this->get('request')->request->get('member_id');
+   $child_member_id = $this->get('request')->request->get('child_member_id');
+
+   $em = $this->getDoctrine()->getManager();
+
+   $member = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:Member')
+      ->findOneBy(array('member_id' => $member_id));
+
+   $childMember = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:Member')
+      ->findOneBy(array('member_id' => $child_member_id));
+
+  $childMember->setParent($member);
+
+  $em->flush($childMember);
+
+  return $this->redirect($this->generateUrl('member',array("memberid"=>$member_id)));
+
+}
+public function removeChildMemberAction(Request $request) {
+   $member_id = $this->get('request')->request->get('member_id');
+   $child_member_id = $this->get('request')->request->get('child_member_id');
+   print $member_id;
+   $em = $this->getDoctrine()->getManager();
+
+   $member = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:Member')
+      ->findOneBy(array('member_id' => $member_id));
+
+   $childMember = $this->getDoctrine()
+      ->getRepository('JYPSRegisterBundle:Member')
+      ->findOneBy(array('member_id' => $child_member_id));
+
+   $childMember->setParent(NULL);
+   $em->flush($childMember);
+   return $this->redirect($this->generateUrl('member',array("memberid"=>$member_id)));
+
+}
+
 }

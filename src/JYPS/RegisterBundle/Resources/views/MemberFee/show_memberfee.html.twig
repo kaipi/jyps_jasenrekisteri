@@ -9,6 +9,7 @@
   $(function() {
     $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
   });
+  var members = "api/v1/members/members.json"
   </script>
 </head>
 <center>
@@ -41,11 +42,22 @@
 </br>
 <fieldset class='memberfee_create'>
 <legend>Jäsenmaksujen luonti</legend>
-Tästä voit luoda jäsenmaksut kuluvalle jäsenkaudelle.
+Tästä voit luoda jäsenmaksut kuluvalle jäsenkaudelle. Muista valita Eräpäivä!
 
 <form name="memberfee_create" method="post" action='../member/memberfees/create'>
 </br>
+<input type="text" id="datepicker" name="due_date"></br>
+</br>
 <button type="submit" id="create_memberfees" name='create_memberfees'>Luo jäsenmaksut</button>
+</form>
+</fieldset>
+
+<fieldset class='memberfee_create'>
+<legend>Jäsenmaksu sähköpostien lähetys</legend>
+Tästä voit lähettää jäsenmaksusähköpostit kuluvalle jäsenkaudelle.
+<form name="memberfee_email" method="post" action='../member/memberfees/sendEmails'>
+</br>
+<button type="submit" id="sendMemberFeeEmail" name='sendMemberFeeEmails'>Lähetä sähköpostit</button>
 </form>
 </fieldset>
 

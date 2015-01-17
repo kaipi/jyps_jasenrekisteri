@@ -133,8 +133,12 @@ class MemberFeeController extends Controller
 
 	    return $member->showAllAction($memberid);
    	}
+
 	public function createMemberFeesAction(Request $request)
 	{
+		$d = $request->request->get('due_date');
+		$duedate = new \DateTime($d);
+
 		$members = $this->getDoctrine()
 		->getRepository('JYPSRegisterBundle:Member')
 		->findAll();
@@ -142,18 +146,20 @@ class MemberFeeController extends Controller
 		$total_qty = 0;
 
 		foreach($members as $member) {
-		    
+		    /*if member is child of familymember -> do not create fee */
+		    if(!empty($member->getParent())) {
+		    	continue;
+		    }
 			$memberFeeConfig = $member->getMemberType();
-			/*from junior to adult member if needed*/
-            if($memberFeeConfig->getMembertype() == 2 &&
+			/*from junior to adult member if needed
+            if($memberFeeConfig->getMembertype() = $juniorfee &&
                date('Y') - $member->getBirthYear() > 17) {
-			   $member->setMemberType(1);
+			   $member->setMemberType($adultfee);
 			   $em = $this->getDoctrine()->getManager();
 			   $em->persist($member);
 			   $em->flush($member);
-            }
+            }*/
 
-			
 			//Do not create fees for membertypes where it's prevented
 			if( $memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
 				continue;
@@ -179,8 +185,6 @@ class MemberFeeController extends Controller
 			else {
 				$memberfee_prepaid = FALSE;
 			}
-				
-			$duedate = new \DateTime('31-03-'.date('Y'));
 			
 			if ($createfee == TRUE) {
 				$total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
@@ -203,6 +207,6 @@ class MemberFeeController extends Controller
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
 	public function sendMemberFeeEmails(Request $request) {
-		
+
 	}
 }

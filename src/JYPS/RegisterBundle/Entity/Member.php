@@ -148,7 +148,15 @@ class Member implements UserInterface, \Serializable
      * '
      */
     protected $member_type;
-    
+    /**
+     * @ORM\OneToMany(targetEntity="Member", mappedBy="parent")
+     **/
+    private $children;
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="children")
+     * @ORM\JoinColumn(name="ParentMemberId", referencedColumnName="id")
+     **/
+    private $parent;
     /**
      * @inheritDoc
      */
@@ -159,7 +167,7 @@ class Member implements UserInterface, \Serializable
         $this->mailing_list_yleinen = false;
         $this->magazine_preference = false;
         $this->invoice_preference = false;
-
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getUsername()
@@ -939,7 +947,6 @@ class Member implements UserInterface, \Serializable
         $errors = "";
         $errors = $this->get('validator')->validateValue($this->getEmail(), $emailConstraint);
         if($errors == "" && !is_null($this->getEmail()) && $this->getEmail() != "")  {
-          $ok++;
           $message = \Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from_address)
@@ -948,5 +955,84 @@ class Member implements UserInterface, \Serializable
           $this->get('mailer')->send($message);
         }
         return true;
+    }
+
+    /**
+     * Set member_fee_email_sent
+     *
+     * @param \DateTime $memberFeeEmailSent
+     * @return Member
+     */
+    public function setMemberFeeEmailSent($memberFeeEmailSent)
+    {
+        $this->member_fee_email_sent = $memberFeeEmailSent;
+
+        return $this;
+    }
+
+    /**
+     * Get member_fee_email_sent
+     *
+     * @return \DateTime 
+     */
+    public function getMemberFeeEmailSent()
+    {
+        return $this->member_fee_email_sent;
+    }
+
+    /**
+     * Add children
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $children
+     * @return Member
+     */
+    public function addChild(\JYPS\RegisterBundle\Entity\Member $children)
+    {
+        $this->children[] = $children;
+
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $children
+     */
+    public function removeChild(\JYPS\RegisterBundle\Entity\Member $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \JYPS\RegisterBundle\Entity\Member $parent
+     * @return Member
+     */
+    public function setParent(\JYPS\RegisterBundle\Entity\Member $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \JYPS\RegisterBundle\Entity\Member 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

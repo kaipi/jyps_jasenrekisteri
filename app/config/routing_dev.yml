@@ -111,7 +111,6 @@ sendCard:
     path:   /member/send_membership_card
     defaults:  { _controller: JYPSRegisterBundle:Member:sendMembershipCard}
 
-
 index_password:
     path:   /member/changePassword
     defaults:  { _controller: JYPSRegisterBundle:PasswordChange:index}

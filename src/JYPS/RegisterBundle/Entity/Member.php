@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
 
 /**
@@ -151,7 +150,7 @@ class Member implements UserInterface, \Serializable
     /**
      * @ORM\OneToMany(targetEntity="Member", mappedBy="parent")
      **/
-    private $children;
+    protected $children;
     /**
      * @ORM\ManyToOne(targetEntity="Member", inversedBy="children")
      * @ORM\JoinColumn(name="ParentMemberId", referencedColumnName="id")
@@ -934,27 +933,6 @@ class Member implements UserInterface, \Serializable
             }
         }
         return false;
-    }
-    
-    public function closeMemberWithEmail($email_template, $subject, $from) {
-        $this->sendEmail($email_template,$subject,$from);        
-        $this->setMembershipEndDate(new \DateTime('now'));
-        return true;
-    }
-
-    public function sendEmail($template,$subject,$from_address) {
-        $emailConstraint = new EmailConstraint();
-        $errors = "";
-        $errors = $this->get('validator')->validateValue($this->getEmail(), $emailConstraint);
-        if($errors == "" && !is_null($this->getEmail()) && $this->getEmail() != "")  {
-          $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($from_address)
-            ->setTo(array($this->getEmail()))
-            ->setBody($this->renderView($template));
-          $this->get('mailer')->send($message);
-        }
-        return true;
     }
 
     /**

@@ -139,19 +139,24 @@ class MemberFeeController extends Controller
 		$d = $request->request->get('due_date');
 		$duedate = new \DateTime($d);
 
-		$members = $this->getDoctrine()
-		->getRepository('JYPSRegisterBundle:Member')
-		->findAll();
+	  	$repository = $this->getDoctrine()
+   		->getRepository('JYPSRegisterBundle:Member');
+
+  		$query = $repository->createQueryBuilder('m')
+		    ->where('m.membership_end_date >= :current_date')
+		    ->setParameter('current_date', new \DateTime("now") )
+		    ->getQuery();
+		$members = $query->getResult();
 		$total_amount = 0;
 		$total_qty = 0;
 
-		foreach($members as $member) {
+		foreach($members as $member) {<
 		    /*if member is child of familymember -> do not create fee */
 		    if(!empty($member->getParent())) {
 		    	continue;
 		    }
 			$memberFeeConfig = $member->getMemberType();
-			/*from junior to adult member if needed
+			/*from junior to adult member if needed*/
             if($memberFeeConfig->getMembertype() = $juniorfee &&
                date('Y') - $member->getBirthYear() > 17) {
 			   $member->setMemberType($adultfee);
@@ -207,6 +212,6 @@ class MemberFeeController extends Controller
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
 	public function sendMemberFeeEmails(Request $request) {
-
+		
 	}
 }

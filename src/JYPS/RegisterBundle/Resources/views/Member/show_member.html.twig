@@ -91,25 +91,21 @@
 {% endfor %}
 
 </table>
-<h3>Perheenjäsenet</h3>
+<h3>Perhejäsenet</h3>
 <table class="gridtable">
 <th>Nimi</th>
 <th>Jäsennumero</th>
-<th>Poista perheestä</th>
+<th>Poista</th>
 </tr>
-{% for child in member.getChildren()%}
-<td>{{child.getFullname()}}</td>
-<td><a href = "../show/{{child.getMemberId()}}">{{child.getMemberId()}}</a></td>
-<td><form action="../removeChildMember" method="post"> <input name="member_id" type="hidden" value="{{member.getMemberId()}}">
- <input type="hidden" name="child_member_id" value="{{child.getMemberId()}}"><input type="submit" value="Poista"></form></td>
+{% for child in member.getChildren() %}
+  <td>{{child.getFullName()}}</td>
+  <td>{{child.getMemberId()}}</td>
+  <td><input name="removed_childs[]" type="checkbox" value="{{child.getMemberId()}}"></td>
 </tr>
-{% endfor %}
+{%endfor%}
 </table>
 </br>
-<form action="../addChildMember" method="post">
-<input name="child_member_id" type="text">
-<input name="member_id" type="hidden" value={{member.getMemberId()}}>
-<input type="submit" value="Lisää perheenjäsen"></form>
+<input name="new_child">
 </br>
 {{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
 </br>
@@ -119,6 +115,7 @@
 
 <form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
 <input  type="submit" value="Poista jäsen"></form>
-
+</font>
+</center>
 </html>
 

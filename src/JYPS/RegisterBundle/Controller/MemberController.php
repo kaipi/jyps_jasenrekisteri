@@ -88,6 +88,18 @@ public function showAllAction($memberid)
         if ($form->isValid()) {
            $em->flush();
            $fees = $request->get('Fees_to_be_marked');
+
+           $childMember = $request->get('new_child');
+           if ($childMember != NULL) {
+              $this->addChildMember($member->getMemberId(),$childMember);
+           }
+           $removedChilds = $request->get('removed_childs');
+           if($removedChilds != "") {
+              foreach($removedChilds as $removedChild) {
+                $this->removeChildMember($removedChild);
+              }
+           }
+           
            $member_all_fees = $member->getMemberFees();
            if($fees != "") {
              foreach($member_all_fees as $member_fee) {
@@ -708,50 +720,40 @@ public function restoreMemberAction()
   ->findOneBy(array('member_id' => $memberid));
    $enddate = new \DateTime("2038-12-31");
    $member->setMembershipEndDate($enddate);
-   $em->flush();
+   $em->flush($member);
 
    return $this->redirect($this->generateUrl('showClosed'));
 
 }
-public function addChildMemberAction(Request $request) {
-   $member_id = $this->get('request')->request->get('member_id');
-   $child_member_id = $this->get('request')->request->get('child_member_id');
-
+private function addChildMember($memberid, $childMemberId) {
+   
    $em = $this->getDoctrine()->getManager();
 
    $member = $this->getDoctrine()
       ->getRepository('JYPSRegisterBundle:Member')
-      ->findOneBy(array('member_id' => $member_id));
+      ->findOneBy(array('member_id' => $memberid));
 
    $childMember = $this->getDoctrine()
       ->getRepository('JYPSRegisterBundle:Member')
-      ->findOneBy(array('member_id' => $child_member_id));
+      ->findOneBy(array('member_id' => $childMemberId));
+  echo $childMember->getFullname();
 
   $childMember->setParent($member);
 
   $em->flush($childMember);
-
-  return $this->redirect($this->generateUrl('member',array("memberid"=>$member_id)));
-
+  return true;
 }
-public function removeChildMemberAction(Request $request) {
-   $member_id = $this->get('request')->request->get('member_id');
-   $child_member_id = $this->get('request')->request->get('child_member_id');
-   print $member_id;
-   $em = $this->getDoctrine()->getManager();
+private function removeChildMember($childMemberId) {
 
-   $member = $this->getDoctrine()
-      ->getRepository('JYPSRegisterBundle:Member')
-      ->findOneBy(array('member_id' => $member_id));
+   $em = $this->getDoctrine()->getManager();
 
    $childMember = $this->getDoctrine()
       ->getRepository('JYPSRegisterBundle:Member')
-      ->findOneBy(array('member_id' => $child_member_id));
+      ->findOneBy(array('member_id' => $childMemberId));
 
    $childMember->setParent(NULL);
    $em->flush($childMember);
-   return $this->redirect($this->generateUrl('member',array("memberid"=>$member_id)));
-
+   return true;
 }
 
 }

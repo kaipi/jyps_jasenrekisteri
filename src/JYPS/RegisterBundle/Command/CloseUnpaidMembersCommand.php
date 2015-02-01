@@ -34,7 +34,7 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
 		foreach($memberfees as $memberfee) {					
 		  $member = $memberfee->getMemberfee();
 			if ($member->getMembershipEndDate() > new \DateTime("now")) {
-				/*$emailConstraint = new EmailConstraint();
+				$emailConstraint = new EmailConstraint();
 		        $errors = "";
 		        $errors = $this->getContainer()->get('validator')->validateValue($member->getEmail(), $emailConstraint);
 		        if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "")  {
@@ -46,7 +46,7 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
 		          $this->getContainer()->get('mailer')->send($message);
 		        }	
 		        $member->setMembershipEndDate(new \DateTime('now'));
-				$em->flush($member);*/
+				$em->flush($member);
 				$members[] = $member;	
 				$i++;
 			}

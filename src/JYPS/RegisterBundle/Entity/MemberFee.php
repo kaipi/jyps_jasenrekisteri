@@ -47,7 +47,10 @@ class MemberFee implements UserInterface, \Serializable
     * @ORM\Column(type="string", nullable=true)
     */
     private $memo;
- 
+    /**
+    * @ORM\Column(type="boolean", nullable=true)
+    */
+    private $email_sent;
     /**
     * @ORM\ManyToOne(targetEntity="Member", inversedBy="memberfees")
     * @ORM\JoinColumn(name="member_id", referencedColumnName="id")
@@ -359,9 +362,35 @@ class MemberFee implements UserInterface, \Serializable
      * @return string 
      */
      public function getVirtualBarCode($bankaccount) {
-        $virtualbarcode = "4".substr($bankaccount->getStringValue(),6,strlen($bankaccount->getStringValue())).str_pad($this->getFeeAmountWithVat(),strlen($this->getFeeAmountWithVat())-6,'0',STR_PAD_LEFT).
-                    '00'.'000'.date_format($this->getDueDate(),'ymd');
-        return $virtualbarcode;
+        $amount = "";
+        $amount = "0000".$this->getFeeAmountWithVat()."00";
+        $virtualbarcode = "4".substr($bankaccount->getStringValue(),2).$amount.
+                    '00'.'000'."000000000".$this->getReferenceNumber().$this->getDueDate()->format("ymd");
+
+        return $virtualbarcode.($virtualbarcode % 103);
      }
 
+
+    /**
+     * Set email_sent
+     *
+     * @param boolean $emailSent
+     * @return MemberFee
+     */
+    public function setEmailSent($emailSent)
+    {
+        $this->email_sent = $emailSent;
+
+        return $this;
+    }
+
+    /**
+     * Get email_sent
+     *
+     * @return boolean 
+     */
+    public function getEmailSent()
+    {
+        return $this->email_sent;
+    }
 }

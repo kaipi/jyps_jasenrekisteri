@@ -10,6 +10,7 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use JYPS\RegisterBundle\Form\Type\MemberFeeType;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Endroid\QrCode\QrCode;
 
 class MemberFeeController extends Controller
 {	
@@ -139,6 +140,8 @@ class MemberFeeController extends Controller
 		$d = $request->request->get('due_date');
 		$duedate = new \DateTime($d);
 
+  		$em = $this->getDoctrine()->getManager();
+
 	  	$repository = $this->getDoctrine()
    		->getRepository('JYPSRegisterBundle:Member');
 
@@ -150,14 +153,14 @@ class MemberFeeController extends Controller
 		$total_amount = 0;
 		$total_qty = 0;
 
-		foreach($members as $member) {<
+		foreach($members as $member) {
 		    /*if member is child of familymember -> do not create fee */
 		    if(!empty($member->getParent())) {
 		    	continue;
 		    }
 			$memberFeeConfig = $member->getMemberType();
 			/*from junior to adult member if needed*/
-            if($memberFeeConfig->getMembertype() = $juniorfee &&
+            /*if($memberFeeConfig->getMembertype() = $juniorfee &&
                date('Y') - $member->getBirthYear() > 17) {
 			   $member->setMemberType($adultfee);
 			   $em = $this->getDoctrine()->getManager();
@@ -206,12 +209,120 @@ class MemberFeeController extends Controller
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($memberfee);
 				$em->flush($memberfee);
+				
 			}
 
 		}
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount'=>$total_amount, 'total_qty'=>$total_qty));
 	}
-	public function sendMemberFeeEmails(Request $request) {
+public function sendMemberFeeEmailsAction(Request $request) {
+	$errors = 0;
+	$sent = 0;
+	$em = $this->getDoctrine()->getManager();
+	
+	$bankaccount = $this->getDoctrine()
+  		->getRepository('JYPSRegisterBundle:SystemParameter')
+  		->findOneBy(array('key' => 'BankAccount'));
+  
+	$repository = $this->getDoctrine()
+   		->getRepository('JYPSRegisterBundle:Member');
+	$query = $repository->createQueryBuilder('m')
+		    ->where('m.membership_end_date >= :current_date AND m.membership_start_date <= :period_start')
+		    ->setParameter('current_date', new \DateTime("now"))
+		    ->setParameter('period_start', new \DateTime("first day of January ".date('Y')))
+		    ->getQuery();
+	
+	$members = $query->getResult();
+	foreach($members as $member) {
+
+		$memberfee = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('member_id' => $member->getId(),
+							  'fee_period' => date('Y'),
+							  'email_sent' => NULL));
+
+	    if(empty($memberfee)) {
+	    	continue;
+	    }
+		$emailConstraint = new EmailConstraint();
 		
+	    $errors = "";
+		$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+		if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "")  {
+			if(\Swift_Validate::email($member->getEmail())) {
+			$message = \Swift_Message::newInstance()
+				->setSubject("JYPS Ry:n jäsenmaksu vuodelle ". date('Y'))
+			    ->setFrom("pj@jyps.fi")
+			    ->setTo(array($member->getEmail()))
+			    ->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
+			    ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
+        			array('member'=>$member,
+              		'memberfee'=>$memberfee,
+              		'bankaccount'=>$bankaccount,
+              		'virtualbarcode'=>$memberfee->getVirtualBarcode($bankaccount),
+              		'year'=>date("Y"))));
+				
+				$childs = $member->getChildren();
+
+				//attach also all childmembers cards to mail
+			    foreach($childs as $child) {
+			    	$this->generateMembershipCard($child);
+			    	$message->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($child)));
+			    }
+              	//$this->get('mailer')->send($message);
+				
+				$memberfee->setEmailSent(1);
+			    $em->flush($memberfee);			    
+    			
+			    $sent++;
+			}
+	    }
+	    else {
+	    	$errors++;
+	    }
 	}
+	 $this->get('session')->getFlashBag()->add(
+               'notice',
+               'Jäsenmaksut lähetetty, OK:'.$sent. " NOK:".$errors. "");
+	return $this->redirect($this->generateUrl('memberfees'));
+}
+
+//copypasted, move to another class when more time
+
+private function generateMembershipCard($member) 
+{
+ 
+  $base_image_path = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
+  $base_image = imagecreatefrompng($base_image_path);
+  $output_image = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/').'MemberCard_'.$member->getMemberId().'.png';
+  
+  /* member data to image */
+
+  $black = imagecolorallocate($base_image, 0, 0, 0);
+  $memberid = $member->getMemberId();
+  $join_year = $member->getMembershipStartDate()->format('Y');
+  $font = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/fonts/LucidaGrande.ttf');
+  
+  imagettftext($base_image, 38, 0, 190, 500, $black, $font, $member->getFullName());
+  imagettftext($base_image, 38, 0, 390, 555, $black, $font, $memberid);
+  imagettftext($base_image, 38, 0, 390, 610, $black, $font, $join_year);
+  
+  /*qr code to image & serialize json for qr code*/ 
+  $member_data = array('member_id'=>$member->getMemberId(),
+                       'join_year'=>$member->getMembershipStartDate()->format('Y'),
+                       'name'=>$member->getFullName());
+  $member_qr_data = json_encode($member_data);
+
+  $qrCode = new QrCode();
+  $qrCode->setSize(380);
+  $qrCode->setText($member_qr_data);
+  $qrCode = $qrCode->get('png');
+  $qr_image = imagecreatefromstring($qrCode);
+  imagecopy($base_image,$qr_image,550,22,0,0,imagesx($qr_image),imagesy($qr_image));
+  /*write image to disk */
+  imagepng($base_image,$output_image);
+  
+  return $output_image;
+}
+
 }

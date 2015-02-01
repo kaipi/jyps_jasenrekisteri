@@ -25,6 +25,7 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
      protected function execute(InputInterface $input, OutputInterface $output)
     {
     	$i = 0;
+    	$members = [];
 	    $year = $input->getArgument('Year');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $memberfees = $em->getRepository('JYPSRegisterBundle:MemberFee')
@@ -33,7 +34,7 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
 		foreach($memberfees as $memberfee) {					
 		  $member = $memberfee->getMemberfee();
 			if ($member->getMembershipEndDate() > new \DateTime("now")) {
-				$emailConstraint = new EmailConstraint();
+				/*$emailConstraint = new EmailConstraint();
 		        $errors = "";
 		        $errors = $this->getContainer()->get('validator')->validateValue($member->getEmail(), $emailConstraint);
 		        if($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "")  {
@@ -45,10 +46,19 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
 		          $this->getContainer()->get('mailer')->send($message);
 		        }	
 		        $member->setMembershipEndDate(new \DateTime('now'));
-				$em->flush($member);
+				$em->flush($member);*/
+				$members[] = $member;	
 				$i++;
 			}
 		}
+		$message = \Swift_Message::newInstance()
+			->setSubject("JYPS Ry jäsentensulkuajo ". date("Y-m-d"))
+		    ->setFrom("rekisteri@jyps.fi")
+		    ->setTo(array("pj@jyps.fi"))
+		    ->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid_infomail.txt.twig",
+		    														    array('members'=>$members)));
+		    $this->getContainer()->get('mailer')->send($message);
+
 		echo "Closed ". $i ." members\n";
     }
 

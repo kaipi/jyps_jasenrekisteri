@@ -1,11 +1,12 @@
 Hei,
 Ohessa JYPS Ry:n jäsenmaksutiedot vuodelle {{year}}.
 
-Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}}, viitteellä {{}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
-Virtuaaliviivakoodi: {{}}
+Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}}, viitteellä {{memberfee.getReferenceNumber()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
+Virtuaaliviivakoodi: {{virtualbarcode}}
 Kirjoita viestiosaan nimesi!
+Jos olet jo maksanut tämän vuoden jäsenmaksusi, tämä viesti on aiheeton.
 
-Liitteenä sähköinen jäsenkorttisi.
+Liitteenä sähköinen jäsenkorttisi, tai jos olet perhejäsen koko perheesi kortit.
 
 terveisin,
 

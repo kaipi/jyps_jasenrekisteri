@@ -9,9 +9,14 @@
   $(function() {
     $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
   });
-  var members = "api/v1/members/members.json"
+
   </script>
 </head>
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div class="flash-notice">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
 <center>
 <h2>JYPS Ry</h2>
 <font face="Lucida Grande" size="1.5">
@@ -55,7 +60,7 @@ Tästä voit luoda jäsenmaksut kuluvalle jäsenkaudelle. Muista valita Eräpäi
 <fieldset class='memberfee_create'>
 <legend>Jäsenmaksu sähköpostien lähetys</legend>
 Tästä voit lähettää jäsenmaksusähköpostit kuluvalle jäsenkaudelle.
-<form name="memberfee_email" method="post" action='../member/memberfees/sendEmails'>
+<form name="memberfee_email" method="post" action='../member/memberfees/sendEmail'>
 </br>
 <button type="submit" id="sendMemberFeeEmail" name='sendMemberFeeEmails'>Lähetä sähköpostit</button>
 </form>

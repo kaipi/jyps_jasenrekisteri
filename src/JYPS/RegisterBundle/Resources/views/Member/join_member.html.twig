@@ -2,6 +2,21 @@
 <head>
 <title>JYPS Ry Liittymislomake</title>
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('bundles/jypsregister/js//jquery-ui.css')}}">
+  <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js')}}"></script>
+  <script src="{{ asset('bundles/jypsregister/js/jquery-ui.js')}}"></script>
+  <script>
+  $('.multi-field-wrapper').each(function() {
+    var $wrapper = $('.multi-fields', this);
+    $(".add-field", $(this)).click(function(e) {
+        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
+    });
+    //$('.multi-field .remove-field', $wrapper).click(function() {
+      //  if ($('.multi-field', $wrapper).length > 1)
+        //    $(this).parent('.multi-field').remove();
+    //});
+});
+  </script>
 </head>
 <center>
 {{ form_start(form) }}
@@ -33,8 +48,27 @@
 
 </fieldset>
 <br/>
+<!--<fieldset>
+<legend>Perheenjäsenet</legend>
+<div class="multi-fields">
+<div class="multi-field">
+<input id="family_firstname" name="family_firstname[]"type="text"/>
+<input id="family_surname" name="family_surname[]"type="text"/>
+<input id="family_othername" name="family_othername[]"type="text"/>
+<input id="family_email" name="family_email[]" type="text"/>
 
+<select id="family__gender" name="family__gender[]">
+
+	<option value="1">Mies</option><option value="0">Nainen</option></select>
+<input type="checkbox"/>
+</div>
+</div>
+</br>
+  <button type="button" class="add-field">Add field</button>
+</fieldset>
+-->
 <fieldset>
+
 <legend>Kiinnostuksen kohteet:</legend>
 <table class="gridtable-intrests">
 

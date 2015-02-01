@@ -437,17 +437,21 @@ if(isset($temp['intrests'])) {
   $intrests = $temp['intrests'];
 }
 //this is not good, please refactor :)
+
 $repository = $this->getDoctrine()
-->getRepository('JYPSRegisterBundle:Member');
+  ->getRepository('JYPSRegisterBundle:Member');
 $query = $repository->createQueryBuilder('m')
-->select('MAX(m.member_id) AS max_memberid');
+  ->select('MAX(m.member_id) AS max_memberid')
+  ->setMaxResults(1);
 $maxmemberid = $query->getQuery()->getResult();
 $temparr =  $maxmemberid[0];
-$maxmemberid = $temparr['max_memberid'];
-$maxmemberid++;
+$maxmemberid_real = $temparr['max_memberid'];
+
+
+$maxmemberid_real++;
 
  //extra params for member
-$member->setMemberid($maxmemberid);  
+$member->setMemberid($maxmemberid_real);  
 
 $member->setMembershipEndDate(new \DateTime("2038-12-31"));
 
@@ -618,7 +622,7 @@ if ($form->isValid()) {
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
-              'virtualbarcode'=>$memberfee->getVirtualBarcode())));
+              'virtualbarcode'=>$memberfee->getVirtualBarcode($bankaccount))));
     } 
     else {            
       $message = \Swift_Message::newInstance()
@@ -631,7 +635,7 @@ if ($form->isValid()) {
         array('member'=>$member,
               'memberfee'=>$memberfee,
               'bankaccount'=>$bankaccount,
-              'virtualbarcode'=>$memberfee->getVirtualBarcode())));
+              'virtualbarcode'=>$memberfee->getVirtualBarcode($bankaccount))));
     }
     
     $this->get('mailer')->send($message);

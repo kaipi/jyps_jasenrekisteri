@@ -7,7 +7,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-
+use Endroid\QrCode\QrCode;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * User
@@ -17,7 +18,7 @@ use JMS\Serializer\Annotation\Expose;
  *
  * @ExclusionPolicy("all")
  */
-class Member implements UserInterface, \Serializable
+class Member extends ContainerAwareCommand implements UserInterface, \Serializable 
 {
     /**
      * @ORM\Column(type="integer")
@@ -130,10 +131,6 @@ class Member implements UserInterface, \Serializable
     * @ORM\Column(type="boolean", nullable=true)
     */   
     private $next_memberfee_paid;
-    /**
-    * @ORM\Column(type="date", nullable=true)
-    */
-    private $member_fee_email_sent;
     /**
      * @ORM\OneToMany(targetEntity="MemberFee", mappedBy="memberfee", cascade={"persist", "remove"})
      */
@@ -757,8 +754,17 @@ class Member implements UserInterface, \Serializable
     {
         return $this->memberfees;
     }
+   /**
+     * Get one memberfee for specific year
+     *
+     * @return \JYPS\RegisterBundle\Entity\MemberFee $memberfee
+     */
+    public function getMemberFee($period) {
+        $all_fees = $this->getMemberFees();
 
+        echo $all_fees;
 
+    }
     /**
      * Add intrests
      *
@@ -1013,4 +1019,5 @@ class Member implements UserInterface, \Serializable
     {
         return $this->parent;
     }
+
 }

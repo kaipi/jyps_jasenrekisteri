@@ -37,10 +37,12 @@ searchOld:
 join_member:
     path: /join
     defaults:  { _controller: JYPSRegisterBundle:Member:joinMember}
+    methods:  [GET]
 
 join_save:
     path: /join/joinSave
     defaults:  { _controller: JYPSRegisterBundle:Member:joinSave}
+    methods:  [POST]
 
 join_internal_save:
     path: /member/joinSave
@@ -134,6 +136,11 @@ addChildMember:
 removeChildMember:
     path: /member/removeChildMember
     defaults: {_controller: JYPSRegisterBundle:Member:removeChildMember }
+
+sendMemberFeeEmail:
+    path: /member/memberfees/sendEmail
+    defaults: {_controller: JYPSRegisterBundle:MemberFee:sendMemberFeeEmails }
+
 acme_blog:
     type: rest
     prefix: /member/api

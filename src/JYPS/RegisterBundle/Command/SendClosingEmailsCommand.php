@@ -9,11 +9,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 
-class CloseUnpaidMembersCommand extends ContainerAwareCommand {
+class SendClosingEmailsCommand extends ContainerAwareCommand {
 	protected function configure() {
 		$this
-			->setName('close_unpaid_members:year')
-			->setDescription('Close all members to TODAY which have open memberfee on specified year / or ALL')
+			->setName('send_closing_emails:year')
+			->setDescription('Hack to run mails again IF error happened, for TODAY ONLY!!!')
 			->addArgument('Year', InputArgument::OPTIONAL, 'Year of unpaid fee');
 	}
 	protected function execute(InputInterface $input, OutputInterface $output) {
@@ -25,7 +25,9 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand {
 
 		foreach ($memberfees as $memberfee) {
 			$member = $memberfee->getMemberfee();
-			if ($member->getMembershipEndDate() > new \DateTime("now")) {
+			$memberenddate = $member->getMembershipEndDate();
+			if ($memberenddate->format("Y-m-d") == date("Y-m-d")) {
+
 				$emailConstraint = new EmailConstraint();
 				$errors = "";
 				$errors = $this->getContainer()->get('validator')->validateValue($member->getEmail(), $emailConstraint);
@@ -35,24 +37,13 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand {
 						->setFrom("pj@jyps.fi")
 						->setTo(array($member->getEmail()))
 						->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid.txt.twig"));
-					//$this->getContainer()->get('mailer')->send($message);
+					$this->getContainer()->get('mailer')->send($message);
 				}
 
-				$member->setMembershipEndDate(new \DateTime('now'));
-				$em->flush($member);
-				$members[] = $member;
 				$i++;
 			}
 		}
-		$message = \Swift_Message::newInstance()
-			->setSubject("JYPS Ry jäsentensulkuajo " . date("Y-m-d"))
-			->setFrom("rekisteri@jyps.fi")
-			->setTo(array("pj@jyps.fi"))
-			->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid_infomail.txt.twig",
-				array('members' => $members)));
-		//$this->getContainer()->get('mailer')->send($message);
-
-		echo "Closed " . $i . " members\n";
+		echo "Sent emails to " . $i . " members\n";
 	}
 
 }

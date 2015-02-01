@@ -143,9 +143,9 @@ class MemberFeeController extends Controller {
 
 		foreach ($members as $member) {
 			/*if member is child of familymember -> do not create fee */
-			if (!empty($member->getParent())) {
-				continue;
-			}
+			//if (!empty($member->getParent())) {
+			//	continue;
+			//}
 			$memberFeeConfig = $member->getMemberType();
 			/*from junior to adult member if needed*/
 			/*if($memberFeeConfig->getMembertype() = $juniorfee &&

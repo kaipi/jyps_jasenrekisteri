@@ -37,8 +37,9 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand {
 						->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid.txt.twig"));
 					$this->getContainer()->get('mailer')->send($message);
 				}
-				// $member->setMembershipEndDate(new \DateTime('now'));
-				//$em->flush($member);
+
+				$member->setMembershipEndDate(new \DateTime('now'));
+				$em->flush($member);
 				$members[] = $member;
 				$i++;
 			}

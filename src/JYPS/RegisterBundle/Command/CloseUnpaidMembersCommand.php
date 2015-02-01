@@ -25,7 +25,7 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand
      protected function execute(InputInterface $input, OutputInterface $output)
     {
     	$i = 0;
-    	$members = [];
+    	
 	    $year = $input->getArgument('Year');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $memberfees = $em->getRepository('JYPSRegisterBundle:MemberFee')

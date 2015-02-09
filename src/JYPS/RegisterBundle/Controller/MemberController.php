@@ -411,21 +411,9 @@ class MemberController extends Controller {
 		if (isset($temp['intrests'])) {
 			$intrests = $temp['intrests'];
 		}
-//this is not good, please refactor :)
-
-		$repository = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:Member');
-		$query = $repository->createQueryBuilder('m')
-		                    ->select('MAX(m.member_id) AS max_memberid')
-		                    ->setMaxResults(1);
-		$maxmemberid = $query->getQuery()->getResult();
-		$temparr = $maxmemberid[0];
-		$maxmemberid_real = $temparr['max_memberid'];
-
-		$maxmemberid_real++;
 
 		//extra params for member
-		$member->setMemberid($maxmemberid_real);
+		$member->setMemberid($this->getNextMemberId());
 
 		$member->setMembershipEndDate(new \DateTime("2038-12-31"));
 
@@ -456,6 +444,8 @@ class MemberController extends Controller {
 			$em->persist($member);
 			$em->persist($memberfee);
 			$em->flush();
+
+			$this->createChildMembers($member);
 
 			$bankaccount = $this->getDoctrine()
 			                    ->getRepository('JYPSRegisterBundle:SystemParameter')
@@ -511,18 +501,8 @@ class MemberController extends Controller {
 			if (isset($temp['intrests'])) {
 				$intrests = $temp['intrests'];
 			}
-			//this is not good, please refactor :)
-			$repository = $this->getDoctrine()
-			                   ->getRepository('JYPSRegisterBundle:Member');
-			$query = $repository->createQueryBuilder('m')
-			                    ->select('MAX(m.member_id) AS max_memberid');
-			$maxmemberid = $query->getQuery()->getResult();
-			$temparr = $maxmemberid[0];
-			$maxmemberid = $temparr['max_memberid'];
-			$maxmemberid++;
-
 			//extra params for member
-			$member->setMemberid($maxmemberid);
+			$member->setMemberid($this->getNextMemberId());
 
 			$member->setMembershipEndDate(new \DateTime("2038-12-31"));
 
@@ -737,5 +717,22 @@ class MemberController extends Controller {
 		$em->flush($childMember);
 		return true;
 	}
+	private function getNextMemberId() {
 
+		$repository = $this->getDoctrine()
+		                   ->getRepository('JYPSRegisterBundle:Member');
+		$query = $repository->createQueryBuilder('m')
+		                    ->select('MAX(m.member_id) AS max_memberid')
+		                    ->setMaxResults(1);
+		$maxmemberid = $query->getQuery()->getResult();
+		$temparr = $maxmemberid[0];
+		$maxmemberid_real = $temparr['max_memberid'];
+
+		$maxmemberid_real++;
+		return $maxmemberid_real;
+	}
+
+	private function createChildMembers(Member $member) {
+
+	}
 }

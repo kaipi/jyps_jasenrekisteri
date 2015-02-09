@@ -5,18 +5,36 @@
 <link rel="stylesheet" href="{{ asset('bundles/jypsregister/js//jquery-ui.css')}}">
   <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js')}}"></script>
   <script src="{{ asset('bundles/jypsregister/js/jquery-ui.js')}}"></script>
-  <script>
-  $('.multi-field-wrapper').each(function() {
-    var $wrapper = $('.multi-fields', this);
-    $(".add-field", $(this)).click(function(e) {
-        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
+  <script type="text/javascript">
+ $(document).ready(function() {
+    var max_fields      = 10; //maximum input boxes allowed
+    var wrapper         = $(".familymember_wrap"); //Fields wrapper
+    var add_button      = $(".new_family_member"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            $(wrapper).append('<div><input type="text" name="familymember_firstname[]"><input type="text" name="familymember_second_names[]"><input type="text" name="familymember_surname[]"><input type="text" name="familymember_birthyear[]"><input type="text" name="familymember_email[]"><select id="family__gender" name="family__gender[]"><option value="1">Mies</option><option value="0">Nainen</option></select><input type="checkbox" name="familymember_maillist[]"><a href="#" class="remove_field">Poista</a></div>'); //add input box
+        }
     });
-    //$('.multi-field .remove-field', $wrapper).click(function() {
-      //  if ($('.multi-field', $wrapper).length > 1)
-        //    $(this).parent('.multi-field').remove();
-    //});
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
 });
-  </script>
+$(function() {
+  $("#family_members").hide();
+  $('#memberid_membertype').change(function(){
+    if ($(this).val() == "10") {
+        $("#family_members").show();
+    } else {
+        $("#family_members").hide();
+    }
+  });
+});
+</script>
 </head>
 <center>
 {{ form_start(form) }}
@@ -48,25 +66,28 @@
 
 </fieldset>
 <br/>
-<!--<fieldset>
+<fieldset id="family_members">
 <legend>Perheenjäsenet</legend>
-<div class="multi-fields">
-<div class="multi-field">
-<input id="family_firstname" name="family_firstname[]"type="text"/>
-<input id="family_surname" name="family_surname[]"type="text"/>
-<input id="family_othername" name="family_othername[]"type="text"/>
-<input id="family_email" name="family_email[]" type="text"/>
-
-<select id="family__gender" name="family__gender[]">
-
-	<option value="1">Mies</option><option value="0">Nainen</option></select>
-<input type="checkbox"/>
+<div class="familymember_wrap" >
+    <div>
+      <input type="text" name="familymember_firstname[]">
+      <input type="text" name="familymember_second_names[]">
+      <input type="text" name="familymember_surname[]">
+      <input type="text" name="familymember_birthyear[]">
+      <input type="text" name="familymember_email[]">
+      <select id="family__gender" name="family__gender[]">
+        <option value="1">Mies</option>
+        <option value="0">Nainen</option>
+      </select>
+      <input type="checkbox" name="familymember_maillist[]">
+    </div>
 </div>
-</div>
+
 </br>
-  <button type="button" class="add-field">Add field</button>
+    <button class="new_family_member">Uusi perheenjäsen...</button>
+
 </fieldset>
--->
+</br>
 <fieldset>
 
 <legend>Kiinnostuksen kohteet:</legend>
@@ -98,8 +119,9 @@
 <fieldset >
 Liittymisen jälkeen saat jäsenmaksutiedot välittömästi antaamaasi sähköpostiosoitteeseen. Jos tietoja ei kuulu, ota yhteyttä jäsensihteeriin (henna piste breilin (ät) toivakka.fi) tai www-vastaavaan (timo.kaipiainen (ät) gmail.com). Olethan huolellinen täyttäessäsi tiedot!
 </fieldset>
+</br>
  {{ form_widget(form.save, { 'label': 'Lähetä lomake' }) }}
 {{ form_end(form) }}
-
+</center>
 </head>
 </html>

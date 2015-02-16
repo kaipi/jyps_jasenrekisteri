@@ -143,18 +143,10 @@ class MemberFeeController extends Controller {
 
 		foreach ($members as $member) {
 			/*if member is child of familymember -> do not create fee */
-			//if (!empty($member->getParent())) {
-			//	continue;
-			//}
+			if (!empty($member->getParent())) {
+				continue;
+			}
 			$memberFeeConfig = $member->getMemberType();
-			/*from junior to adult member if needed*/
-			/*if($memberFeeConfig->getMembertype() = $juniorfee &&
-			date('Y') - $member->getBirthYear() > 17) {
-			$member->setMemberType($adultfee);
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($member);
-			$em->flush($member);
-			}*/
 
 			//Do not create fees for membertypes where it's prevented
 			if ($memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
@@ -256,7 +248,7 @@ class MemberFeeController extends Controller {
 						$this->generateMembershipCard($child);
 						$message->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($child)));
 					}
-					//$this->get('mailer')->send($message);
+					$this->get('mailer')->send($message);
 
 					$memberfee->setEmailSent(1);
 					$em->flush($memberfee);

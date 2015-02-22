@@ -141,6 +141,10 @@ sendMemberFeeEmail:
     path: /member/memberfees/sendEmail
     defaults: {_controller: JYPSRegisterBundle:MemberFee:sendMemberFeeEmails }
 
+sendSingleMemberFeeEmail:
+    path: /member/memberfees/sendSingleEmail
+    defaults: {_controller: JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail }
+
 acme_blog:
     type: rest
     prefix: /member/api

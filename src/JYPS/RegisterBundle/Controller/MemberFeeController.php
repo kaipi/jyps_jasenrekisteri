@@ -195,6 +195,48 @@ class MemberFeeController extends Controller {
 		}
 		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount' => $total_amount, 'total_qty' => $total_qty));
 	}
+	public function sendOneMemberFeeEmailAction(Request $request) {
+
+		$member_id = $request->request->get('fee_member_id');
+		$fee_period = $request->request->get('fee_period');
+
+		$em = $this->getDoctrine()->getManager();
+
+		$bankaccount = $this->getDoctrine()
+		                    ->getRepository('JYPSRegisterBundle:SystemParameter')
+		                    ->findOneBy(array('key' => 'BankAccount'));
+
+		$member = $this->getDoctrine()
+		               ->getRepository('JYPSRegisterBundle:Member')
+		               ->findOneBy(array('member_id' => $member_id));
+
+		$memberfee = $this->getDoctrine()
+		                  ->getRepository('JYPSRegisterBundle:MemberFee')
+		                  ->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period));
+
+		$emailConstraint = new EmailConstraint();
+
+		$errors = "";
+		$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+		if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
+			if (\Swift_Validate::email($member->getEmail())) {
+				$message = \Swift_Message::newInstance()
+					->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
+					->setFrom("pj@jyps.fi")
+					->setTo(array($member->getEmail()))
+					->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
+					->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
+						array('member' => $member,
+							'memberfee' => $memberfee,
+							'bankaccount' => $bankaccount,
+							'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+							'year' => date("Y"))));
+				$this->get('mailer')->send($message);
+			}
+		}
+		return $this->redirect($this->generateUrl('member', array("memberid" => $member_id)));
+
+	}
 	public function sendMemberFeeEmailsAction(Request $request) {
 		$errors = 0;
 		$sent = 0;
@@ -266,7 +308,7 @@ class MemberFeeController extends Controller {
 		return $this->redirect($this->generateUrl('memberfees'));
 	}
 
-//copypasted, move to another class when more time
+	//copypasted, move to another class when more time
 
 	private function generateMembershipCard($member) {
 

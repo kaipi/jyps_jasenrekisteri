@@ -76,6 +76,7 @@
 <th>Summa</th>
 <th>Memo</th>
 <th>Maksun tila</th>
+<th>Sähköposti</th>
 </tr>
 {% for memberfee in memberfees %}
 <td>{{ memberfee.getFeePeriod() }}</td>
@@ -89,7 +90,9 @@
 {% if (memberfee.getPaid() == 1) %}
 <td><input name="Fees_to_be_marked[]" type="checkbox" value="{{memberfee.getId()}}" checked></td>
 {% endif %}
+<td><form action="../memberfees/sendSingleEmail" method="post"><input  type="submit" value="Lähetä"><input type="hidden" name="fee_member_id" value={{member.getMemberId()}}><input type="hidden" name="fee_period" value={{memberfee.getFeePeriod()}}></form></td>
 </tr>
+
 {% endfor %}
 
 </table>

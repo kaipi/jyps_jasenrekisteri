@@ -34,7 +34,7 @@ class SendClosingEmailsCommand extends ContainerAwareCommand {
 				if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
 					$message = \Swift_Message::newInstance()
 						->setSubject("Jäsenyytesi JYPS Ry:ssä on lopetettu maksamattomien jäsenmaksujen takia")
-						->setFrom("pj@jyps.fi")
+						->setFrom("jasenrekisteri@jyps.fi")
 						->setTo(array($member->getEmail()))
 						->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid.txt.twig"));
 					$this->getContainer()->get('mailer')->send($message);

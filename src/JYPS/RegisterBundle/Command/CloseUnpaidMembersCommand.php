@@ -32,10 +32,10 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand {
 				if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
 					$message = \Swift_Message::newInstance()
 						->setSubject("Jäsenyytesi JYPS Ry:ssä on lopetettu maksamattomien jäsenmaksujen takia")
-						->setFrom("pj@jyps.fi")
+						->setFrom("jasenrekisteri@jyps.fi")
 						->setTo(array($member->getEmail()))
 						->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid.txt.twig"));
-					//$this->getContainer()->get('mailer')->send($message);
+					$this->getContainer()->get('mailer')->send($message);
 				}
 
 				$member->setMembershipEndDate(new \DateTime('now'));
@@ -45,12 +45,12 @@ class CloseUnpaidMembersCommand extends ContainerAwareCommand {
 			}
 		}
 		$message = \Swift_Message::newInstance()
-			->setSubject("JYPS Ry jäsentensulkuajo " . date("Y-m-d"))
-			->setFrom("rekisteri@jyps.fi")
-			->setTo(array("pj@jyps.fi"))
+			->setSubject("JYPS Ry jäsentensulkuajo " . date("D-M-Y"))
+			->setFrom("jasenrekisteri@jyps.fi")
+			->setTo(array("jasenrekisteri@jyps.fi"))
 			->setBody($this->getContainer()->get('templating')->render("JYPSRegisterBundle:MemberFee:closed_member_unpaid_infomail.txt.twig",
 				array('members' => $members)));
-		//$this->getContainer()->get('mailer')->send($message);
+		$this->getContainer()->get('mailer')->send($message);
 
 		echo "Closed " . $i . " members\n";
 	}

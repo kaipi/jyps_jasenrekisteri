@@ -16,7 +16,7 @@
         e.preventDefault();
         if(x < max_fields){ //max input box allowed
             x++; //text box increment
-            $(wrapper).append('<div><input type="text" name="familymember_firstname[]"><input type="text" name="familymember_second_names[]"><input type="text" name="familymember_surname[]"><input type="text" name="familymember_birthyear[]"><input type="text" name="familymember_email[]"><select id="family__gender" name="family__gender[]"><option value="1">Mies</option><option value="0">Nainen</option></select><input type="checkbox" name="familymember_maillist[]"><a href="#" class="remove_field">Poista</a></div>'); //add input box
+            $(wrapper).append('<div><label for="familymember_firstnames[]">Etunimi</label><p><input type="text" name="familymember_firstnames[]"></p><label for="familymember_second_names[]">Muut nimet</label><p><input type="text" name="familymember_second_names[]"></p><label for="familymember_surnames[]">Sukunimi</label><p><input type="text" name="familymember_surnames[]"></p><label for="familymember_birthyears[]">Syntymävuosi</label><p><input type="text" name="familymember_birthyears[]"></p><label for="familymember_emails[]">Sähköposti</label><p><input type="text" name="familymember_emails[]"></p><label for="familymember_genders[]">Sukupuoli</label><p><select id="family__gender" name="family__genders[]"><option value="1">Mies</option><option value="0">Nainen</option></select></p><label for="familymember_mail_list[]">Haluan liittyä yleiselle sähköpostilistalle</label><p><input type="checkbox" name="familymembers_mail_list[]"></p></div>'); //add input box
         }
     });
     
@@ -66,20 +66,27 @@ $(function() {
 
 </fieldset>
 <br/>
-<!--<fieldset id="family_members">
+<fieldset id="family_members">
 <legend>Perheenjäsenet</legend>
 <div class="familymember_wrap" >
     <div>
-      <input type="text" name="familymember_firstname[]">
-      <input type="text" name="familymember_second_names[]">
-      <input type="text" name="familymember_surname[]">
-      <input type="text" name="familymember_birthyear[]">
-      <input type="text" name="familymember_email[]">
-      <select id="family__gender" name="family__gender[]">
+      <label for="familymember_firstnames[]">Etunimi</label>
+      <p><input type="text" name="familymember_firstnames[]"></p>
+      <label for="familymember_second_names[]">Muut nimet</label>
+      <p><input type="text" name="familymember_second_names[]"></p>
+      <label for="familymember_surnames[]">Sukunimi</label>
+      <p><input type="text" name="familymember_surnames[]"></p>
+      <label for="familymember_birthyears[]">Syntymävuosi</label>
+      <p><input type="text" name="familymember_birthyears[]"></p>
+      <label for="familymember_emails[]">Sähköposti</label>
+      <p><input type="text" name="familymember_emails[]"></p>
+      <label for="familymember_genders[]">Sukupuoli</label>
+      <p><select id="family__gender" name="family__genders[]">
         <option value="1">Mies</option>
         <option value="0">Nainen</option>
-      </select>
-      <input type="checkbox" name="familymember_maillist[]">
+      </select></p>
+      <label for="familymember_mail_list[]">Haluan liittyä yleiselle sähköpostilistalle</label>
+      <p><input type="checkbox" name="familymembers_mail_list[]"></p>
     </div>
 </div>
 
@@ -87,7 +94,7 @@ $(function() {
     <button class="new_family_member">Uusi perheenjäsen...</button>
 
 </fieldset>
--->
+
 </br>
 <fieldset>
 

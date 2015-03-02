@@ -74,7 +74,7 @@ class MemberFeeController extends Controller {
 				if ($errors == "") {
 					$message = \Swift_Message::newInstance();
 					$message->setSubject('JYPS ry jäsenmaksumuistutus')
-					        ->setFrom('pj@jyps.fi')
+					        ->setFrom('jasenrekisteri@jyps.fi')
 					        ->setTo($member->getEmail())
 					        ->setBody($this->renderView(
 						       'JYPSRegisterBundle:MemberFee:reminder_letter_last_reminder.txt.twig'));
@@ -197,9 +197,11 @@ class MemberFeeController extends Controller {
 	}
 	public function sendOneMemberFeeEmailAction(Request $request) {
 
-		$member_id = $request->request->get('fee_member_id');
-		$fee_period = $request->request->get('fee_period');
+		$member_id = $request->request->get('member_id');
 
+		$fee_period = date('Y');
+		echo $member_id;
+		echo $fee_period;
 		$em = $this->getDoctrine()->getManager();
 
 		$bankaccount = $this->getDoctrine()
@@ -208,7 +210,7 @@ class MemberFeeController extends Controller {
 
 		$member = $this->getDoctrine()
 		               ->getRepository('JYPSRegisterBundle:Member')
-		               ->findOneBy(array('member_id' => $member_id));
+		               ->findOneBy(array('id' => $member_id));
 
 		$memberfee = $this->getDoctrine()
 		                  ->getRepository('JYPSRegisterBundle:MemberFee')
@@ -222,7 +224,7 @@ class MemberFeeController extends Controller {
 			if (\Swift_Validate::email($member->getEmail())) {
 				$message = \Swift_Message::newInstance()
 					->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
-					->setFrom("pj@jyps.fi")
+					->setFrom("jasenrekisteri@jyps.fi")
 					->setTo(array($member->getEmail()))
 					->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
 					->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
@@ -234,7 +236,10 @@ class MemberFeeController extends Controller {
 				$this->get('mailer')->send($message);
 			}
 		}
-		return $this->redirect($this->generateUrl('member', array("memberid" => $member_id)));
+		$this->get('session')->getFlashBag()->add(
+			'notice',
+			'Sähköposti lähetetty');
+		return $this->redirect($this->generateUrl('member', array("memberid" => $member->getMemberId())));
 
 	}
 	public function sendMemberFeeEmailsAction(Request $request) {
@@ -274,7 +279,7 @@ class MemberFeeController extends Controller {
 				if (\Swift_Validate::email($member->getEmail())) {
 					$message = \Swift_Message::newInstance()
 						->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
-						->setFrom("pj@jyps.fi")
+						->setFrom("jasenrekisteri@jyps.fi")
 						->setTo(array($member->getEmail()))
 						->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
 						->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',

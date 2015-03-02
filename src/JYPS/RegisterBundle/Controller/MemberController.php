@@ -92,6 +92,7 @@ class MemberController extends Controller {
 				}
 
 				$member_all_fees = $member->getMemberFees();
+
 				if ($fees != "") {
 					foreach ($member_all_fees as $member_fee) {
 						if (in_array($member_fee->getId(), $fees)) {
@@ -245,7 +246,7 @@ class MemberController extends Controller {
 		$membership_card = $this->generateMembershipCard($member);
 		$message = \Swift_Message::newInstance()
 			->setSubject('JYPS ry:n jäsenkorttisi')
-			->setFrom('pj@jyps.fi')
+			->setFrom('jasenrekisteri@jyps.fi')
 			->setTo($member->getEmail())
 			->attach(\Swift_Attachment::fromPath($membership_card))
 			->setBody($this->renderView(
@@ -338,7 +339,7 @@ class MemberController extends Controller {
 
 				$message = \Swift_Message::newInstance()
 					->setSubject("JYPS Ry Jäsenlehti")
-					->setFrom('pj@jyps.fi')
+					->setFrom('jasenrekisteri@jyps.fi')
 					->setTo(array($member->getEmail()))
 					->setBody($this->renderView(
 						$magazine_template, array('magazine_url' => $magazine_url)));
@@ -407,6 +408,7 @@ class MemberController extends Controller {
 		$member = new Member();
 
 		$temp = $request->request->get('memberid');
+		$firstnames = $request->get('familymember_firstname');
 
 		if (isset($temp['intrests'])) {
 			$intrests = $temp['intrests'];
@@ -445,7 +447,10 @@ class MemberController extends Controller {
 			$em->persist($memberfee);
 			$em->flush();
 
-			$this->createChildMembers($member);
+			$childMembers = $this->processChildMembers($request);
+			if (!empty($childMembers)) {
+				$this->createChildMembers($member, $childMembers);
+			}
 
 			$bankaccount = $this->getDoctrine()
 			                    ->getRepository('JYPSRegisterBundle:SystemParameter')
@@ -463,7 +468,7 @@ class MemberController extends Controller {
 				//2) information mail
 				$message = \Swift_Message::newInstance()
 					->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-					->setFrom('pj@jyps.fi')
+					->setFrom('jasenrekisteri@jyps.fi')
 					->setTo($member->getEmail())
 					->attach(\Swift_Attachment::fromPath($membership_card))
 					->setBody($this->renderView(
@@ -473,6 +478,13 @@ class MemberController extends Controller {
 							'bankaccount' => $bankaccount,
 							'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount))));
 
+				$childs = $member->getChildren();
+
+				//attach also all childmembers cards to mail
+				foreach ($childs as $child) {
+					$this->generateMembershipCard($child);
+					$message->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($child)));
+				}
 				$this->get('mailer')->send($message);
 			}
 
@@ -580,7 +592,7 @@ class MemberController extends Controller {
 				if ($send_mail_without_payment_info == False) {
 					$message = \Swift_Message::newInstance()
 						->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-						->setFrom('pj@jyps.fi')
+						->setFrom('jasenrekisteri@jyps.fi')
 						->setTo($member->getEmail())
 						->attach(\Swift_Attachment::fromPath($membership_card))
 						->setBody($this->renderView(
@@ -592,7 +604,7 @@ class MemberController extends Controller {
 				} else {
 					$message = \Swift_Message::newInstance()
 						->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
-						->setFrom('pj@jyps.fi')
+						->setFrom('jasenrekisteri@jyps.fi')
 						->setTo($member->getEmail())
 						->attach(\Swift_Attachment::fromPath($membership_card))
 						->setBody($this->renderView(
@@ -731,8 +743,54 @@ class MemberController extends Controller {
 		$maxmemberid_real++;
 		return $maxmemberid_real;
 	}
+	private function processChildMembers(Request $request) {
+		$childMembers = [];
+		$i = 0;
 
-	private function createChildMembers(Member $member) {
+		$firstnames = $request->get('familymember_firstnames');
+		$secondnames = $request->get('familymember_secondnames');
+		$surnames = $request->get('familymember_surnames');
+		$birthyears = $request->get('familymember_birthyears');
+		$genders = $request->get('familymember_genders');
+		$emails = $request->get('familymember_emails');
+		$mail_lists = $request->get('familymember_mail_lists');
 
+		foreach ($firstnames as $firstname) {
+			$child['firstname'] = $firstnames[$i];
+			$child['secondname'] = $secondnames[$i];
+			$child['surname'] = $surnames[$i];
+			$child['birthyear'] = $birthyears[$i];
+			$child['gender'] = $genders[$i];
+			$child['email'] = $emails[$i];
+			$child['mail_list'] = $mail_lists[$i];
+			$i++;
+			$childMembers[] = $child;
+		}
+		return $childMembers;
+	}
+	private function createChildMembers(Member $member, $childrens) {
+		$em = $this->getDoctrine()->getManager();
+
+		foreach ($childrens as $children) {
+			$childMember = clone $member;
+			$childMember->setFirstName($children['firstname']);
+			$childMember->setSecondName($children['secondname']);
+			$childMember->setSurName($children['surname']);
+			$childMember->setBirthYear($children['birthyear']);
+			$childMember->setGender($children['gender']);
+			$childMember->setEmail($children['email']);
+			if ($children['mail_list'] = 'Yes') {
+				$childMember->setMailingListYleinen(1);
+			} else {
+				$childMember->setMailingListYleinen(0);
+			}
+			$childMember->setMemberId($this->getNextMemberId());
+			$childMember->setParent($member);
+			$em->persist($childMember);
+			$em->flush($childMember);
+			//create fee and mark as paid
+
+		}
+		return true;
 	}
 }

@@ -35,7 +35,7 @@ class MemberEditType extends AbstractType {
 				'expanded' => false,
 				'multiple' => false))
 			->add('next_memberfee_paid', 'checkbox', array('required' => false))
-			->add('membership_start_date', 'date', array('required' => false))
+			->add('membership_start_date', 'date', array('required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
 			->add('save', 'submit');
 
 	}

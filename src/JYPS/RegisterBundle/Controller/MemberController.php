@@ -754,6 +754,7 @@ class MemberController extends Controller {
 		$genders = $request->get('familymember_genders');
 		$emails = $request->get('familymember_emails');
 		$mail_lists = $request->get('familymember_mail_lists');
+		$member_types = $request->get('familymember_types');
 
 		foreach ($firstnames as $firstname) {
 			$child['firstname'] = $firstnames[$i];
@@ -763,6 +764,7 @@ class MemberController extends Controller {
 			$child['gender'] = $genders[$i];
 			$child['email'] = $emails[$i];
 			$child['mail_list'] = $mail_lists[$i];
+			$child['type'] = $member_types[$i];
 			$i++;
 			$childMembers[] = $child;
 		}
@@ -786,11 +788,38 @@ class MemberController extends Controller {
 			}
 			$childMember->setMemberId($this->getNextMemberId());
 			$childMember->setParent($member);
+
+			$memberFeeConfig = $this->getDoctrine()
+			                        ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
+			                        ->findOneBy(array('member_type' => $children['type']));
+			$childMember->setMemberType($memberFeeConfig);
 			$em->persist($childMember);
 			$em->flush($childMember);
 			//create fee and mark as paid
-
+			$this->createMemberFee($memberfeeConfig, $childMember, true);
+			//join to yleinen list
+			$this->sendYleinenJoinMail($childMember);
 		}
 		return true;
+	}
+	private function createMemberFee(MemberFeeConfig $memberfeeconfig, Member $member, $markpaid) {
+
+		$memberfee = new MemberFee();
+		$memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
+		$memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
+		$memberfee->setDueDate(new \DateTime("now"));
+		$memberfee->setPaid($markpaid);
+		$memberfee->setMemberFee($member);
+
+	}
+	private function sendYleinenJoinMail(Member $member) {
+		if ($member->getEmail() != "") {
+			if ($member->getMailingListYleinen() == True) {
+				$message = \Swift_Message::newInstance()
+					->setFrom($member->getEmail())
+					->setTo('yleinen-join@jyps.info');
+				$this->get('mailer')->send($message);
+			}
+		}
 	}
 }

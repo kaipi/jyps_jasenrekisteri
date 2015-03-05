@@ -791,18 +791,20 @@ class MemberController extends Controller {
 
 			$memberFeeConfig = $this->getDoctrine()
 			                        ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-			                        ->findOneBy(array('member_type' => $children['type']));
+			                        ->findOneBy(array('id' => $children['type']));
+
 			$childMember->setMemberType($memberFeeConfig);
-			$em->persist($childMember);
-			$em->flush($childMember);
+
 			//create fee and mark as paid
-			$this->createMemberFee($memberfeeConfig, $childMember, true);
+			$this->createMemberFee($childMember, true);
 			//join to yleinen list
 			$this->sendYleinenJoinMail($childMember);
+			$em->persist($childMember);
+			$em->flush($childMember);
 		}
 		return true;
 	}
-	private function createMemberFee(MemberFeeConfig $memberfeeconfig, Member $member, $markpaid) {
+	private function createMemberFee(Member $member, $markpaid) {
 
 		$memberfee = new MemberFee();
 		$memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());

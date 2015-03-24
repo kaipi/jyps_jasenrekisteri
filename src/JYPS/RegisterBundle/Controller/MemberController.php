@@ -363,7 +363,7 @@ class MemberController extends Controller {
 		                   ->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :today_date AND m.magazine_preference = 0')
+		                    ->where('m.membership_end_date >= :today_date AND m.magazine_preference = 0 AND m.parent IS NULL')
 		                    ->setParameter('today_date', new \Datetime("now"))
 		                    ->getQuery();
 		$members = $query->getResult();

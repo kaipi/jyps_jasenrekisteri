@@ -28,7 +28,7 @@
   <th>Katuosoite</th>
   <th>Postinumero</th>
   <th>Kaupunki</th>
-  
+
   </tr>
   <td> {{ form_widget(form.firstname) }}</td>
   <td> {{ form_widget(form.second_name) }}</td>
@@ -41,7 +41,7 @@
   <th>Maa</th>
   <th colspan="2">Sähköposti</th>
   <th>Puhelin</th>
-  <th>Syntymävuosi</th> 
+  <th>Syntymävuosi</th>
   <th>Sukupuoli</th>
   </tr>
    <td> {{ form_widget(form.country) }} </td>
@@ -96,6 +96,7 @@
 {% endfor %}
 
 </table>
+{% if (member.getParent() == "") %}
 <h3>Perhejäsenet</h3>
 <table class="gridtable">
 <th>Nimi</th>
@@ -104,13 +105,18 @@
 </tr>
 {% for child in member.getChildren() %}
   <td>{{child.getFullName()}}</td>
-  <td>{{child.getMemberId()}}</td>
+  <td><a href="../show/{{child.getMemberId()}}">{{child.getMemberId()}}</a></td>
   <td><input name="removed_childs[]" type="checkbox" value="{{child.getMemberId()}}"></td>
 </tr>
 {%endfor%}
 </table>
 </br>
 <input name="new_child">
+{% endif %}
+
+{% if (member.getParent() != "") %}
+  <h3>Tämä jäsen on osa perhettä (isäntäjäsen): <a href="../show/{{member.getParent().getMemberId()}}">{{member.getParent().getMemberId()}}</a></h3>
+{% endif %}
 </br>
 </br>
 {{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}

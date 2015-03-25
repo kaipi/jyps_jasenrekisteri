@@ -60,11 +60,14 @@ Tästä voit lähettää sähköpostia jäsenille, voit valita päivämäärän 
 <br/>
 <fieldset class='magazine'>
 <legend>Sähköinen lehti -ilmoitus</legend>
-Tästä voit lähettää ilmoituksen sähköisen lehden saatavuudesta sen tilanneille jäsenille, muista täyttää lehden URL osoite!
+Tästä voit lähettää ilmoituksen sähköisen lehden saatavuudesta sen tilanneille jäsenille, muista täyttää lehden URL osoite! Muista myös valita lähetetäänkö tämänvuoden avoimille jäsenmaksuille maksumuistutus!
 <form name="magazine" method="post" action='../member/magazineInfo'>
 <br/>
 <label for="magazine_url">Lehden url-osoite:</label>
 <input type="text" size="60" id="magazine_url" name="magazine_url"/>
+<br/>
+<label for="send_payment_info">Lähetä maksumuistutus jos jäsenmaksua ei ole maksettu tältä vuodelta:</label>
+<input type="checkbox" id="send_payment_info" name="send_payment_info"/>
 <br/>
 <br/>
 <button type="submit" id="magazine" name='magazine_info'>Lähetä ilmoitus</button>

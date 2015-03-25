@@ -313,6 +313,7 @@ class MemberController extends Controller {
 		$ok = 0;
 		$nok = 0;
 		$magazine_url = $request->get('magazine_url');
+		$send_payment_info = $request->get('send_payment_info');
 
 		$repository = $this->getDoctrine()
 		                   ->getRepository('JYPSRegisterBundle:Member');
@@ -331,9 +332,9 @@ class MemberController extends Controller {
 			if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
 				$ok++;
 				/* check if the fee is paid for current year */
-				if ($member->isMemberFeePaid(date('Y')) == True) {
+				if ($member->isMemberFeePaid(date('Y')) == True || $send_payment_info == '') {
 					$magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
-				} else {
+				} else if ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) == False) {
 					$magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';
 				}
 

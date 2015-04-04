@@ -6,12 +6,9 @@ Tämän projektin tarkoituksena on luoda kevyt jäsenrekisteri Jyväskylän pyö
 
 Alusta
 =======
-Symphony 2.4 PHP-Framework + Mysql tietokanta
+Symphony 2.x PHP-Framework + tietokanta
 
 Asennus
 =======
-kohta :)
+Composer
 
-Avoimet issuet
-===============
-https://sourceforge.net/p/teamkeeper/tickets/

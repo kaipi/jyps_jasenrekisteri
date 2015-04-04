@@ -2,7 +2,7 @@
 
 JYPS Jäsenrekisteri
 ===================
-Tämän projektin tarkoituksena on luoda kevyt jäsenrekisteri Jyväskylän pyöräilyseuran käyttöön.
+Kevyt ja jatkuvasti kasvava jäsenrekisteri Jyväskylän pyöräilyseuran tarpeisiin.
 
 Alusta
 =======

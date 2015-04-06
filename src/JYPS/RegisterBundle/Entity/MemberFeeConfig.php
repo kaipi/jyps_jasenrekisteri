@@ -56,6 +56,10 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	 */
 	private $real_membertype;
 	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $show_amount;
+	/**
 	 * @ORM\OneToMany(targetEntity="Member", mappedBy="member_type")
 	 * @ORM\JoinColumn(referencedColumnName="id")
 	 */
@@ -114,7 +118,7 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 			$this->id,
 			$this->username,
 			$this->salt,
-			$this->password,
+			$this->password
 		) = unserialize($serialized);
 	}
 
@@ -254,7 +258,12 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	}
 
 	public function getNameWithFeeAmount() {
-		return $this->memberfee_name . " (" . $this->memberfee_amount . "eur)";
+		if ($this->getShowAmount() == false) {
+			return $this->memberfee_name;
+		} else {
+			return $this->memberfee_name . " (" . $this->memberfee_amount . "eur)";
+		}
+
 	}
 
 	/**
@@ -378,5 +387,26 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	 */
 	public function getMembertypes() {
 		return $this->membertype;
+	}
+
+	/**
+	 * Set show_amount
+	 *
+	 * @param boolean $showAmount
+	 * @return MemberFeeConfig
+	 */
+	public function setShowAmount($showAmount) {
+		$this->show_amount = $showAmount;
+
+		return $this;
+	}
+
+	/**
+	 * Get show_amount
+	 *
+	 * @return boolean
+	 */
+	public function getShowAmount() {
+		return $this->show_amount;
 	}
 }

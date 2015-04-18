@@ -483,7 +483,6 @@ class MemberController extends Controller {
 
 				//attach also all childmembers cards to mail
 				foreach ($childs as $child) {
-					$this->generateMembershipCard($child);
 					$message->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($child)));
 				}
 				$this->get('mailer')->send($message);
@@ -524,7 +523,7 @@ class MemberController extends Controller {
 					$new_intrest = new Intrest();
 					$new_intrest->setIntrestId($intrest);
 					$new_intrest->setIntrest($member);
-					$member->setIntrest($new_intrest);
+					$member->addIntrest($new_intrest);
 				}
 			}
 
@@ -758,6 +757,10 @@ class MemberController extends Controller {
 		$member_types = $request->get('familymember_types');
 
 		foreach ($firstnames as $firstname) {
+			//stupid hack
+			//if (!array_key_exists($i, $genders)) {
+			//	continue;
+			//}
 			$child['firstname'] = $firstnames[$i];
 			$child['secondname'] = $secondnames[$i];
 			$child['surname'] = $surnames[$i];
@@ -775,6 +778,9 @@ class MemberController extends Controller {
 		$em = $this->getDoctrine()->getManager();
 
 		foreach ($childrens as $children) {
+			//if ($children['firstname'] == "" || $children['secondname'] == "") {
+			//	continue;
+			//}
 			$childMember = clone $member;
 			$childMember->setFirstName($children['firstname']);
 			$childMember->setSecondName($children['secondname']);

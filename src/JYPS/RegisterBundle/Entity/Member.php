@@ -230,7 +230,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
 			$this->id,
 			$this->username,
 			$this->salt,
-			$this->password,
+			$this->password
 		) = unserialize($serialized);
 	}
 

@@ -258,7 +258,7 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	}
 
 	public function getNameWithFeeAmount() {
-		if ($this->getShowAmount() == false) {
+		if ($this->getShowAmount() === false) {
 			return $this->memberfee_name;
 		} else {
 			return $this->memberfee_name . " (" . $this->memberfee_amount . "eur)";

@@ -39,7 +39,7 @@ class CheckMemberTypesCommand extends ContainerAwareCommand {
 				$feeperiod = $memberfee->getFeePeriod();
 				if ($feeperiod == date('Y') && $membertype->getMemberfeeAmount() != $memberfee->getFeeAmountWithVat()) {
 					echo $member->getMemberId() . " " . $feeperiod . " " . $member->getFullName() . " " . $memberfee->getFeeAmountWithVat() . " -> " . $membertype->getMemberFeeAmount() . " (" . $membertype->getMemberFeeName() . ")\n";
-					if ($dryrun != true) {
+					if ($dryrun !== true) {
 						$memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
 						$em->flush($memberfee);
 					}

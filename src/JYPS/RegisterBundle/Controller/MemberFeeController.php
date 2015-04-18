@@ -193,7 +193,10 @@ class MemberFeeController extends Controller {
 			}
 
 		}
-		return $this->render('JYPSRegisterBundle:MemberFee:memberfee_creation_finished.html.twig', array('total_amount' => $total_amount, 'total_qty' => $total_qty));
+		$this->get('session')->getFlashBag()->add(
+			'notice',
+			'Jäsenmaksut luotu, Kokonaissumma: ' . $total_amount . " Määrä(kpl): " . $total_qty . "");
+		return $this->redirect($this->generateUrl('memberfees'));
 	}
 	public function sendOneMemberFeeEmailAction(Request $request) {
 

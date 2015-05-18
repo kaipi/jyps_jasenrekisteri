@@ -96,6 +96,8 @@
 {% endfor %}
 
 </table>
+</br>
+{{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
 {% if (member.getParent() == "") %}
 <h3>Perhejäsenet</h3>
 <table class="gridtable">
@@ -119,7 +121,7 @@
 {% endif %}
 </br>
 </br>
-{{ form_widget(form.save, { 'label': 'Tallenna muutokset' }) }}
+
 </br>
 {{ form_end(form) }}
 <form action="../send_membership_card" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>

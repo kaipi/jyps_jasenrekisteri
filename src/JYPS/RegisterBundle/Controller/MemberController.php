@@ -776,11 +776,13 @@ class MemberController extends Controller {
 	}
 	private function createChildMembers(Member $member, $childrens) {
 		$em = $this->getDoctrine()->getManager();
-
+		if ($member->getMemberType()->getMemberfeeName() !== "Perhejäsen") {
+			return;
+		}
 		foreach ($childrens as $children) {
-			//if ($children['firstname'] == "" || $children['secondname'] == "") {
-			//	continue;
-			//}
+			if ($children['firstname'] === "" || $children['secondname'] === "") {
+				continue;
+			}
 			$childMember = clone $member;
 			$childMember->setFirstName($children['firstname']);
 			$childMember->setSecondName($children['secondname']);

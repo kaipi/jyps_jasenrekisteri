@@ -75,7 +75,7 @@ end_member:
 mark_member_fees:
     path:   /member/memberfees/showFees
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:showUnpaidFees}
-    methods: [GET]
+    methods: [POST]
 
 mark_fees:
     path:   /member/memberfees/markUnpaidFees

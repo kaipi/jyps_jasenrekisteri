@@ -77,7 +77,7 @@ class MemberFeeController extends Controller {
 					        ->setFrom('jasenrekisteri@jyps.fi')
 					        ->setTo($member->getEmail())
 					        ->setBody($this->renderView(
-						       'JYPSRegisterBundle:MemberFee:reminder_letter_last_reminder.txt.twig'));
+						      'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
 					$this->get('mailer')->send($message);
 					$qty++;
 					$em = $this->getDoctrine()->getManager();

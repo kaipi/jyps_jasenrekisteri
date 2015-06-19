@@ -129,7 +129,7 @@ class MemberFee implements UserInterface, \Serializable {
 			$this->id,
 			$this->username,
 			$this->salt,
-			$this->password,
+			$this->password
 		) = unserialize($serialized);
 	}
 

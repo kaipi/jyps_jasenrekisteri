@@ -814,9 +814,10 @@ class MemberController extends Controller {
 		return true;
 	}
 	private function createMemberFee(Member $member, $markpaid) {
+		$memberfeeamount = $member->getMemberType()->getMemberfeeAmount();
 
 		$memberfee = new MemberFee();
-		$memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
+		$memberfee->setFeeAmountWithVat($memberfeeamount);
 		$memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
 		$memberfee->setDueDate(new \DateTime("now"));
 		$memberfee->setPaid($markpaid);

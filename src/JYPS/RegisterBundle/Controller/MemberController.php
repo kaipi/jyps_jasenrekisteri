@@ -804,8 +804,6 @@ class MemberController extends Controller {
 
 			$childMember->setMemberType($memberFeeConfig);
 
-			//create fee and mark as paid
-			$this->createMemberFee($childMember, true);
 			//join to yleinen list
 			$this->sendYleinenJoinMail($childMember);
 			$em->persist($childMember);
@@ -814,7 +812,8 @@ class MemberController extends Controller {
 		return true;
 	}
 	private function createMemberFee(Member $member, $markpaid) {
-		$memberfeeamount = $member->getMemberType()->getMemberfeeAmount();
+		$memberconf = $member->getMemberType();
+		$memberfeeamount = $memberconf->getMemberfeeAmount();
 
 		$memberfee = new MemberFee();
 		$memberfee->setFeeAmountWithVat($memberfeeamount);

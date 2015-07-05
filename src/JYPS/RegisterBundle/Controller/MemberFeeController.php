@@ -41,10 +41,12 @@ class MemberFeeController extends Controller {
 			$member = $memberfee->getMemberFee();
 
 			if ($member->getMembershipEndDate() > new \DateTime("now")) {
+				$total_amount = $total_amount + $memberFee->getFeeAmountWithVat();
+				$total_qty++;
 				$ok_fees[] = $memberfee;
 			}
 		}
-		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees' => $ok_fees, 'year' => $year));
+		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees' => $ok_fees, 'year' => $year,'qty'=>$total_qty, 'total_amount' => $total_amount));
 
 	}
 	public function sendReminderLetterAction(Request $request) {

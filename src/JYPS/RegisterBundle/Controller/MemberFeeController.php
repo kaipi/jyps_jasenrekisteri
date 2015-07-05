@@ -32,6 +32,8 @@ class MemberFeeController extends Controller {
 	}
 	public function showUnpaidFeesAction(Request $request) {
 		$year = $request->request->get('year');
+		$total_amount = 0;
+		$total_qty = 0;
 		$memberfees = $this->getDoctrine()
 		                   ->getRepository('JYPSRegisterBundle:MemberFee')
 		                   ->findBy(array('fee_period' => $year, 'paid' => 0),
@@ -41,7 +43,7 @@ class MemberFeeController extends Controller {
 			$member = $memberfee->getMemberFee();
 
 			if ($member->getMembershipEndDate() > new \DateTime("now")) {
-				$total_amount = $total_amount + $memberFee->getFeeAmountWithVat();
+				$total_amount = $total_amount + $memberfee->getFeeAmountWithVat();
 				$total_qty++;
 				$ok_fees[] = $memberfee;
 			}

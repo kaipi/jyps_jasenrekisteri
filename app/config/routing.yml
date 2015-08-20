@@ -17,6 +17,7 @@ member:
     defaults: { _controller: JYPSRegisterBundle:Member:showAll }
     requirements:
         id:  \d+
+    methods:  [POST]
 
 all_members:
     path:   /member
@@ -25,15 +26,15 @@ all_members:
 add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
-
+    methods:  [POST]
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
-
+    methods:  [POST]
 searchOld:
     path:   /member/searchOld
     defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
-
+    methods:  [POST]
 join_member:
     path: /join
     defaults:  { _controller: JYPSRegisterBundle:Member:joinMember}
@@ -57,7 +58,7 @@ join_complete:
 configuration:
     path: /member/configuration
     defaults: {_controller: JYPSRegisterBundle:Configuration:showAll}
-
+    methods:  [GET]
 memberfees:
     path: /member/memberfees
     defaults: {_controller: JYPSRegisterBundle:MemberFee:showAll}
@@ -85,6 +86,7 @@ mark_fees:
 showClosed:
     path:   /member/history
     defaults:  { _controller: JYPSRegisterBundle:Member:showClosed}
+    methods:  [GET]
 
 restoreMember:
     path:   /member/history/restore
@@ -106,26 +108,32 @@ index_password:
 member_statistics:
     path:   /member/statistics
     defaults:  { _controller: JYPSRegisterBundle:Member:memberStatistics}
+    methods:  [GET]
 
 showQuickReports:
     path:   /member/reports
     defaults:  { _controller: JYPSRegisterBundle:Report:index}
+    methods:  [GET]
 
 sendReminders:
     path:   /member/memberfees/sendReminders
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:sendReminderLetter}
+    methods:  [POST]
 
 exportAddressExcel:
     path:   /member/addressExcel
     defaults:  { _controller: JYPSRegisterBundle:Member:addressExcel}
+    methods:  [GET]
 
 memberActions:
     path:   /member/memberactions
     defaults:  { _controller: JYPSRegisterBundle:Member:memberExtra}
+    methods:  [GET]
 
 magazineInfo:
     path:   /member/magazineInfo
     defaults:  { _controller: JYPSRegisterBundle:Member:sendMagazineLink}
+    methods:  [POST]
 
 communicationMail:
     path:   /member/communicationMail
@@ -140,11 +148,12 @@ sendCard:
 sendMemberFeeEmail:
     path: /member/memberfees/sendEmail
     defaults: {_controller: JYPSRegisterBundle:MemberFee:sendMemberFeeEmails }
-
+    methods:  [POST]
+    
 sendSingleMemberFeeEmail:
     path: /member/memberfees/sendSingleEmail
     defaults: {_controller: JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail }
-
+    methods:  [POST]
 acme_blog:
     type: rest
     prefix: /member/api

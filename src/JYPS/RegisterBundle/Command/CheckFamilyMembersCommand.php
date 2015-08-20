@@ -22,12 +22,12 @@ class CheckFamilyMembersCommand extends ContainerAwareCommand {
 		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
 		$repository = $this->getContainer()->get('doctrine')
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :current_date AND m.parent is NOT NULL')
-		                    ->setParameter('current_date', new \DateTime("now"))
-		                    ->getQuery();
+			->where('m.membership_end_date >= :current_date AND m.parent is NOT NULL')
+			->setParameter('current_date', new \DateTime("now"))
+			->getQuery();
 
 		$members = $query->getResult();
 
@@ -35,9 +35,9 @@ class CheckFamilyMembersCommand extends ContainerAwareCommand {
 
 			$memberfees = $member->getMemberFees();
 			foreach ($memberfees as $fee) {
-				if ($fee->getPaid() == false) {
+				if ($fee->getPaid() === false) {
 					echo $member->getMemberId() . " " . $fee->getFeePeriod() . " " . $member->getFullname() . "\n";
-					if ($dryrun == false) {
+					if ($dryrun === false) {
 						$fee->setPaid(true);
 						$em->flush($fee);
 					}

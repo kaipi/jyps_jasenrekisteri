@@ -17,19 +17,18 @@ class RemoveDuplicateMemberCommand extends ContainerAwareCommand {
 	}
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$dryrun = $input->getOption('dryrun');
-		$i = 0;
 		$parent_member = null;
 		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
 		$repository = $this->getContainer()->get('doctrine')
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.birth_year = 0 AND m.firstname = :firstname AND m.surname = :surname AND m.membership_end_date >= :current_date')
-		                    ->setParameter('firstname', '')
-		                    ->setParameter('surname', '')
-		                    ->setParameter('current_date', new \DateTime('now'))
-		                    ->getQuery();
+			->where('m.birth_year = 0 AND m.firstname = :firstname AND m.surname = :surname AND m.membership_end_date >= :current_date')
+			->setParameter('firstname', '')
+			->setParameter('surname', '')
+			->setParameter('current_date', new \DateTime('now'))
+			->getQuery();
 
 		$members = $query->getResult();
 

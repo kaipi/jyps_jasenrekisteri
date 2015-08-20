@@ -17,20 +17,18 @@ class CheckMemberTypesCommand extends ContainerAwareCommand {
 	}
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$dryrun = $input->getOption('dryrun');
-		$i = 0;
 		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
 		$repository = $this->getContainer()->get('doctrine')
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :current_date')
-		                    ->setParameter('current_date', new \DateTime("now"))
-		                    ->getQuery();
+			->where('m.membership_end_date >= :current_date')
+			->setParameter('current_date', new \DateTime("now"))
+			->getQuery();
 
 		$members = $query->getResult();
-		$adult_member = $em->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-		                   ->findOneBy(array('member_type' => 1));
+			->findOneBy(array('member_type' => 1));
 
 		foreach ($members as $member) {
 			$membertype = $member->getMemberType();

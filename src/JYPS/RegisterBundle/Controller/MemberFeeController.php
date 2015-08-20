@@ -11,18 +11,18 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 class MemberFeeController extends Controller {
 	public function showAllAction() {
 		$memberfeeconfigs = $this->getDoctrine()
-		                         ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-		                         ->findAll();
+			->getRepository('JYPSRegisterBundle:MemberFeeConfig')
+			->findAll();
 
 		$repository = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:MemberFee');
+			->getRepository('JYPSRegisterBundle:MemberFee');
 		$feeyears = $repository->createQueryBuilder('memberfee')
-		                       ->select('memberfee.fee_period')
-		                       ->where('memberfee.paid= :paymentstatus')
-		                       ->orderBy('memberfee.fee_period', 'DESC')
-		                       ->setParameter('paymentstatus', 0)
-		                       ->distinct()
-		                       ->getQuery();
+			->select('memberfee.fee_period')
+			->where('memberfee.paid= :paymentstatus')
+			->orderBy('memberfee.fee_period', 'DESC')
+			->setParameter('paymentstatus', 0)
+			->distinct()
+			->getQuery();
 
 		$distinct_years = $feeyears->getResult();
 
@@ -35,9 +35,9 @@ class MemberFeeController extends Controller {
 		$total_amount = 0;
 		$total_qty = 0;
 		$memberfees = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:MemberFee')
-		                   ->findBy(array('fee_period' => $year, 'paid' => 0),
-			                   array('member_id' => 'ASC'));
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findBy(array('fee_period' => $year, 'paid' => 0),
+				array('member_id' => 'ASC'));
 		$ok_fees = array();
 		foreach ($memberfees as $memberfee) {
 			$member = $memberfee->getMemberFee();
@@ -48,16 +48,16 @@ class MemberFeeController extends Controller {
 				$ok_fees[] = $memberfee;
 			}
 		}
-		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees' => $ok_fees, 'year' => $year,'qty'=>$total_qty, 'total_amount' => $total_amount));
+		return $this->render('JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig', array('memberfees' => $ok_fees, 'year' => $year, 'qty' => $total_qty, 'total_amount' => $total_amount));
 
 	}
 	public function sendReminderLetterAction(Request $request) {
 		$join_date_limit = $request->request->get('join_date_limit');
 
 		$memberfees = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:MemberFee')
-		                   ->findBy(array('paid' => 0),
-			                   array('member_id' => 'ASC'));
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findBy(array('paid' => 0),
+				array('member_id' => 'ASC'));
 		$qty = 0;
 		$error_qty = 0;
 		$error_members = array();
@@ -78,10 +78,10 @@ class MemberFeeController extends Controller {
 				if ($errors == "") {
 					$message = \Swift_Message::newInstance();
 					$message->setSubject('JYPS ry jäsenmaksumuistutus')
-					        ->setFrom('jasenrekisteri@jyps.fi')
-					        ->setTo($member->getEmail())
-					        ->setBody($this->renderView(
-						      'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
+						->setFrom('jasenrekisteri@jyps.fi')
+						->setTo($member->getEmail())
+						->setBody($this->renderView(
+							'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
 					$this->get('mailer')->send($message);
 					$qty++;
 					$em = $this->getDoctrine()->getManager();
@@ -103,8 +103,8 @@ class MemberFeeController extends Controller {
 
 		foreach ($fees as $fee) {
 			$markfee = $this->getDoctrine()
-			                ->getRepository('JYPSRegisterBundle:MemberFee')
-			                ->findOneBy(array('id' => $fee));
+				->getRepository('JYPSRegisterBundle:MemberFee')
+				->findOneBy(array('id' => $fee));
 			$markfee->setPaid(True);
 			$em->flush($markfee);
 		}
@@ -116,14 +116,14 @@ class MemberFeeController extends Controller {
 
 		$em = $this->getDoctrine()->getManager();
 		$markfee = $this->getDoctrine()
-		                ->getRepository('JYPSRegisterBundle:MemberFee')
-		                ->findOneBy(array('id' => $feeid));
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('id' => $feeid));
 		$markfee->setPaid(True);
 		$em->flush($markfee);
 
 		$member = $this->getDoctrine()
-		               ->getRepository('JYPSRegisterBundle:Member')
-		               ->findOneBy(array('member_id' => $memberid));
+			->getRepository('JYPSRegisterBundle:Member')
+			->findOneBy(array('member_id' => $memberid));
 
 		return $member->showAllAction($memberid);
 	}
@@ -135,12 +135,12 @@ class MemberFeeController extends Controller {
 		$em = $this->getDoctrine()->getManager();
 
 		$repository = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :current_date')
-		                    ->setParameter('current_date', new \DateTime("now"))
-		                    ->getQuery();
+			->where('m.membership_end_date >= :current_date')
+			->setParameter('current_date', new \DateTime("now"))
+			->getQuery();
 		$members = $query->getResult();
 		$total_amount = 0;
 		$total_qty = 0;
@@ -207,21 +207,17 @@ class MemberFeeController extends Controller {
 		$member_id = $request->request->get('member_id');
 
 		$fee_period = date('Y');
-		echo $member_id;
-		echo $fee_period;
-		$em = $this->getDoctrine()->getManager();
-
 		$bankaccount = $this->getDoctrine()
-		                    ->getRepository('JYPSRegisterBundle:SystemParameter')
-		                    ->findOneBy(array('key' => 'BankAccount'));
+			->getRepository('JYPSRegisterBundle:SystemParameter')
+			->findOneBy(array('key' => 'BankAccount'));
 
 		$member = $this->getDoctrine()
-		               ->getRepository('JYPSRegisterBundle:Member')
-		               ->findOneBy(array('id' => $member_id));
+			->getRepository('JYPSRegisterBundle:Member')
+			->findOneBy(array('id' => $member_id));
 
 		$memberfee = $this->getDoctrine()
-		                  ->getRepository('JYPSRegisterBundle:MemberFee')
-		                  ->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period));
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period));
 
 		$emailConstraint = new EmailConstraint();
 
@@ -255,25 +251,25 @@ class MemberFeeController extends Controller {
 		$em = $this->getDoctrine()->getManager();
 
 		$bankaccount = $this->getDoctrine()
-		                    ->getRepository('JYPSRegisterBundle:SystemParameter')
-		                    ->findOneBy(array('key' => 'BankAccount'));
+			->getRepository('JYPSRegisterBundle:SystemParameter')
+			->findOneBy(array('key' => 'BankAccount'));
 
 		$repository = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :current_date AND m.membership_start_date <= :period_start')
-		                    ->setParameter('current_date', new \DateTime("now"))
-		                    ->setParameter('period_start', new \DateTime("first day of January " . date('Y')))
-		                    ->getQuery();
+			->where('m.membership_end_date >= :current_date AND m.membership_start_date <= :period_start')
+			->setParameter('current_date', new \DateTime("now"))
+			->setParameter('period_start', new \DateTime("first day of January " . date('Y')))
+			->getQuery();
 
 		$members = $query->getResult();
 		foreach ($members as $member) {
 
 			$memberfee = $this->getDoctrine()
-			                  ->getRepository('JYPSRegisterBundle:MemberFee')
-			                  ->findOneBy(array('member_id' => $member->getId(),
-				                  'fee_period' => date('Y'),
-				                  'email_sent' => NULL));
+				->getRepository('JYPSRegisterBundle:MemberFee')
+				->findOneBy(array('member_id' => $member->getId(),
+					'fee_period' => date('Y'),
+					'email_sent' => NULL));
 
 			if (empty($memberfee)) {
 				continue;

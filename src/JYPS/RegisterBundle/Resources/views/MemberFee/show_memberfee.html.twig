@@ -2,14 +2,16 @@
 <head>
 	<title>JYPS Ry jäsenrekisteri</title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('bundles/jypsregister/js//jquery-ui.css')}}">
+<link rel="stylesheet" href="{{ asset('bundles/jypsregister/js/jquery-ui.css')}}">
   <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js')}}"></script>
   <script src="{{ asset('bundles/jypsregister/js/jquery-ui.js')}}"></script>
    <script>
   $(function() {
-    $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#datepicker_memberfee" ).datepicker({ dateFormat: 'yy-mm-dd' });
   });
-
+$(function() {
+    $( "#datepicker_reminder" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  });
   </script>
 </head>
 {% for flashMessage in app.session.flashbag.get('notice') %}
@@ -57,7 +59,7 @@ Tästä voit luoda jäsenmaksut kuluvalle jäsenkaudelle. Muista valita Eräpäi
 
 <form name="memberfee_create" method="post" action='../member/memberfees/create'>
 </br>
-<input type="text" id="datepicker" name="due_date"></br>
+<input type="text" id="datepicker_memberfee" name="due_date"></br>
 </br>
 <button type="submit" id="create_memberfees" name='create_memberfees'>Luo jäsenmaksut</button>
 </form>
@@ -92,7 +94,7 @@ Tästä voit lähettää jäsenmaksusähköpostit kuluvalle jäsenkaudelle.
 Tästä voit lähettää muistutukset. Muistutukset lähetetään kaikille kellä on maksamattomia jäsenmaksuja tällähetkellä. Päivämäärävalinnasta voit valita mitä uudemmille jäsenille ei muistutusta lähetetä.
 <form name="reminder_send" method="post" action='../member/memberfees/sendReminders'>
 </br>
-<input type="text" id="datepicker" name="join_date_limit"></br>
+<input type="text" id="datepicker_reminder" name="join_date_limit"></br>
 <button type="submit" id="send_reminders" name='send_reminders'>Lähetä muistutukset</button>
 </form>
 </fieldset>

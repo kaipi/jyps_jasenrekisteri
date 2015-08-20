@@ -28,7 +28,6 @@ class CheckMemberTypesCommand extends ContainerAwareCommand {
 			->getQuery();
 
 		$members = $query->getResult();
-			->findOneBy(array('member_type' => 1));
 
 		foreach ($members as $member) {
 			$membertype = $member->getMemberType();

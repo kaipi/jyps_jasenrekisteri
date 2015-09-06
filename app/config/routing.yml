@@ -19,6 +19,13 @@ member:
         id:  \d+
     methods:  [GET]
 
+member_save:
+    pattern: /member/show/{memberid}
+    defaults: { _controller: JYPSRegisterBundle:Member:showAll }
+    requirements:
+        id:  \d+
+    methods:  [POST]
+
 all_members:
     path:   /member
     defaults:  { _controller: JYPSRegisterBundle:Member:index }

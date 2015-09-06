@@ -26,7 +26,7 @@ all_members:
 add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
-    methods:  [POST]
+    methods:  [GET]
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }

@@ -17,7 +17,7 @@ member:
     defaults: { _controller: JYPSRegisterBundle:Member:showAll }
     requirements:
         id:  \d+
-    methods:  [POST]
+    methods:  [GET]
 
 all_members:
     path:   /member

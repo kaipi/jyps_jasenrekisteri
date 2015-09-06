@@ -2,10 +2,11 @@
 namespace JYPS\RegisterBundle\Controller;
 
 use Endroid\QrCode\QrCode;
+use JYPS\RegisterBundle\Entity\Member;
 
 class MemberCardGenerator {
 
-	public static function generateMembershipCard($member, $base_image_path, $font, $image_path) {
+	public static function generateMembershipCard(Member $member, $base_image_path, $font, $image_path) {
 		$base_image = imagecreatefrompng($base_image_path);
 		$output_image = $image_path . 'MemberCard_' . $member->getMemberId() . '.png';
 		/* member data to image */

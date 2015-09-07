@@ -562,7 +562,7 @@ class MemberController extends Controller {
 						->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
 						->setFrom('jasenrekisteri@jyps.fi')
 						->setTo($member->getEmail())
-						->attach(\Swift_Attachment::fromPath($member->generateMembershipCard()))
+						->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
 						->setBody($this->renderView(
 							'JYPSRegisterBundle:Member:join_member_email_internal_no_payment_info_base.txt.twig',
 							array('member' => $member,

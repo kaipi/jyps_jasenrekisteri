@@ -223,6 +223,7 @@ class MemberController extends Controller {
 		return $this->redirect($this->generateUrl('member', array("memberid" => $memberid)));
 	}
 	public function sendCommunicationMailAction(Request $request) {
+		$logger = $this->get('logger');
 
 		$message = $request->get('message');
 		$subject = $request->get('subject');
@@ -238,7 +239,7 @@ class MemberController extends Controller {
 			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-			->where('m.membership_start_date >= :ui_date AND m.membership_end_date <= :current_date')
+			->where('m.membership_start_date >= :ui_date AND m.membership_end_date >= :current_date')
 			->setParameter('ui_date', $ui_date)
 			->setParameter('current_date', new \Datetime('now'))
 			->getQuery();
@@ -252,13 +253,17 @@ class MemberController extends Controller {
 			$errors = "";
 			$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
 			if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
-				$ok++;
-				$message = \Swift_Message::newInstance()
-					->setSubject($subject)
-					->setFrom($from_address)
-					->setTo(array($member->getEmail()))
-					->setBody($message);
-				$this->get('mailer')->send($message);
+				if (\Swift_Validate::email($member->getEmail())) {
+					$ok++;
+					$message = \Swift_Message::newInstance()
+						->setSubject($subject)
+						->setFrom($from_address)
+						->setTo(array($member->getEmail()))
+						->setBody($message);
+					$this->get('mailer')->send($message);
+				} else {
+					$nok++;
+				}
 			} else {
 				$nok++;
 

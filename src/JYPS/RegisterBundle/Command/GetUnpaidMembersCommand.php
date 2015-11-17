@@ -34,7 +34,7 @@ class GetUnpaidMembersCommand extends ContainerAwareCommand {
 			foreach ($member->getMemberFees() as $memberfee) {
 
 				if ($memberfee->getFeePeriod() == $period && $memberfee->getPaid() == 0) {
-					echo $member->getMemberId() . ";" . $member->getFirstName() . " " . $member->getSurname() . "\n";
+					echo $member->getMemberId() . ";" . $member->getFirstName() . " " . $member->getSecondName() . " " . $member->getSurname() . "\n";
 				}
 
 			}

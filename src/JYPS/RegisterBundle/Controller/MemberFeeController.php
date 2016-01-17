@@ -228,7 +228,7 @@ class MemberFeeController extends Controller {
 					->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
 					->setFrom("jasenrekisteri@jyps.fi")
 					->setTo(array($member->getEmail()))
-					->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
+					->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
 					->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
 						array('member' => $member,
 							'memberfee' => $memberfee,
@@ -283,7 +283,7 @@ class MemberFeeController extends Controller {
 						->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
 						->setFrom("jasenrekisteri@jyps.fi")
 						->setTo(array($member->getEmail()))
-						->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($member)))
+						->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
 						->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
 							array('member' => $member,
 								'memberfee' => $memberfee,
@@ -313,5 +313,14 @@ class MemberFeeController extends Controller {
 			'notice',
 			'Jäsenmaksut lähetetty, OK:' . $sent . " NOK:" . $errors . "");
 		return $this->redirect($this->generateUrl('memberfees'));
+	}
+	private function makeMemberCard($member) {
+
+		$baseimage = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');
+		$font = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/fonts/LucidaGrande.ttf');
+		$card_image = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/savedCards/');
+
+		return MemberCardGenerator::generateMembershipCard($member, $baseimage, $font, $card_image);
+
 	}
 }

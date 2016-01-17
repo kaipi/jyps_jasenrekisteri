@@ -777,7 +777,7 @@ class MemberController extends Controller {
 			if ($member->getMailingListYleinen() == True) {
 				$message = \Swift_Message::newInstance()
 					->setFrom($member->getEmail())
-					->setTo('yleinen-join@jyps.info');
+					->setTo('jasenet-lista-join@jyps.fi');
 				$this->get('mailer')->send($message);
 			}
 		}

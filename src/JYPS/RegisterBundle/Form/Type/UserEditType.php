@@ -1,6 +1,6 @@
 <?php
 
-namespace JYPS\RegisterBundle\Form;
+namespace JYPS\RegisterBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

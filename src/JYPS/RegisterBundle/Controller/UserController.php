@@ -6,8 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use JYPS\RegisterBundle\Entity\User;
-use JYPS\RegisterBundle\Form\UserType;
-use JYPS\RegisterBundle\Form\UserEditType;
+use JYPS\RegisterBundle\Form\Type\UserType;
+use JYPS\RegisterBundle\Form\Type\UserEditType;
 /**
  * User controller.
  *

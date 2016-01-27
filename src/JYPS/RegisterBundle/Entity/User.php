@@ -243,7 +243,9 @@ class User implements AdvancedUserInterface, \Serializable {
 	public function isEnabled() {
 		return $this->isActive;
 	}
-
+	public function isActive() {
+		return $this->isActive;
+	}
 	/**
 	 * Add roles
 	 *

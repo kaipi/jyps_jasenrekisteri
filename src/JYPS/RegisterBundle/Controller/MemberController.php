@@ -184,7 +184,7 @@ class MemberController extends Controller {
 		$message = \Swift_Message::newInstance()
 			->setSubject('Uusi JYPS-jäsen!')
 			->setFrom('rekisteri@jyps.fi')
-			->setTo(array('teemu.tenhunen@gmail.com', 'jyrki.solja@gmail.com'))
+			->setTo(array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com'))
 			->setBody($this->renderView(
 				'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
 				array('member' => $member,

@@ -337,7 +337,7 @@ class MemberFee implements UserInterface, \Serializable {
 		$amount = "";
 		$amount = "0000" . $this->getFeeAmountWithVat() . "00";
 		$virtualbarcode = "4" . substr($bankaccount->getStringValue(), 2) . $amount .
-		'00' . '000' . "000000000" . $this->getReferenceNumber() . $this->getDueDate()->format("ymd");
+		'00' . '000' . "000000000000000000" . $this->getDueDate()->format("ymd");
 
 		return $virtualbarcode . ($virtualbarcode % 103);
 	}

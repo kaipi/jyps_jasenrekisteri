@@ -2,9 +2,13 @@ Hei,
  
 ohessa JYPS ry:n jäsenmaksutiedot ja jäsenkortti vuodelle {{memberfee.getFeePeriod()}}.
 
-Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}}, eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
-Virtuaaliviivakoodi: {{virtualbarcode}}
-Kirjoitathan viestikenttään nimesi, jotta jäsenmaksujen kohdistaminen helpottuu!
+Maksutiedot:
+Saaja: Jyväskylän Pyöräilyseura Ry
+Tilinumero: {{bankaccount.getStringValue()}}
+Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
+Viesti: "Jäsenmaksu 2016 + oma nimi"
+Summa: {{memberfee.getFeeAmountWithVat()}}eur
+Virtuaaliviivakoodi:  {{virtualbarcode}}
 
 Jos olet jo maksanut tämän vuoden jäsenmaksusi, niin tämä viesti on aiheeton.
 

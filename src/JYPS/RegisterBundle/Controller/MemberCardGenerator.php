@@ -15,7 +15,7 @@ class MemberCardGenerator {
 		$join_year = $member->getMembershipStartDate()->format('Y');
 		imagettftext($base_image, 38, 0, 190, 500, $black, $font, $member->getFullName());
 		imagettftext($base_image, 38, 0, 390, 555, $black, $font, $memberid);
-		imagettftext($base_image, 38, 0, 390, 610, $black, $font, $join_year);
+		imagettftext($base_image, 38, 0, 390, 610, $black, $font, date('Y'));
 		/*qr code to image & serialize json for qr code*/
 		$member_data = array('member_id' => $member->getMemberId(),
 			'join_year' => $member->getMembershipStartDate()->format('Y'),

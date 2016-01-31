@@ -12,7 +12,6 @@ class MemberCardGenerator {
 		/* member data to image */
 		$black = imagecolorallocate($base_image, 0, 0, 0);
 		$memberid = $member->getMemberId();
-		$join_year = $member->getMembershipStartDate()->format('Y');
 		imagettftext($base_image, 38, 0, 190, 500, $black, $font, $member->getFullName());
 		imagettftext($base_image, 38, 0, 390, 555, $black, $font, $memberid);
 		imagettftext($base_image, 38, 0, 390, 610, $black, $font, date('Y'));

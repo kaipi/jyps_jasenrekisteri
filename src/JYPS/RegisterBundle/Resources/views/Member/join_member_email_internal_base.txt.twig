@@ -11,7 +11,7 @@ Jos et ole maksanut jäsenmaksuasi, niin voit maksaa jäsenmaksusi seuraavilla t
 Saaja: Jyväskylän Pyöräilyseura Ry
 Tilinumero: {{bankaccount.getStringValue()}}
 Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
-Viesti: "Jäsenmaksu {{date('Y')}} + oma nimi"
+Viesti: "Jäsenmaksu {{'now'|date('Y')}} + oma nimi"
 Summa: {{memberfee.getFeeAmountWithVat()}}eur
 
 

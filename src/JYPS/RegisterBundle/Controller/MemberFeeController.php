@@ -217,7 +217,11 @@ class MemberFeeController extends Controller {
 		$memberfee = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:MemberFee')
 			->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period));
-
+		if ($memberfee === null) {
+			$memberfee = $this->getDoctrine()
+				->getRepository('JYPSRegisterBundle:MemberFee')
+				->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period - 1));
+		}
 		$emailConstraint = new EmailConstraint();
 
 		$errors = "";

@@ -172,6 +172,10 @@ class MemberController extends Controller {
 
 	private function sendJoinInfoEmail(Member $member, MemberFee $memberfee) {
 		$intrest_names = array();
+		$recipents = array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com');
+		if ($member->getGender() == False) {
+			array_push($recipents, 'ledpis@gmail.com');
+		}
 		if ($member->getIntrests()) {
 			foreach ($member->getIntrests() as $intrest) {
 				$intrest_config = $this->getDoctrine()
@@ -183,8 +187,8 @@ class MemberController extends Controller {
 		$member_age = date('Y') - $member->getBirthYear();
 		$message = \Swift_Message::newInstance()
 			->setSubject('Uusi JYPS-jäsen!')
-			->setFrom('rekisteri@jyps.fi')
-			->setTo(array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com'))
+			->setFrom('jasenrekisteri@jyps.fi')
+			->setTo($recipents)
 			->setBody($this->renderView(
 				'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
 				array('member' => $member,

@@ -6,9 +6,8 @@ Maksutiedot:
 Saaja: Jyväskylän Pyöräilyseura Ry
 Tilinumero: {{bankaccount.getStringValue()}}
 Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
-Viesti: "Jäsenmaksu 2016 + oma nimi"
+Viesti: "Jäsenmaksu {{'now'|date('Y')}} + oma nimi"
 Summa: {{memberfee.getFeeAmountWithVat()}}eur
-Virtuaaliviivakoodi:  {{virtualbarcode}}
 
 Jos olet jo maksanut tämän vuoden jäsenmaksusi, niin tämä viesti on aiheeton.
 

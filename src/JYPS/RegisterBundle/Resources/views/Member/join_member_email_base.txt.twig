@@ -3,15 +3,18 @@ Tervetuloa JYPS:in jäseneksi! Sinut on lisätty jäsenrekisteriimme.
 
 Ohessa liitteenä jäsenkorttisi, voit joko tulostaa sen paperille, tai tallentaa matkapuhelimeesi, saat kortilla mm. alennuksia useista eri liikkeistä (katso lisää http://www.jyps.fi/seura/jasenyys-ja-maksut/jasenedut).
 
-Jäsennumerosi on: {{member.getMemberId()}}
-Voit maksaa jäsenmaksusi {{memberfee.getFeeAmountWithVat()}}eur, tilille {{bankaccount.getStringValue()}} , viitteellä {{memberfee.getReferenceNumber()}} eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}.
-Virtuaaliviivakoodi: {{virtualbarcode}}
-Kirjoita viestiosaan "Uusi jäsen" ja nimesi millä rekisteröidyit!
+Maksutiedot:
 
-Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B9NuDzod6jHac21nZ1RzenlWM0E/edit?usp=sharing
+Saaja: Jyväskylän Pyöräilyseura Ry
+Tilinumero: {{bankaccount.getStringValue()}}
+Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
+Viesti: "Uusi jäsen + Oma nimi"
+Summa: {{memberfee.getFeeAmountWithVat()}}eur
+
+Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B3ssmXVLZWt5N2xteTVBNnY1bzg/view
 {% if member.getMailingListYleinen() == true %}
 
-Sinut on myös liitetty Yleinen sähköpostilistalle (yleinen@jyps.info) tällä sähköpostiosoitteella ({{member.getEmail()}})
+Sinut on myös liitetty Jasenet-Lista sähköpostilistalle (jasenet-lista@jyps.fi) tällä sähköpostiosoitteella ({{member.getEmail()}})
 
 {% endif %}
 

@@ -239,8 +239,14 @@ class MemberFeeController extends Controller {
 							'bankaccount' => $bankaccount,
 							'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
 							'year' => date("Y"))));
-				$this->get('mailer')->send($message);
+
 			}
+			$childs = $member->getChildren();
+			//attach also all childmembers cards to mail
+			foreach ($childs as $child) {
+				$message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
+			}
+			$this->get('mailer')->send($message);
 		}
 		$this->get('session')->getFlashBag()->add(
 			'notice',

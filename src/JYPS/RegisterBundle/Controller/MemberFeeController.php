@@ -306,7 +306,7 @@ class MemberFeeController extends Controller {
 					//attach also all childmembers cards to mail
 					foreach ($childs as $child) {
 						$this->generateMembershipCard($child);
-						$message->attach(\Swift_Attachment::fromPath($this->generateMembershipCard($child)));
+						$message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
 					}
 					$this->get('mailer')->send($message);
 

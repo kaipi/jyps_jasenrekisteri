@@ -69,6 +69,7 @@ class MemberFeeController extends Controller {
 			if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
 				$member->getMembershipEndDate() > new \DateTime("now") &&
 				$member->getEmail() != "" &&
+				$member->getParent == NULL &&
 				($member->getReminderSentDate() <= $treshold_date ||
 					$member->getReminderSentDate() == NULL)) {
 				$errors = "";

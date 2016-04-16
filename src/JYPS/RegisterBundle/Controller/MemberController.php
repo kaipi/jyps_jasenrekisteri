@@ -305,7 +305,7 @@ class MemberController extends Controller {
 				/* check if the fee is paid for current year */
 				if ($member->isMemberFeePaid(date('Y')) == True || $send_payment_info == '') {
 					$magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
-				} else if ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) == False) {
+				} else if ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) == False && $member->getParent == NULL) {
 					$magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';
 				}
 

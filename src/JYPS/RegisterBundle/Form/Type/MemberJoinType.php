@@ -25,8 +25,8 @@ class MemberJoinType extends AbstractType {
 			->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
 				'query_builder' => function (EntityRepository $fee_conf) {
 					return $fee_conf->createQueryBuilder('f')
-					->where('f.show_on_join_form = 1')
-					->orderBy('f.member_type', 'ASC');},
+						->where('f.show_on_join_form = 1')
+						->orderBy('f.member_type', 'ASC');},
 				'property' => 'NameWithFeeAmount'))
 			->add('street_address', 'text', array('attr' => array('size' => '63')))
 			->add('postal_code', 'text', array('attr' => array('size' => '63')))
@@ -50,7 +50,7 @@ class MemberJoinType extends AbstractType {
 			->add('intrests', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\IntrestConfig',
 				'query_builder' => function (EntityRepository $conf) {
 					return $conf->createQueryBuilder('c')
-					->orderBy('c.order', 'ASC');
+						->orderBy('c.order', 'ASC');
 				},
 				'property' => 'intrestname',
 				'multiple' => true,

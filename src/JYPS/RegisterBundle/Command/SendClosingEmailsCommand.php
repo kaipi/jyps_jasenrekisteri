@@ -21,7 +21,7 @@ class SendClosingEmailsCommand extends ContainerAwareCommand {
 		$year = $input->getArgument('Year');
 		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 		$memberfees = $em->getRepository('JYPSRegisterBundle:MemberFee')
-		                 ->findBy(array('fee_period' => $year, 'paid' => 0));
+			->findBy(array('fee_period' => $year, 'paid' => 0));
 
 		foreach ($memberfees as $memberfee) {
 			$member = $memberfee->getMemberfee();

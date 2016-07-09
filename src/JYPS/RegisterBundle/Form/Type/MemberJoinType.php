@@ -33,7 +33,7 @@ class MemberJoinType extends AbstractType {
 			->add('city', 'text', array('attr' => array('size' => '63')))
 			->add('country', 'text', array('required' => false,
 				'attr' => array('size' => '63')))
-			->add('email', 'text', array('required' => false,
+			->add('email', 'email', array('required' => false,
 				'attr' => array('size' => '63')))
 			->add('telephone', 'text', array('required' => false,
 				'attr' => array('size' => '63')))

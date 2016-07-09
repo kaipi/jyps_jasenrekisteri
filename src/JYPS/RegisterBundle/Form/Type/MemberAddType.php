@@ -25,7 +25,7 @@ class MemberAddType extends AbstractType {
 			->add('city')
 			->add('country', 'text', array('required' => false,
 				'data' => 'Suomi'))
-			->add('email', 'text', array('required' => false,
+			->add('email', 'email', array('required' => false,
 				'attr' => array('size' => '46')))
 			->add('telephone', 'text', array('required' => false))
 			->add('magazine_preference', 'checkbox', array('required' => false))

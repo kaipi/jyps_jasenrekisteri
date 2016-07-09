@@ -138,10 +138,16 @@ class MemberController extends Controller {
 		$memberfee_confs = $this->getDoctrine()
 			->getManager()
 			->getRepository('JYPSRegisterBundle:MemberFeeConfig');
+		$form = $this->createForm(new MemberAddType(), $member);
 
-		$form = $this->createForm(new MemberAddType(), $member, array('action' => $this->generateUrl('join_internal_save'),
-			'intrest_configs' => $all_confs,
-			'memberfee_configs' => $memberfee_confs));
+		$request = $this->get('request');
+
+		if ($request->getMethod() == 'POST') {
+			if ($form->isValid()) {
+				return $this->render('JYPSRegisterBundle:Member:add_member.html.twig', array(
+					'form' => $form->createView()));
+			}
+		}
 
 		return $this->render('JYPSRegisterBundle:Member:add_member.html.twig', array(
 			'form' => $form->createView(),
@@ -452,7 +458,11 @@ class MemberController extends Controller {
 				foreach ($childs as $child) {
 					$message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
 				}
-				$this->get('mailer')->send($message);
+				$emailConstraint = new EmailConstraint();
+				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+				if ($errors == "") {
+					$this->get('mailer')->send($message);
+				}
 			}
 
 			$this->sendJoinInfoEmail($member, $memberfee);
@@ -579,8 +589,13 @@ class MemberController extends Controller {
 								'bankaccount' => $bankaccount,
 								'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount))));
 				}
+				$emailConstraint = new EmailConstraint();
+				$errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+				if ($errors == "") {
+					$this->get('mailer')->send($message);
+					$this->sendJoinInfoEmail($member, $memberfee);
 
-				$this->get('mailer')->send($message);
+				}
 			}
 
 			$this->sendJoinInfoEmail($member, $memberfee);
@@ -722,10 +737,6 @@ class MemberController extends Controller {
 		$member_types = $request->get('familymember_types');
 
 		foreach ($firstnames as $firstname) {
-			//stupid hack
-			//if (!array_key_exists($i, $genders)) {
-			//	continue;
-			//}
 			$child['firstname'] = $firstnames[$i];
 			$child['secondname'] = $secondnames[$i];
 			$child['surname'] = $surnames[$i];

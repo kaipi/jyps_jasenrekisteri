@@ -27,7 +27,7 @@
         "nelmio/api-doc-bundle": "@stable",
         "liuggio/excelbundle": "~2.0",
         "symfony/console": "2.8.*",
-	      "phpmd/phpmd" : "@stable"
+	    "phpmd/phpmd" : "@stable"
 
     },
     "scripts": {

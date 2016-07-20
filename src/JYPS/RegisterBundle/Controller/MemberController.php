@@ -138,7 +138,10 @@ class MemberController extends Controller {
 		$memberfee_confs = $this->getDoctrine()
 			->getManager()
 			->getRepository('JYPSRegisterBundle:MemberFeeConfig');
-		$form = $this->createForm(new MemberAddType(), $member);
+
+		$form = $this->createForm(new MemberAddType(), $member, array('action' => $this->generateUrl('join_internal_save'),
+			'intrest_configs' => $all_confs,
+			'memberfee_configs' => $memberfee_confs));
 
 		$request = $this->get('request');
 
@@ -148,7 +151,6 @@ class MemberController extends Controller {
 					'form' => $form->createView()));
 			}
 		}
-
 		return $this->render('JYPSRegisterBundle:Member:add_member.html.twig', array(
 			'form' => $form->createView(),
 		));

@@ -25,6 +25,7 @@ all_members:
 add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
+
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }
@@ -33,6 +34,7 @@ searchOld:
     path:   /member/searchOld
     defaults:  { _controller: JYPSRegisterBundle:Member:searchOldMembers }
     methods:  [POST]
+
 join_member:
     path: /join
     defaults:  { _controller: JYPSRegisterBundle:Member:joinMember}

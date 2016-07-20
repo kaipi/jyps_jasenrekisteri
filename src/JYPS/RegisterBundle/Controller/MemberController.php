@@ -436,7 +436,7 @@ class MemberController extends Controller {
 				if ($member->getMailingListYleinen() == True) {
 					$message = \Swift_Message::newInstance()
 						->setFrom($member->getEmail())
-						->setTo('yleinen-join@jyps.info');
+						->setTo('yleinen-lista-join@jyps.fi');
 					$this->get('mailer')->send($message);
 				}
 				//2) information mail
@@ -473,7 +473,19 @@ class MemberController extends Controller {
 	}
 
 	public function joinCompleteAction() {
-		return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig');
+
+		return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig', array('merchant_id' => $merchant_id, 
+																							   'order_number' => $order_number,
+																							   'reference_number' => $reference_number,
+																							   'order_description' => $order_description,
+																							   'return_address' => $return_address,
+																							   'cancel_address' => $cancel_address,
+																							   'notify_address' => $notify_address,
+																							   'contact_phone' => $contact<));
+	}
+
+	public function paymentCompleteAction(Request $request) {
+
 	}
 
 	public function joinSaveInternalAction(Request $request) {

@@ -469,21 +469,70 @@ class MemberController extends Controller {
 
 			$this->sendJoinInfoEmail($member, $memberfee);
 
-			return $this->redirect($this->generateUrl('join_complete'), 303);
+			$merchant_id = "13466";
+			$order_number = "1";
+			$order_description = "Testitilaus";
+			$return_address = "https://jasenrekisteri.jyps.fi/paymentcomplete";
+			$cancel_address = "https://jasenrekisteri.jyps.fi/paymentcancelled";
+			$notify_address = "https://jasenrekisteri.jyps.fi/paymentnotify";
+			$contact_firstname = "Teijo";
+			$contact_lastname = "Testi";
+			$contact_email = "teijo@testi.fi";
+			$contact_addr_street = "Testikatu 1";
+			$contact_addr_zip = "40740";
+			$contact_addr_city = "Testville";
+			$contact_addr_country = "Suomi";
+
+			$memberfee_amount = "30";
+
+			$authcode = strtoupper(md5($merchant_id . "|" .
+				$order_number . "|" .
+				$order_number . "|" .
+				$order_description . "|" .
+				"EUR|" .
+				$return_address . "|" .
+				$cancel_address . "|" .
+				"|" .
+				$notify_address . "|" .
+				"E1|" .
+				"fi_FI|" .
+				"|" .
+				"1" .
+				"|" .
+				$contact_email . "|" .
+				$contact_firstname . "|" .
+				$contact_lastname . "|" .
+				$contact_addr_street . "|" .
+				$contact_addr_zip . "|" .
+				$contact_addr_city . "|" .
+				"FI|" .
+				"1|" .
+				"Jäsenmaksu|" .
+				"1|" .
+				$memberfee_amount . "|" .
+				$merchant_id . "|" .
+				"|" .
+				"24|"
+			));
+
+			return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig', array('merchant_id' => $merchant_id,
+				'order_number' => $order_number,
+				'order_description' => $order_description,
+				'return_address' => $return_address,
+				'cancel_address' => $cancel_address,
+				'notify_address' => $notify_address,
+				'contact_email' => $contact_email,
+				'contact_firstname' => $contact_firstname,
+				'contact_lastname' => $contact_lastname,
+				'contact_addr_street' => $contact_addr_street,
+				'contact_addr_zip' => $contact_addr_zip,
+				'contact_addr_city' => $contact_addr_city,
+				'contact_addr_country' => $contact_addr_country,
+				'memberfee_amount' => $memberfee_amount,
+				'authcode' => $authcode));
+
 		}
 		return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
-	}
-
-	public function joinCompleteAction() {
-
-		return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig', array('merchant_id' => $merchant_id, 
-																							   'order_number' => $order_number,
-																							   'reference_number' => $reference_number,
-																							   'order_description' => $order_description,
-																							   'return_address' => $return_address,
-																							   'cancel_address' => $cancel_address,
-																							   'notify_address' => $notify_address,
-																							   'contact_phone' => $contact<));
 	}
 
 	public function paymentCompleteAction(Request $request) {

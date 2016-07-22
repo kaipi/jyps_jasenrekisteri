@@ -482,38 +482,25 @@ class MemberController extends Controller {
 			$contact_addr_zip = "40740";
 			$contact_addr_city = "Testville";
 			$contact_addr_country = "Suomi";
-
 			$memberfee_amount = "30";
 
-			$authcode = strtoupper(md5($merchant_id . "|" .
+			$authcode = strtoupper(md5("6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ|" .
+				$merchant_id . "|" .
+				$memberfee_amount . "|" .
 				$order_number . "|" .
-				$order_number . "|" .
+				"|" .
 				$order_description . "|" .
 				"EUR|" .
 				$return_address . "|" .
 				$cancel_address . "|" .
 				"|" .
 				$notify_address . "|" .
-				"E1|" .
+				"S1|" .
 				"fi_FI|" .
 				"|" .
-				"1" .
-				"|" .
-				$contact_email . "|" .
-				$contact_firstname . "|" .
-				$contact_lastname . "|" .
-				$contact_addr_street . "|" .
-				$contact_addr_zip . "|" .
-				$contact_addr_city . "|" .
-				"FI|" .
 				"1|" .
-				"Jäsenmaksu|" .
-				"1|" .
-				$memberfee_amount . "|" .
-				$merchant_id . "|" .
 				"|" .
-				"24|"
-			));
+				""));
 
 			return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig', array('merchant_id' => $merchant_id,
 				'order_number' => $order_number,
@@ -536,6 +523,8 @@ class MemberController extends Controller {
 	}
 
 	public function paymentCompleteAction(Request $request) {
+		$ordernumber = $request->request->get('ORDER_NUMBER');
+		$return_auth = $request->request->get('RETURN_AUTHCODE');
 
 	}
 

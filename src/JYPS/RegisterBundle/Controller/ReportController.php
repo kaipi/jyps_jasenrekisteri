@@ -7,12 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class ReportController extends Controller {
 	public function indexAction() {
 		$repository = $this->getDoctrine()
-		                   ->getRepository('JYPSRegisterBundle:Member');
+			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-		                    ->where('m.membership_end_date >= :current_date')
-		                    ->setParameter('current_date', new \DateTime("now"))
-		                    ->getQuery();
+			->where('m.membership_end_date >= :current_date')
+			->setParameter('current_date', new \DateTime("now"))
+			->getQuery();
 		$total_members = 0;
 		$male_qty = 0;
 		$female_qty = 0;

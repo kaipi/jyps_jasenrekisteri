@@ -11,221 +11,200 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table()
  * @ORM\Entity
  */
-class SystemParameter implements UserInterface, \Serializable
-{
+class SystemParameter implements UserInterface, \Serializable {
 /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-    /**
-    * @ORM\Column(type="string")
-    */
-    private $key;
-    /**
-    * @ORM\Column(type="integer")
-    */
-    private $int_value;
-    /**
-    * @ORM\Column(type="string")
-    */
-    private $string_value;
-    /**
-    * @ORM\Column(type="decimal")
-    */
-    private $dec_value;
-    /**
-    * @ORM\Column(type="boolean")
-    */
-    private $boolean_value;
-    /**
-     * @inheritDoc
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-    /**
-     * @inheritDoc
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-    /**
-     * @inheritDoc
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
+ * @ORM\Column(type="integer")
+ * @ORM\Id
+ * @ORM\GeneratedValue(strategy="AUTO")
+ */
+	private $id;
+	/**
+	 * @ORM\Column(type="string")
+	 */
+	private $key;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $int_value;
+	/**
+	 * @ORM\Column(type="string")
+	 */
+	private $string_value;
+	/**
+	 * @ORM\Column(type="decimal")
+	 */
+	private $dec_value;
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $boolean_value;
+	/**
+	 * @inheritDoc
+	 */
+	public function getUsername() {
+		return $this->username;
+	}
+	/**
+	 * @inheritDoc
+	 */
+	public function getSalt() {
+		return null;
+	}
+	/**
+	 * @inheritDoc
+	 */
+	public function getPassword() {
+		return $this->password;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function getRoles() {
+		return array('ROLE_USER');
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function eraseCredentials()
-    {
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function eraseCredentials() {
+	}
 
-    /**
-     * @see \Serializable::serialize()
-     */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password,
-        ));
-    }
+	/**
+	 * @see \Serializable::serialize()
+	 */
+	public function serialize() {
+		return serialize(array(
+			$this->id,
+			$this->username,
+			$this->salt,
+			$this->password,
+		));
+	}
 
-    /**
-     * @see \Serializable::unserialize()
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password,
-        ) = unserialize($serialized);
-    }
+	/**
+	 * @see \Serializable::unserialize()
+	 */
+	public function unserialize($serialized) {
+		list(
+			$this->id,
+			$this->username,
+			$this->salt,
+			$this->password,
+		) = unserialize($serialized);
+	}
 
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getId() {
+		return $this->id;
+	}
 
+	/**
+	 * Set key
+	 *
+	 * @param string $key
+	 * @return SystemParameter
+	 */
+	public function setKey($key) {
+		$this->key = $key;
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+		return $this;
+	}
 
-    /**
-     * Set key
-     *
-     * @param string $key
-     * @return SystemParameter
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
+	/**
+	 * Get key
+	 *
+	 * @return string
+	 */
+	public function getKey() {
+		return $this->key;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set int_value
+	 *
+	 * @param integer $intValue
+	 * @return SystemParameter
+	 */
+	public function setIntValue($intValue) {
+		$this->int_value = $intValue;
 
-    /**
-     * Get key
-     *
-     * @return string 
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
+		return $this;
+	}
 
-    /**
-     * Set int_value
-     *
-     * @param integer $intValue
-     * @return SystemParameter
-     */
-    public function setIntValue($intValue)
-    {
-        $this->int_value = $intValue;
+	/**
+	 * Get int_value
+	 *
+	 * @return integer
+	 */
+	public function getIntValue() {
+		return $this->int_value;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set string_value
+	 *
+	 * @param string $stringValue
+	 * @return SystemParameter
+	 */
+	public function setStringValue($stringValue) {
+		$this->string_value = $stringValue;
 
-    /**
-     * Get int_value
-     *
-     * @return integer 
-     */
-    public function getIntValue()
-    {
-        return $this->int_value;
-    }
+		return $this;
+	}
 
-    /**
-     * Set string_value
-     *
-     * @param string $stringValue
-     * @return SystemParameter
-     */
-    public function setStringValue($stringValue)
-    {
-        $this->string_value = $stringValue;
+	/**
+	 * Get string_value
+	 *
+	 * @return string
+	 */
+	public function getStringValue() {
+		return $this->string_value;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set dec_value
+	 *
+	 * @param string $decValue
+	 * @return SystemParameter
+	 */
+	public function setDecValue($decValue) {
+		$this->dec_value = $decValue;
 
-    /**
-     * Get string_value
-     *
-     * @return string 
-     */
-    public function getStringValue()
-    {
-        return $this->string_value;
-    }
+		return $this;
+	}
 
-    /**
-     * Set dec_value
-     *
-     * @param string $decValue
-     * @return SystemParameter
-     */
-    public function setDecValue($decValue)
-    {
-        $this->dec_value = $decValue;
+	/**
+	 * Get dec_value
+	 *
+	 * @return string
+	 */
+	public function getDecValue() {
+		return $this->dec_value;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set boolean_value
+	 *
+	 * @param boolean $booleanValue
+	 * @return SystemParameter
+	 */
+	public function setBooleanValue($booleanValue) {
+		$this->boolean_value = $booleanValue;
 
-    /**
-     * Get dec_value
-     *
-     * @return string 
-     */
-    public function getDecValue()
-    {
-        return $this->dec_value;
-    }
+		return $this;
+	}
 
-    /**
-     * Set boolean_value
-     *
-     * @param boolean $booleanValue
-     * @return SystemParameter
-     */
-    public function setBooleanValue($booleanValue)
-    {
-        $this->boolean_value = $booleanValue;
-
-        return $this;
-    }
-
-    /**
-     * Get boolean_value
-     *
-     * @return boolean 
-     */
-    public function getBooleanValue()
-    {
-        return $this->boolean_value;
-    }
+	/**
+	 * Get boolean_value
+	 *
+	 * @return boolean
+	 */
+	public function getBooleanValue() {
+		return $this->boolean_value;
+	}
 }

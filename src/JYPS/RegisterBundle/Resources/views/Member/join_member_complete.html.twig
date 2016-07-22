@@ -1,13 +1,12 @@
-{# src/JYPS/RegisterBundle/Resources/views/Member/join_member.html.twig #}
+{# src/JYPS/RegisterBundle/Resources/views/Member/join_member_complete.html.twig #}
 <head>
 <title>JYPS Ry Jäsenmaksun maksaminen</title>
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
 <center>
-Ole hyvä ja maksa jäsenmaksusi alla olevalla verkkomaksulla.
-
 <form id="payment">
   <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
+  <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">
   <input name="ORDER_NUMBER" type="hidden" value="{{order_number}}">
   <input name="REFERENCE_NUMBER" type="hidden" value= "" >
   <input name="ORDER_DESCRIPTION" type="hidden" value="{{order_description}}">
@@ -16,27 +15,12 @@ Ole hyvä ja maksa jäsenmaksusi alla olevalla verkkomaksulla.
   <input name="CANCEL_ADDRESS" type="hidden" value="{{cancel_address}}">
   <input name="PENDING_ADDRESS" type="hidden" value="">
   <input name="NOTIFY_ADDRESS" type="hidden" value="{{notify_address}}">
-  <input name="TYPE" type="hidden" value="E1">
+  <input name="TYPE" type="hidden" value="S1">
   <input name="CULTURE" type="hidden" value="fi_FI">
   <input name="PRESELECTED_METHOD" type="hidden" value="">
   <input name="MODE" type="hidden" value="1">
   <input name="VISIBLE_METHODS" type="hidden" value="">
   <input name="GROUP" type="hidden" value="">
-  <input name="CONTACT_EMAIL" type="hidden" value="{{contact_email}}">
-  <input name="CONTACT_FIRSTNAME" type="hidden" value="{{contact_firstname}}">
-  <input name="CONTACT_LASTNAME" type="hidden" value="{{contact_lastname}}">
-  <input name="CONTACT_ADDR_STREET" type="hidden" value="{{contact_addr_street}}">
-  <input name="CONTACT_ADDR_ZIP" type="hidden" value="{{contact_addr_zip}}">
-  <input name="CONTACT_ADDR_CITY" type="hidden" value="{{contact_addr_city}}">
-  <input name="CONTACT_ADDR_COUNTRY" type="hidden" value="FI">
-  <input name="INCLUDE_VAT" type="hidden" value="1">
-  <input name="ITEMS" type="hidden" value="1">
-  <input name="ITEM_TITLE[0]" type="hidden" value="Jäsenmaksu">
-  <input name="ITEM_AMOUNT[0]" type="hidden" value="1">
-  <input name="ITEM_PRICE[0]" type="hidden" value="{{memberfee_amount}}">
-  <input name="ITEM_MERCHANT_ID[0]" type="hidden" value="{{merchant_id}}">
-  <input name="ITEM_CP[0]" type="hidden" value="">
-  <input name="ITEM_TAX[0]" type="hidden" value="24">
   <input name="AUTHCODE" type="hidden" value="{{authcode}}">
   <input type="submit" value="Pay here">
 </form>

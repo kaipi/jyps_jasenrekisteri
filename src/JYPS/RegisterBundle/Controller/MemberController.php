@@ -470,19 +470,19 @@ class MemberController extends Controller {
 			$this->sendJoinInfoEmail($member, $memberfee);
 
 			$merchant_id = "13466";
-			$order_number = "1";
-			$order_description = "Testitilaus";
+			$order_number = $memberfee->getReferencenumber();
+			$order_description = "Jasenmaksu";
 			$return_address = "https://jasenrekisteri.jyps.fi/paymentcomplete";
-			$cancel_address = "https://jasenrekisteri.jyps.fi/paymentcancelled";
-			$notify_address = "https://jasenrekisteri.jyps.fi/paymentnotify";
-			$contact_firstname = "Teijo";
-			$contact_lastname = "Testi";
-			$contact_email = "teijo@testi.fi";
-			$contact_addr_street = "Testikatu 1";
-			$contact_addr_zip = "40740";
-			$contact_addr_city = "Testville";
-			$contact_addr_country = "Suomi";
-			$memberfee_amount = "30";
+			$cancel_address = "https://jasenrekisteri.jyps.fi/paymentfailed";
+			$notify_address = "https://jasenrekisteri.jyps.fi/paymentcomplete";
+			$contact_firstname = $member->getFirstName();
+			$contact_lastname = $member->getSurname();
+			$contact_email = $member->getEmail();
+			$contact_addr_street = $member->getStreetAddress();
+			$contact_addr_zip = $member->getPostalCode();
+			$contact_addr_city = $member->getCity();
+			$contact_addr_country = $member->getCountry();
+			$memberfee_amount = $memberfee->getFeeAmountWithVat();
 
 			$authcode = strtoupper(md5("6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ|" .
 				$merchant_id . "|" .
@@ -525,6 +525,14 @@ class MemberController extends Controller {
 	public function paymentCompleteAction(Request $request) {
 		$ordernumber = $request->request->get('ORDER_NUMBER');
 		$return_auth = $request->request->get('RETURN_AUTHCODE');
+		$fee = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('reference_number' => $ordernumber));
+		$fee->setPaid(True);
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($fee);
+		$em->flush();
+		return $this->render('JYPSRegisterBundle:Member:join_member_payment_complete.html.twig');
 
 	}
 

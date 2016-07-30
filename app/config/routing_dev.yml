@@ -41,6 +41,10 @@ add_member:
     path:   /member/add
     defaults:  { _controller: JYPSRegisterBundle:Member:addMember }
 
+payment_complete:
+    path:   /paymentcomplete
+    defaults:  { _controller: JYPSRegisterBundle:Member:paymentComplete }
+
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }

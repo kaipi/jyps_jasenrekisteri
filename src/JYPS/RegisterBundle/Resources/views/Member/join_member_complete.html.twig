@@ -3,7 +3,7 @@
 <title>JYPS Ry Jäsenmaksun maksaminen</title>
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
-<center>
+
 <form id="payment">
   <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
   <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">
@@ -28,5 +28,4 @@
 <script type="text/javascript">
 SV.widget.initWithForm('payment', {charset:'ISO-8859-1'});
 </script> 
-</center>
 </html>

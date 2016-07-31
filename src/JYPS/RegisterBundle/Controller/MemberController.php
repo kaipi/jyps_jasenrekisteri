@@ -428,10 +428,6 @@ class MemberController extends Controller {
 				$this->createChildMembers($member, $childMembers);
 			}
 
-			$bankaccount = $this->getDoctrine()
-				->getRepository('JYPSRegisterBundle:SystemParameter')
-				->findOneBy(array('key' => 'BankAccount'));
-
 			//Send mail here, if user exits confirmation page too fast no mail is sent.
 			//1) List join
 			if ($member->getEmail() != "") {
@@ -469,12 +465,13 @@ class MemberController extends Controller {
 
 			$this->sendJoinInfoEmail($member, $memberfee);
 
-			$merchant_id = "13466";
+			$merchant_id = SystemParameterHelper::GetSystemParameter("PaytrailMerchantId");
+			$authcode = SystemParameterHelper::GetSystemParameter("PaytrailMerchantAuthCode");
 			$order_number = $memberfee->getReferencenumber();
-			$order_description = "Jasenmaksu";
-			$return_address = "https://jasenrekisteri.jyps.fi/paymentcomplete";
-			$cancel_address = "https://jasenrekisteri.jyps.fi/paymentfailed";
-			$notify_address = "https://jasenrekisteri.jyps.fi/paymentcomplete";
+			$order_description = "Jasenmaksu;Jasen:" . $member->getMemberId();
+			$return_address = SystemParameterHelper::GetSystemParameter("PaymentCompleteURL");
+			$cancel_address = SystemParameterHelper::GetSystemParameter("PaymentCancelledURL");
+			$notify_address = SystemParameterHelper::GetSystemParameter("PaymentCompleteURL");
 			$contact_firstname = $member->getFirstName();
 			$contact_lastname = $member->getSurname();
 			$contact_email = $member->getEmail();
@@ -484,7 +481,7 @@ class MemberController extends Controller {
 			$contact_addr_country = $member->getCountry();
 			$memberfee_amount = $memberfee->getFeeAmountWithVat();
 
-			$authcode = strtoupper(md5("6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ|" .
+			$authcode = strtoupper(md5($authcode . "|" .
 				$merchant_id . "|" .
 				$memberfee_amount . "|" .
 				$order_number . "|" .
@@ -525,14 +522,25 @@ class MemberController extends Controller {
 	public function paymentCompleteAction(Request $request) {
 		$ordernumber = $request->request->get('ORDER_NUMBER');
 		$return_auth = $request->request->get('RETURN_AUTHCODE');
-		$fee = $this->getDoctrine()
-			->getRepository('JYPSRegisterBundle:MemberFee')
-			->findOneBy(array('reference_number' => $ordernumber));
-		$fee->setPaid(True);
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($fee);
-		$em->flush();
-		return $this->render('JYPSRegisterBundle:Member:join_member_payment_complete.html.twig');
+		$timestamp = $request->request->get('TIMESTAMP');
+		$payment_method = $request->request->get('METHOD');
+		$payment_transaction_id = $request->request->get('PAID');
+		if (strtoupper(md5($ordernumber . "|" .
+			$timestamp . "|" .
+			$payment_transaction_id . "|" .
+			$payment_method . "|" .
+			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $RETURN_AUTHCODE) {
+			$fee = $this->getDoctrine()
+				->getRepository('JYPSRegisterBundle:MemberFee')
+				->findOneBy(array('reference_number' => $ordernumber));
+			$fee->setPaid(True);
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($fee);
+			$em->flush();
+			return $this->render('JYPSRegisterBundle:Member:join_member_payment_complete.html.twig');
+		} else {
+			return $this->render('JYPSRegisterBundle:Member:join_member_payment_failed.html.twig');
+		}
 
 	}
 

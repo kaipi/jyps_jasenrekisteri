@@ -154,7 +154,16 @@ sendSingleMemberFeeEmail:
     path: /member/memberfees/sendSingleEmail
     defaults: {_controller: JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail }
     methods:  [POST]
+
 acme_blog:
     type: rest
     prefix: /member/api
     resource: "@JYPSRegisterBundle/Resources/config/routes.yml"  
+
+payment_complete:
+    path:   /paymentcomplete
+    defaults:  { _controller: JYPSRegisterBundle:Member:paymentComplete }
+
+payment_cancelled:
+    path:   /paymentcancelled
+    defaults:  { _controller: JYPSRegisterBundle:Member:paymentCancelled }

@@ -26,3 +26,6 @@ monolog:
 fos_rest:
     view:
         view_response_listener: true
+
+swiftmailer:
+    delivery_address:  timo.kaipiainen@gmail.com

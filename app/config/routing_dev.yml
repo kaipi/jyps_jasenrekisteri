@@ -45,6 +45,10 @@ payment_complete:
     path:   /paymentcomplete
     defaults:  { _controller: JYPSRegisterBundle:Member:paymentComplete }
 
+payment_cancelled:
+    path:   /paymentcancelled
+    defaults:  { _controller: JYPSRegisterBundle:Member:paymentCancelled }
+
 search:
     path:   /member/search
     defaults:  { _controller: JYPSRegisterBundle:Member:searchMembers }

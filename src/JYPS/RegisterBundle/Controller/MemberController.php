@@ -447,8 +447,7 @@ class MemberController extends Controller {
 						'JYPSRegisterBundle:Member:join_member_email_base.txt.twig',
 						array('member' => $member,
 							'memberfee' => $memberfee,
-							'bankaccount' => $bankaccount,
-							'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount))));
+						)));
 
 				$childs = $member->getChildren();
 
@@ -465,13 +464,13 @@ class MemberController extends Controller {
 
 			$this->sendJoinInfoEmail($member, $memberfee);
 
-			$merchant_id = SystemParameterHelper::GetSystemParameter("PaytrailMerchantId");
-			$authcode = SystemParameterHelper::GetSystemParameter("PaytrailMerchantAuthCode");
+			$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
+			$authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
 			$order_number = $memberfee->getReferencenumber();
 			$order_description = "Jasenmaksu;Jasen:" . $member->getMemberId();
-			$return_address = SystemParameterHelper::GetSystemParameter("PaymentCompleteURL");
-			$cancel_address = SystemParameterHelper::GetSystemParameter("PaymentCancelledURL");
-			$notify_address = SystemParameterHelper::GetSystemParameter("PaymentCompleteURL");
+			$return_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
+			$cancel_address = $this->GetSystemParameter("PaymentCancelledURL")->getStringValue();
+			$notify_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
 			$contact_firstname = $member->getFirstName();
 			$contact_lastname = $member->getSurname();
 			$contact_email = $member->getEmail();
@@ -499,7 +498,7 @@ class MemberController extends Controller {
 				"|" .
 				""));
 
-			return $this->render('JYPSRegisterBundle:Member:join_member_complete.html.twig', array('merchant_id' => $merchant_id,
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment.html.twig', array('merchant_id' => $merchant_id,
 				'order_number' => $order_number,
 				'order_description' => $order_description,
 				'return_address' => $return_address,
@@ -516,7 +515,7 @@ class MemberController extends Controller {
 				'authcode' => $authcode));
 
 		}
-		return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
+		return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_failed.html.twig');
 	}
 
 	public function paymentCompleteAction(Request $request) {
@@ -543,7 +542,10 @@ class MemberController extends Controller {
 		}
 
 	}
+	public function paymentCancelledAction(Request $request) {
+		return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig');
 
+	}
 	public function joinSaveInternalAction(Request $request) {
 		$member = new Member();
 
@@ -874,4 +876,12 @@ class MemberController extends Controller {
 		return MemberCardGenerator::generateMembershipCard($member, $baseimage, $font, $card_image);
 
 	}
+
+	private function getSystemParameter($parameter_name) {
+		$value = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:SystemParameter')
+			->findOneBy(array('key' => $parameter_name));
+		return $value;
+	}
+
 }

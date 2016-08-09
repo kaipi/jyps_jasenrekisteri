@@ -527,7 +527,7 @@ class MemberController extends Controller {
 			$timestamp . "|" .
 			$payment_transaction_id . "|" .
 			$payment_method . "|" .
-			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $return_auth) 
+			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ"))
 
 		if ($check_hash == $return_auth) {
 			$fee = $this->getDoctrine()

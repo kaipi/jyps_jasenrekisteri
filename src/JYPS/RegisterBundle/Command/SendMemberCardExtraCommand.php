@@ -14,7 +14,6 @@ class SendMemberCardExtraCommand extends ContainerAwareCommand {
 			->setDescription('Send membercards also to kunniajäsen and ikijäsen.');
 	}
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
 		$repository = $this->getContainer()->get('doctrine')
 			->getRepository('JYPSRegisterBundle:Member');

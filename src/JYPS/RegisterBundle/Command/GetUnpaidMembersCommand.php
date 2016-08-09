@@ -17,7 +17,6 @@ class GetUnpaidMembersCommand extends ContainerAwareCommand {
 	}
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$period = $input->getOption('period');
-		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
 		$repository = $this->getContainer()->get('doctrine')
 			->getRepository('JYPSRegisterBundle:Member');

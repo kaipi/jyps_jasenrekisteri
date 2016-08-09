@@ -235,7 +235,6 @@ class MemberController extends Controller {
 		return $this->redirect($this->generateUrl('member', array("memberid" => $memberid)));
 	}
 	public function sendCommunicationMailAction(Request $request) {
-		$logger = $this->get('logger');
 
 		$message = $request->get('message');
 		$subject = $request->get('subject');
@@ -528,7 +527,7 @@ class MemberController extends Controller {
 			$timestamp . "|" .
 			$payment_transaction_id . "|" .
 			$payment_method . "|" .
-			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $RETURN_AUTHCODE) {
+			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $return_auth) {
 			$fee = $this->getDoctrine()
 				->getRepository('JYPSRegisterBundle:MemberFee')
 				->findOneBy(array('reference_number' => $ordernumber));
@@ -536,9 +535,9 @@ class MemberController extends Controller {
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($fee);
 			$em->flush();
-			return $this->render('JYPSRegisterBundle:Member:join_member_payment_complete.html.twig');
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_completed.html.twig');
 		} else {
-			return $this->render('JYPSRegisterBundle:Member:join_member_payment_failed.html.twig');
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig');
 		}
 
 	}

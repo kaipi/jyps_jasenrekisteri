@@ -1,0 +1,31 @@
+{# src/JYPS/RegisterBundle/Resources/views/Member/join_member_complete.html.twig #}
+<head>
+<title>JYPS Ry Jäsenmaksun maksaminen</title>
+<link href="{{ asset('style.css') }}" rel="stylesheet" />
+</head>
+
+<form id="payment">
+  <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
+  <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">
+  <input name="ORDER_NUMBER" type="hidden" value="{{order_number}}">
+  <input name="REFERENCE_NUMBER" type="hidden" value= "" >
+  <input name="ORDER_DESCRIPTION" type="hidden" value="{{order_description}}">
+  <input name="CURRENCY" type="hidden" value="EUR">
+  <input name="RETURN_ADDRESS" type="hidden" value="{{return_address}}">
+  <input name="CANCEL_ADDRESS" type="hidden" value="{{cancel_address}}">
+  <input name="PENDING_ADDRESS" type="hidden" value="">
+  <input name="NOTIFY_ADDRESS" type="hidden" value="{{notify_address}}">
+  <input name="TYPE" type="hidden" value="S1">
+  <input name="CULTURE" type="hidden" value="fi_FI">
+  <input name="PRESELECTED_METHOD" type="hidden" value="">
+  <input name="MODE" type="hidden" value="1">
+  <input name="VISIBLE_METHODS" type="hidden" value="">
+  <input name="GROUP" type="hidden" value="">
+  <input name="AUTHCODE" type="hidden" value="{{authcode}}">
+  <input type="submit" value="Pay here">
+</form>
+<script type="text/javascript" src="//payment.paytrail.com/js/payment-widget-v1.0.min.js"></script>
+<script type="text/javascript">
+SV.widget.initWithForm('payment', {charset:'ISO-8859-1'});
+</script> 
+</html>

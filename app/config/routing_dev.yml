@@ -67,10 +67,6 @@ join_save:
     path: /join/joinSave
     defaults:  { _controller: JYPSRegisterBundle:Member:joinSave}
 
-join_complete:
-    path: /join/joinComplete
-    defaults: {_controller: JYPSRegisterBundle:Member:joinComplete}
-
 join_internal_save:
     path: /member/joinSave
     defaults:  { _controller: JYPSRegisterBundle:Member:joinSaveInternal}

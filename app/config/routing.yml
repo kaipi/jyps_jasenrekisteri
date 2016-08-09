@@ -50,11 +50,6 @@ join_internal_save:
     defaults:  { _controller: JYPSRegisterBundle:Member:joinSaveInternal}
     methods: [POST]
 
-join_complete:
-    path: /join/joinComplete
-    defaults: {_controller: JYPSRegisterBundle:Member:joinComplete}
-    methods:  [GET]
-
 configuration:
     path: /member/configuration
     defaults: {_controller: JYPSRegisterBundle:Configuration:showAll}

@@ -527,7 +527,7 @@ class MemberController extends Controller {
 			$timestamp . "|" .
 			$payment_transaction_id . "|" .
 			$payment_method . "|" .
-			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ"))
+			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ"));
 
 		if ($check_hash == $return_auth) {
 			$fee = $this->getDoctrine()
@@ -539,7 +539,7 @@ class MemberController extends Controller {
 			$em->flush();
 			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_completed.html.twig');
 		} else {
-			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig',array('return_auth'=>$return_auth));
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig', array('return_auth' => $return_auth));
 		}
 
 	}

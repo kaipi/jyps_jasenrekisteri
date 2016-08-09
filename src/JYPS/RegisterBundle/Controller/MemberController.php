@@ -514,20 +514,22 @@ class MemberController extends Controller {
 				'authcode' => $authcode));
 
 		}
-		return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_failed.html.twig');
+		return $this->render('JYPSRegisterBundle:Member:join_member_failed.twig');
 	}
 
 	public function paymentCompleteAction(Request $request) {
-		$ordernumber = $request->request->get('ORDER_NUMBER');
-		$return_auth = $request->request->get('RETURN_AUTHCODE');
-		$timestamp = $request->request->get('TIMESTAMP');
-		$payment_method = $request->request->get('METHOD');
-		$payment_transaction_id = $request->request->get('PAID');
-		if (strtoupper(md5($ordernumber . "|" .
+		$ordernumber = $request->query->get('ORDER_NUMBER');
+		$return_auth = $request->query->get('RETURN_AUTHCODE');
+		$timestamp = $request->query->get('TIMESTAMP');
+		$payment_method = $request->query->get('METHOD');
+		$payment_transaction_id = $request->query->get('PAID');
+		$check_hash = strtoupper(md5($ordernumber . "|" .
 			$timestamp . "|" .
 			$payment_transaction_id . "|" .
 			$payment_method . "|" .
-			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $return_auth) {
+			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ")) == $return_auth) 
+
+		if ($check_hash == $return_auth) {
 			$fee = $this->getDoctrine()
 				->getRepository('JYPSRegisterBundle:MemberFee')
 				->findOneBy(array('reference_number' => $ordernumber));
@@ -537,7 +539,7 @@ class MemberController extends Controller {
 			$em->flush();
 			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_completed.html.twig');
 		} else {
-			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig');
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig',array('return_auth'=>$return_auth));
 		}
 
 	}

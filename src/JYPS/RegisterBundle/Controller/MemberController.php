@@ -527,7 +527,7 @@ class MemberController extends Controller {
 			$timestamp . "|" .
 			$payment_transaction_id . "|" .
 			$payment_method . "|" .
-			"6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ"));
+			$this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();));
 
 		if ($check_hash == $return_auth) {
 			$fee = $this->getDoctrine()

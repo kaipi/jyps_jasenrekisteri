@@ -235,7 +235,6 @@ class MemberController extends Controller {
 		return $this->redirect($this->generateUrl('member', array("memberid" => $memberid)));
 	}
 	public function sendCommunicationMailAction(Request $request) {
-		$logger = $this->get('logger');
 
 		$message = $request->get('message');
 		$subject = $request->get('subject');

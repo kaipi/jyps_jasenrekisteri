@@ -4,12 +4,10 @@ namespace JYPS\RegisterBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-class InterestRepository extends EntityRepository
-{
-    public function findAllIntrests()
-    {
-        return   $intrests = $this->getDoctrine()
-  				->getRepository("JYPSRegisterBundle:IntrestConfig")
-  				->findAll();
-    }
+class InterestRepository extends EntityRepository {
+	public function findAllIntrests() {
+		return $this->getDoctrine()
+			->getRepository("JYPSRegisterBundle:IntrestConfig")
+			->findAll();
+	}
 }

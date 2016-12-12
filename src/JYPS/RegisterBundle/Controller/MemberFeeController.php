@@ -325,7 +325,10 @@ class MemberFeeController extends Controller {
 		return $this->redirect($this->generateUrl('memberfees'));
 	}
 
-	public function paytrailPayment(Request $request) {
+	public function paytrailPaymentAction(Request $request) {
+
+		$memberid = $request->query->get('member_id');
+		$reference_number = $request->query->get('reference');
 
 	}
 

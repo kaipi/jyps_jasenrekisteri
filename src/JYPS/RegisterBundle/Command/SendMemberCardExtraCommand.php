@@ -26,7 +26,7 @@ class SendMemberCardExtraCommand extends ContainerAwareCommand {
 		$members = $query->getResult();
 
 		foreach ($members as $member) {
-			if ($member->getMemberType() == "Ainaisjäsen" AND $member !== NULL) {
+			if ($member->getMemberType() == "Ainaisjäsen" && $member !== NULL) {
 				echo $member->getFullName() . "\n";
 			}
 		}

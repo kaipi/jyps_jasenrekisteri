@@ -861,6 +861,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
 				return True;
 			}
 		}
+
 		return false;
 	}
 

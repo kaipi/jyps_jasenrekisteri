@@ -669,8 +669,6 @@ class MemberController extends Controller {
 				}
 			}
 
-			$this->sendJoinInfoEmail($member, $memberfee);
-
 			$this->get('session')->getFlashBag()->add(
 				'notice',
 				'Jäsen lisätty');

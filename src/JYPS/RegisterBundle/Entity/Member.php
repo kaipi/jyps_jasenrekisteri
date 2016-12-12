@@ -861,10 +861,6 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
 				return True;
 			}
 		}
-		/*never remind child members or ainais/kunniajäsen*/
-		if ($member->getMemberType() = xx) {
-			return True;
-		}
 
 		return false;
 	}

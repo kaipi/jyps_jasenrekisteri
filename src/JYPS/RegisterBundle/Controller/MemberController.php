@@ -876,11 +876,4 @@ class MemberController extends Controller {
 
 	}
 
-	private function getSystemParameter($parameter_name) {
-		$value = $this->getDoctrine()
-			->getRepository('JYPSRegisterBundle:SystemParameter')
-			->findOneBy(array('key' => $parameter_name));
-		return $value;
-	}
-
 }

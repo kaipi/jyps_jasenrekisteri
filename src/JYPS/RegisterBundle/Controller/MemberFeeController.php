@@ -325,10 +325,64 @@ class MemberFeeController extends Controller {
 		return $this->redirect($this->generateUrl('memberfees'));
 	}
 
-	public function paytrailPaymentAction(Request $request) {
+	public function paytrailPaymentAction(Request $request, $reference) {
 
-		$memberid = $request->query->get('member_id');
-		$reference_number = $request->query->get('reference');
+		$memberfee = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:MemberFee')
+			->findOneBy(array('reference_number' => $reference));
+		$member = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:Member')
+			->findOneBy(array('member_id' => $memberfee->getMemberId()));
+
+		$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
+		$authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
+		$order_number = $memberfee->getReferencenumber();
+		$order_description = "Jasenmaksu;Jasen:" . $member->getMemberId();
+		$return_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
+		$cancel_address = $this->GetSystemParameter("PaymentCancelledURL")->getStringValue();
+		$notify_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
+		$contact_firstname = $member->getFirstName();
+		$contact_lastname = $member->getSurname();
+		$contact_email = $member->getEmail();
+		$contact_addr_street = $member->getStreetAddress();
+		$contact_addr_zip = $member->getPostalCode();
+		$contact_addr_city = $member->getCity();
+		$contact_addr_country = $member->getCountry();
+		$memberfee_amount = $memberfee->getFeeAmountWithVat();
+
+		$authcode = strtoupper(md5($authcode . "|" .
+			$merchant_id . "|" .
+			$memberfee_amount . "|" .
+			$order_number . "|" .
+			"|" .
+			$order_description . "|" .
+			"EUR|" .
+			$return_address . "|" .
+			$cancel_address . "|" .
+			"|" .
+			$notify_address . "|" .
+			"S1|" .
+			"fi_FI|" .
+			"|" .
+			"1|" .
+			"|" .
+			""));
+
+		return $this->render('JYPSRegisterBundle:MemberFee:paytrail_payment.html.twig', array('merchant_id' => $merchant_id,
+			'order_number' => $order_number,
+			'order_description' => $order_description,
+			'return_address' => $return_address,
+			'cancel_address' => $cancel_address,
+			'notify_address' => $notify_address,
+			'contact_email' => $contact_email,
+			'contact_firstname' => $contact_firstname,
+			'contact_lastname' => $contact_lastname,
+			'contact_addr_street' => $contact_addr_street,
+			'contact_addr_zip' => $contact_addr_zip,
+			'contact_addr_city' => $contact_addr_city,
+			'contact_addr_country' => $contact_addr_country,
+			'memberfee_amount' => $memberfee_amount,
+			'authcode' => $authcode));
 
 	}
 
@@ -340,5 +394,11 @@ class MemberFeeController extends Controller {
 
 		return MemberCardGenerator::generateMembershipCard($member, $baseimage, $font, $card_image);
 
+	}
+	private function getSystemParameter($parameter_name) {
+		$value = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:SystemParameter')
+			->findOneBy(array('key' => $parameter_name));
+		return $value;
 	}
 }

@@ -133,7 +133,7 @@ JYPSRegisterBundle_member_intrestconfig:
     prefix:   /member/intrestconfig
 
 paytrailPayment:
-    path:   /paytrailpayment
+    path:   /pay/{reference}
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:paytrailPayment}
 
 EndroidQrCodeBundle:

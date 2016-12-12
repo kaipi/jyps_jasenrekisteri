@@ -463,7 +463,7 @@ class MemberController extends Controller {
 
 			$this->sendJoinInfoEmail($member, $memberfee);
 
-			$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
+			/*$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
 			$authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
 			$order_number = $memberfee->getReferencenumber();
 			$order_description = "Jasenmaksu;Jasen:" . $member->getMemberId();
@@ -512,7 +512,7 @@ class MemberController extends Controller {
 				'contact_addr_country' => $contact_addr_country,
 				'memberfee_amount' => $memberfee_amount,
 				'authcode' => $authcode));
-
+	*/
 		}
 		return $this->render('JYPSRegisterBundle:Member:join_member_failed.twig');
 	}

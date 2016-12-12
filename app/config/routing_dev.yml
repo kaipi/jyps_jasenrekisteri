@@ -132,6 +132,10 @@ JYPSRegisterBundle_member_intrestconfig:
     resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
     prefix:   /member/intrestconfig
 
+paytrailPayment:
+    path:   /paytrailpayment
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:paytrailPayment}
+
 EndroidQrCodeBundle:
     resource:   "@EndroidQrCodeBundle/Controller/"
     type:       annotation

@@ -324,6 +324,11 @@ class MemberFeeController extends Controller {
 			'Jäsenmaksut lähetetty, OK:' . $sent . " NOK:" . $errors . "");
 		return $this->redirect($this->generateUrl('memberfees'));
 	}
+
+	public function paytrailPayment(Request $request) {
+
+	}
+
 	private function makeMemberCard($member) {
 
 		$baseimage = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');

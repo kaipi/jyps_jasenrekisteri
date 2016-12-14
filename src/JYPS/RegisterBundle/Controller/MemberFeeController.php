@@ -330,6 +330,9 @@ class MemberFeeController extends Controller {
 		$memberfee = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:MemberFee')
 			->findOneBy(array('reference_number' => $reference));
+		if ($memberfee->getPaid()) {
+			return $this->render('JYPSRegisterBundle:MemberFee:payment_already_paid.html.twig');
+		}
 		$member = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:Member')
 			->findOneBy(array('id' => $memberfee->getMemberId()));

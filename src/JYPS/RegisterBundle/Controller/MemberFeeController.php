@@ -332,7 +332,7 @@ class MemberFeeController extends Controller {
 			->findOneBy(array('reference_number' => $reference));
 		$member = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:Member')
-			->findOneBy(array('member_id' => $memberfee->getMemberId()));
+			->findOneBy(array('id' => $memberfee->getMemberId()));
 
 		$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
 		$authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();

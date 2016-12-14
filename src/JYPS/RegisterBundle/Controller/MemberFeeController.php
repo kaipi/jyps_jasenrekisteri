@@ -382,10 +382,43 @@ class MemberFeeController extends Controller {
 			'contact_addr_city' => $contact_addr_city,
 			'contact_addr_country' => $contact_addr_country,
 			'memberfee_amount' => $memberfee_amount,
-			'authcode' => $authcode));
+			'authcode' => $authcode,
+			'memberfee_year' => $memberfee->getFeePeriod(),
+			'memberfullname' => $member->getFullName(),
+			'memberid' => $member->getMemberid(),
+			'membertype' => $member->getMemberType()));
 
 	}
+	public function paymentCompleteAction(Request $request) {
+		$ordernumber = $request->query->get('ORDER_NUMBER');
+		$return_auth = $request->query->get('RETURN_AUTHCODE');
+		$timestamp = $request->query->get('TIMESTAMP');
+		$payment_method = $request->query->get('METHOD');
+		$payment_transaction_id = $request->query->get('PAID');
+		$check_hash = strtoupper(md5($ordernumber . "|" .
+			$timestamp . "|" .
+			$payment_transaction_id . "|" .
+			$payment_method . "|" .
+			$this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue()));
 
+		if ($check_hash == $return_auth) {
+			$fee = $this->getDoctrine()
+				->getRepository('JYPSRegisterBundle:MemberFee')
+				->findOneBy(array('reference_number' => $ordernumber));
+			$fee->setPaid(True);
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($fee);
+			$em->flush();
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_completed.html.twig');
+		} else {
+			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig', array('return_auth' => $return_auth));
+		}
+
+	}
+	public function paymentCancelledAction(Request $request) {
+		return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig');
+
+	}
 	private function makeMemberCard($member) {
 
 		$baseimage = $this->get('kernel')->locateResource('@JYPSRegisterBundle/Resources/public/images/JYPS_Jasenkortti.png');

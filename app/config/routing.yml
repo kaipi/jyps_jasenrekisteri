@@ -155,10 +155,14 @@ acme_blog:
     prefix: /member/api
     resource: "@JYPSRegisterBundle/Resources/config/routes.yml"  
 
+paytrailPayment:
+    path:   /pay/{reference}
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:paytrailPayment}
+
 payment_complete:
     path:   /paymentcomplete
-    defaults:  { _controller: JYPSRegisterBundle:Member:paymentComplete }
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentComplete }
 
 payment_cancelled:
     path:   /paymentcancelled
-    defaults:  { _controller: JYPSRegisterBundle:Member:paymentCancelled }
+    defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentCancelled }

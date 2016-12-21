@@ -412,14 +412,14 @@ class MemberFeeController extends Controller {
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($fee);
 			$em->flush();
-			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_completed.html.twig');
+			return $this->render('JYPSRegisterBundle:MemberFee:paytrail_payment_completed.html.twig');
 		} else {
-			return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig', array('return_auth' => $return_auth));
+			return $this->render('JYPSRegisterBundle:MemberFee:paytrail_payment_failed.html.twig', array('return_auth' => $return_auth));
 		}
 
 	}
 	public function paymentCancelledAction(Request $request) {
-		return $this->render('JYPSRegisterBundle:Member:join_member_paytrail_payment_failed.html.twig');
+		return $this->render('JYPSRegisterBundle:MemberFee:paytrail_payment_failed.html.twig');
 
 	}
 	private function makeMemberCard($member) {

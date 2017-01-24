@@ -392,6 +392,7 @@ class MemberFeeController extends Controller {
 			'membertype' => $member->getMemberType()));
 
 	}
+
 	public function paymentCompleteAction(Request $request) {
 		$ordernumber = $request->query->get('ORDER_NUMBER');
 		$return_auth = $request->query->get('RETURN_AUTHCODE');

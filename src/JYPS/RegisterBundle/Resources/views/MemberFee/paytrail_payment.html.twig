@@ -11,6 +11,8 @@ Hei, tervetuloa maksamaan Jyps Ry:n vuoden {{memberfee_year}} jäsenmaksusi, all
   Jäsentyyppi: {{membertype}}
   Jäsenmaksu: {{memberfee_amount}} eur
 </pre>
+Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="http://betarekkari.jyps.fi/typechange/{{memberid}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
+<p>
 <form id="payment" action="https://payment.paytrail.com/" method="post">
   <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
   <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">

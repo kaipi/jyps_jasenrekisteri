@@ -136,6 +136,10 @@ payment_cancelled:
     path:   /paymentcancelled
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentCancelled }
 
+change_membertype:
+    path:   /changetype/{memberid}
+    defaults:  { _controller: JYPSRegisterBundle:Member:changeMemberType }
+
 EndroidQrCodeBundle:
     resource:   "@EndroidQrCodeBundle/Controller/"
     type:       annotation

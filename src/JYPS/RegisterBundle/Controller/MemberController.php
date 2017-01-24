@@ -669,6 +669,14 @@ class MemberController extends Controller {
 		return $this->redirect($this->generateUrl('showClosed'));
 
 	}
+	public function changeMemberTypeAction($memberid) {
+		$em = $this->getDoctrine()->getManager();
+
+		$member = $this->getDoctrine()
+			->getRepository('JYPSRegisterBundle:Member')
+			->findOneBy(array('member_id' => $memberid));
+
+	}
 	private function addChildMember($memberid, $childMemberId) {
 
 		$em = $this->getDoctrine()->getManager();
@@ -776,6 +784,7 @@ class MemberController extends Controller {
 		}
 		return true;
 	}
+
 	private function sendYleinenJoinMail(Member $member) {
 		if ($member->getEmail() != "") {
 			if ($member->getMailingListYleinen() == True) {

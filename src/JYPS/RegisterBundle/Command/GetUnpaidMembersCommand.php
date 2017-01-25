@@ -26,7 +26,6 @@ class GetUnpaidMembersCommand extends ContainerAwareCommand {
 			->setParameter('current_date', new \DateTime("now"))
 			->setParameter('magazine_pref', 0)
 			->getQuery();
-		$period = 2015;
 		$members = $query->getResult();
 
 		foreach ($members as $member) {

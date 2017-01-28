@@ -6,5 +6,14 @@
 <center>
 
   Voit vaihtaa jäsentyyppisi alla olevasta valikosta. Tallentamisen jälkeen sivu palaa takaisin maksulomakkeelle.
-  
+  <form action="/changetype/{{memberid}}" method="post">
+    <select>
+  {% for membertype in membertypes %}
+    <option value="{{memberfeeconfig.id}}">{{memberfeeconfig.memberfeename}}</option>
+  {%endfor%}
+</select>
+<button type="submit" id="change_membertype" name='change_membertype'>Vaihda</button>
+
+</form>
+
 </html>

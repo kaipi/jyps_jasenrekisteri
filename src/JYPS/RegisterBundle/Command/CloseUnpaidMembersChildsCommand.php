@@ -19,7 +19,7 @@ class CloseUnpaidMembersChildsCommand extends ContainerAwareCommand {
 			->getRepository('JYPSRegisterBundle:Member');
 
 		$query = $repository->createQueryBuilder('m')
-			->where('m.membership_end_date <= :current_date AND m.parent IS NOT NULL')
+			->where('m.membership_end_date >= :current_date AND m.parent IS NOT NULL')
 			->setParameter('current_date', new \DateTime("now"))
 			->getQuery();
 		$members = $query->getResult();

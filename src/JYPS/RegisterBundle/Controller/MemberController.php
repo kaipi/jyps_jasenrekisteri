@@ -685,8 +685,14 @@ class MemberController extends Controller
 			$memberfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
             ->findOneBy(array('reference_number' => $referencenumber));
-			$member->setMemberType();
-			$memberfee->setMemberFeeAmount($memberfeeconfig->getAmount());
+           print($request);
+			$memberfeeconfig = $this->getDoctrine()
+            ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
+			->findOneBy(array('id' => $request->request->get('changed_type')));
+			print($request->request->get('changed_type'));
+
+			$member->setMemberType($memberfeeconfig);
+			$memberfee->setFeeAmountWithVat($memberfeeconfig->getMemberfeeAmount());
 			$em->flush($member);
 			$em->flush($memberfee);
 			return $this->redirect($this->generateUrl('paytrailPayment', array('reference' => $referencenumber)));

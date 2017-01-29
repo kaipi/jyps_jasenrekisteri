@@ -8,7 +8,7 @@
   Voit vaihtaa jäsentyyppisi alla olevasta valikosta. Tallentamisen jälkeen sivu palaa takaisin maksulomakkeelle.</p>
   Jos haluat palata maksulomakkeelle, paina <a href="../../pay/{{referencenumber}}">tästä</a>  </p>
   <form id="typechange" action="../../typechange/{{memberid}}/{{referencenumber}}" method="post">
-  <select id="changed_type">
+  <select name="changed_type">
   {% for membertype in membertypes %}
     <option value="{{membertype.getId()}}">{{membertype.getNameWithFeeAmount()}}</option>
   {%endfor%}

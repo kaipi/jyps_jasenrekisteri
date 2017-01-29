@@ -266,4 +266,28 @@ class User implements AdvancedUserInterface, \Serializable {
 	public function removeRole(\JYPS\RegisterBundle\Entity\Role $roles) {
 		$this->roles->removeElement($roles);
 	}
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
 }

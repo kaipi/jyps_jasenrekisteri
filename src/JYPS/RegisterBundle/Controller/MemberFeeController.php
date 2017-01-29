@@ -389,7 +389,8 @@ class MemberFeeController extends Controller {
 			'memberfee_year' => $memberfee->getFeePeriod(),
 			'memberfullname' => $member->getFullName(),
 			'memberid' => $member->getMemberid(),
-			'membertype' => $member->getMemberType()));
+			'membertype' => $member->getMemberType(),
+			'referencenumber' => $memberfee->getReferenceNumber()));
 
 	}
 

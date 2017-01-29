@@ -4,12 +4,13 @@
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
 <center>
-
-  Voit vaihtaa jäsentyyppisi alla olevasta valikosta. Tallentamisen jälkeen sivu palaa takaisin maksulomakkeelle.
-  <form action="/changetype/{{memberid}}" method="post">
-    <select>
+  <h3>Jäsentyypin vaihto - Jyps Ry</h3>
+  Voit vaihtaa jäsentyyppisi alla olevasta valikosta. Tallentamisen jälkeen sivu palaa takaisin maksulomakkeelle.</p>
+  Jos haluat palata maksulomakkeelle, paina <a href="../../pay/{{referencenumber}}">tästä</a>  </p>
+  <form id="typechange" action="../../typechange/{{memberid}}/{{referencenumber}}" method="post">
+  <select id="changed_type">
   {% for membertype in membertypes %}
-    <option value="{{memberfeeconfig.id}}">{{memberfeeconfig.memberfeename}}</option>
+    <option value="{{membertype.getId()}}">{{membertype.getNameWithFeeAmount()}}</option>
   {%endfor%}
 </select>
 <button type="submit" id="change_membertype" name='change_membertype'>Vaihda</button>

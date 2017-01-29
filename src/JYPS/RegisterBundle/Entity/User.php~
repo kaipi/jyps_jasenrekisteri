@@ -1,10 +1,8 @@
 <?php
 
 namespace JYPS\RegisterBundle\Entity;
-use Symfony\Component\Security\Core\Role\RoleInterface;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -13,259 +11,259 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table()
  * @ORM\Entity
  */
-class User implements AdvancedUserInterface, \Serializable
-{
+class User implements AdvancedUserInterface, \Serializable {
 
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+	/**
+	 * @ORM\Column(type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     */
-    private $username;
+	/**
+	 * @ORM\Column(type="string", length=25, unique=true)
+	 */
+	private $username;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $salt;
+	/**
+	 * @ORM\Column(type="string", length=100, nullable=true))
+	 */
+	private $salt;
 
-    /**
-     * @ORM\Column(type="string", length=250)
-     */
-    private $password;
+	/**
+	 * @ORM\Column(type="string", length=250)
+	 */
+	private $password;
 
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     */
-    private $email;
+	/**
+	 * @ORM\Column(type="string", length=60, unique=true)
+	 */
+	private $email;
 
-    /**
-    * @ORM\Column(name="is_active", type="boolean")
-    */
-    private $isActive;
+	/**
+	 * @ORM\Column(name="is_active", type="boolean")
+	 */
+	private $isActive;
 
-    /**
-    * @ORM\Column(type="string", length=100)
-    */
-    private $realname;
+	/**
+	 * @ORM\Column(type="string", length=100)
+	 */
+	private $realname;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="users")
-     */
-    private $roles;
+	/**
+	 * @ORM\ManyToMany(targetEntity="Role", inversedBy="users")
+	 */
+	private $roles;
 
-    public function __construct()
-    {
-        $this->isActive = true;
-        $this->salt = md5(uniqid(null, true));
-        $this->roles = new ArrayCollection();
+	public function __construct() {
+		$this->isActive = true;
 
-    }
+		$this->roles = new ArrayCollection();
 
-    /**
-     * @inheritDoc
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function getSalt()
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function getUsername() {
+		return $this->username;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function getSalt() {
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function getRoles()
-    {
-        return $this->roles->toArray();
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function getPassword() {
+		return $this->password;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function eraseCredentials()
-    {
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function getRoles() {
+		return $this->roles->toArray();
+	}
 
-    /**
-     * @see \Serializable::serialize()
-     */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password,
-            ));
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function eraseCredentials() {
+	}
 
-    /**
-     * @see \Serializable::unserialize()
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password,
-            ) = unserialize($serialized);
-    }
+	/**
+	 * @see \Serializable::serialize()
+	 */
+	public function serialize() {
+		return serialize(array(
+			$this->id,
+			$this->username,
+			$this->salt,
+			$this->password,
+		));
+	}
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * @see \Serializable::unserialize()
+	 */
+	public function unserialize($serialized) {
+		list(
+			$this->id,
+			$this->username,
+			$this->salt,
+			$this->password
+		) = unserialize($serialized);
+	}
 
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getId() {
+		return $this->id;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set username
+	 *
+	 * @param string $username
+	 * @return User
+	 */
+	public function setUsername($username) {
+		$this->username = $username;
 
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set salt
+	 *
+	 * @param string $salt
+	 * @return User
+	 */
+	public function setSalt($salt) {
+		$this->salt = $salt;
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set password
+	 *
+	 * @param string $password
+	 * @return User
+	 */
+	public function setPassword($password) {
+		$this->password = $password;
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set email
+	 *
+	 * @param string $email
+	 * @return User
+	 */
+	public function setEmail($email) {
+		$this->email = $email;
 
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
+		return $this;
+	}
 
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     * @return User
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
+	/**
+	 * Get email
+	 *
+	 * @return string
+	 */
+	public function getEmail() {
+		return $this->email;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set isActive
+	 *
+	 * @param boolean $isActive
+	 * @return User
+	 */
+	public function setActive($active) {
+		$this->isActive = $active;
 
-    /**
-     * Get isActive
-     *
-     * @return boolean 
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
+		return $this;
+	}
 
-    /**
-     * Set realname
-     *
-     * @param string $realname
-     * @return User
-     */
-    public function setRealname($realname)
-    {
-        $this->realname = $realname;
+	/**
+	 * Get isActive
+	 *
+	 * @return boolean
+	 */
+	public function getActive() {
+		return $this->isActive;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set realname
+	 *
+	 * @param string $realname
+	 * @return User
+	 */
+	public function setRealname($realname) {
+		$this->realname = $realname;
 
-    /**
-     * Get realname
-     *
-     * @return string 
-     */
-    public function getRealname()
-    {
-        return $this->realname;
-    }
+		return $this;
+	}
 
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
+	/**
+	 * Get realname
+	 *
+	 * @return string
+	 */
+	public function getRealname() {
+		return $this->realname;
+	}
 
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
+	public function isAccountNonExpired() {
+		return true;
+	}
 
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
+	public function isAccountNonLocked() {
+		return true;
+	}
 
-    public function isEnabled()
-    {
-        return $this->isActive;
-    }
+	public function isCredentialsNonExpired() {
+		return true;
+	}
+
+	public function isEnabled() {
+		return $this->isActive;
+	}
+	public function isActive() {
+		return $this->isActive;
+	}
+	/**
+	 * Add roles
+	 *
+	 * @param \JYPS\RegisterBundle\Entity\Role $roles
+	 * @return User
+	 */
+	public function addRole(\JYPS\RegisterBundle\Entity\Role $roles) {
+		$this->roles[] = $roles;
+
+		return $this;
+	}
+
+	/**
+	 * Remove roles
+	 *
+	 * @param \JYPS\RegisterBundle\Entity\Role $roles
+	 */
+	public function removeRole(\JYPS\RegisterBundle\Entity\Role $roles) {
+		$this->roles->removeElement($roles);
+	}
 }

@@ -137,7 +137,7 @@ payment_cancelled:
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentCancelled }
 
 change_membertype:
-    path:   /changetype/{memberid}
+    path:   /typechange/{memberid}/{referencenumber}
     defaults:  { _controller: JYPSRegisterBundle:Member:changeMemberType }
 
 EndroidQrCodeBundle:

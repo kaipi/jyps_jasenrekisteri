@@ -60,6 +60,14 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	 */
 	private $show_amount;
 	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $change_allowed_to;
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	private $change_allowed_from;
+	/**
 	 * @ORM\OneToMany(targetEntity="Member", mappedBy="member_type")
 	 * @ORM\JoinColumn(referencedColumnName="id")
 	 */
@@ -409,4 +417,52 @@ class MemberFeeConfig implements UserInterface, \Serializable {
 	public function getShowAmount() {
 		return $this->show_amount;
 	}
+
+    /**
+     * Set changeAllowedTo
+     *
+     * @param boolean $changeAllowedTo
+     *
+     * @return MemberFeeConfig
+     */
+    public function setChangeAllowedTo($changeAllowedTo)
+    {
+        $this->change_allowed_to = $changeAllowedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get changeAllowedTo
+     *
+     * @return boolean
+     */
+    public function getChangeAllowedTo()
+    {
+        return $this->change_allowed_to;
+    }
+
+    /**
+     * Set changeAllowedFrom
+     *
+     * @param boolean $changeAllowedFrom
+     *
+     * @return MemberFeeConfig
+     */
+    public function setChangeAllowedFrom($changeAllowedFrom)
+    {
+        $this->change_allowed_from = $changeAllowedFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get changeAllowedFrom
+     *
+     * @return boolean
+     */
+    public function getChangeAllowedFrom()
+    {
+        return $this->change_allowed_from;
+    }
 }

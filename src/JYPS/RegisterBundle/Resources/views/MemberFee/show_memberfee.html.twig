@@ -31,6 +31,8 @@ $(function() {
   <th>Voimassa loppuen</th>
   <th>Näytä liittymislomakkeella</th>
   <th>Näytä summa liittymislomakkeella</th>
+  <th>Tyypin vaihto sallittu (kohde) </th>
+  <th>Tyypin vaihto sallittu (lähde) </th>
   
   </tr>
   {% for memberfee_conf in memberfee_configs %}
@@ -45,6 +47,16 @@ $(function() {
   <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_192_circle_remove.png')}}"></td>
   {% endif %}
   {% if (memberfee_conf.getShowAmount() == 1) %}
+  <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_193_circle_ok.png')}}"></td>
+  {%else%}
+  <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_192_circle_remove.png')}}"></td>
+  {% endif %}
+  {% if (memberfee_conf.getChangeAllowedFrom() == 1) %}
+  <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_193_circle_ok.png')}}"></td>
+  {%else%}
+  <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_192_circle_remove.png')}}"></td>
+  {% endif %}
+  {% if (memberfee_conf.getChangeAllowedTo() == 1) %}
   <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_193_circle_ok.png')}}"></td>
   {%else%}
   <td><img src="{{ asset('bundles/jypsregister/images/icons/glyphicons_192_circle_remove.png')}}"></td>

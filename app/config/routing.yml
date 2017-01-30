@@ -163,6 +163,10 @@ payment_complete:
     path:   /paymentcomplete
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentComplete }
 
+change_membertype:
+    path:   /typechange/{memberid}/{referencenumber}
+    defaults:  { _controller: JYPSRegisterBundle:Member:changeMemberType }
+    
 payment_cancelled:
     path:   /paymentcancelled
     defaults:  { _controller: JYPSRegisterBundle:MemberFee:paymentCancelled }

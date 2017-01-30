@@ -685,7 +685,7 @@ class MemberController extends Controller
 			$memberfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
             ->findOneBy(array('reference_number' => $referencenumber));
-           print($request);
+
 			$memberfeeconfig = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
 			->findOneBy(array('id' => $request->request->get('changed_type')));
@@ -701,7 +701,7 @@ class MemberController extends Controller
 
             $memberfeeconfigs = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFeeConfig')
-            ->findAll();
+            ->findBy(array('change_allowed_to' => '1'));
             return $this->render('JYPSRegisterBundle:Member:change_membertype.html.twig', array('memberid' => $member->getMemberId(), 'membertypes' => $memberfeeconfigs, 'referencenumber' => $referencenumber));
         }
     }

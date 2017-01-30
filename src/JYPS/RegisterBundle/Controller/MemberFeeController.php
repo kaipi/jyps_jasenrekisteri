@@ -336,7 +336,7 @@ class MemberFeeController extends Controller {
 		$member = $this->getDoctrine()
 			->getRepository('JYPSRegisterBundle:Member')
 			->findOneBy(array('id' => $memberfee->getMemberId()));
-
+        $memberfeeconfig = $member->getMemberType();
 		$merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
 		$authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
 		$order_number = $memberfee->getReferencenumber();
@@ -390,7 +390,8 @@ class MemberFeeController extends Controller {
 			'memberfullname' => $member->getFullName(),
 			'memberid' => $member->getMemberid(),
 			'membertype' => $member->getMemberType(),
-			'referencenumber' => $memberfee->getReferenceNumber()));
+			'referencenumber' => $memberfee->getReferenceNumber(),
+			'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom()));
 
 	}
 

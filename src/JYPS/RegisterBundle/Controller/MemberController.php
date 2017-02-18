@@ -420,7 +420,7 @@ class MemberController extends Controller
             $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
             $memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
             $duedate = new \DateTime("now");
-            $duedate = $duedate->add(new DateInteval("P14D"));
+            $duedate = $duedate->add(new \DateInterval("P14D"));
             $memberfee->setDueDate($duedate);
             $memberfee->setMemberFee($member);
 
@@ -469,6 +469,7 @@ class MemberController extends Controller
             }
 
             $this->sendJoinInfoEmail($member, $memberfee);
+            return $this->redirect($this->generateUrl('paytrailPayment', array('reference' => $memberfee->getReferenceNumber())));
         }
         return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
     }
@@ -507,7 +508,7 @@ class MemberController extends Controller
             $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
             $memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
             $duedate = (new \DateTime("now"));
-            $duedate = $duedate->add(new DateInteval("P14D"));
+            $duedate = $duedate->add(new \DateInterval("P14D"));
             $memberfee->setDueDate($duedate);
             $memberfee->setMemberFee($member);
 

@@ -419,7 +419,9 @@ class MemberController extends Controller
             $memberfee = new MemberFee();
             $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
             $memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
-            $memberfee->setDueDate(new \DateTime("now"));
+            $duedate = new \DateTime("now");
+            $duedate = $duedate->add(new DateInteval("P14D"));
+            $memberfee->setDueDate($duedate);
             $memberfee->setMemberFee($member);
 
             $em = $this->getDoctrine()->getManager();
@@ -504,7 +506,9 @@ class MemberController extends Controller
             $memberfee = new MemberFee();
             $memberfee->setFeeAmountWithVat($member->getMemberType()->getMemberfeeAmount());
             $memberfee->setReferenceNumber(date("Y") . $member->getMemberId());
-            $memberfee->setDueDate(new \DateTime("now"));
+            $duedate = (new \DateTime("now"));
+            $duedate = $duedate->add(new DateInteval("P14D"));
+            $memberfee->setDueDate($duedate);
             $memberfee->setMemberFee($member);
 
             $memberFeeConfig = $this->getDoctrine()

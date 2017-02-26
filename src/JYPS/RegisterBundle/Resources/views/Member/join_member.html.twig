@@ -10,7 +10,7 @@
     var max_fields      = 10; //maximum input boxes allowed
     var wrapper         = $(".familymember_wrap"); //Fields wrapper
     var add_button      = $(".new_family_member"); //Add button ID
-    
+
     var x = 1; //initlal text box count
     $(add_button).click(function(e){ //on add input button click
         e.preventDefault();
@@ -19,7 +19,7 @@
             $(wrapper).append('<div><label for="familymember_firstnames[]">Etunimi</label><p><input type="text" name="familymember_firstnames[]"></p><label for="familymember_second_names[]">Muut nimet</label><p><input type="text" name="familymember_second_names[]"></p><label for="familymember_surnames[]">Sukunimi</label><p><input type="text" name="familymember_surnames[]"></p><label for="familymember_birthyears[]">Syntymävuosi</label><p><input type="text" name="familymember_birthyears[]"></p><label for="familymember_emails[]">Sähköposti</label><p><input type="text" name="familymember_emails[]"></p><label for="familymember_genders[]">Sukupuoli</label><p><select id="family__gender" name="family__genders[]"><option value="1">Mies</option><option value="0">Nainen</option></select></p><label for="familymember_mail_list[]">Haluan liittyä yleiselle sähköpostilistalle</label><p><input type="checkbox" name="familymembers_mail_list[]"></p> <label for="familymember_types[]">Jäsentyyppi</label><p><select id="family__gender" name="family__types[]"><option value="1">Aikuinen</option><option value="2">Juniori(alle 18v)</option></select></p><a href="#" class="remove_field">Poista</a></div>'); //add input box
         }
     });
-    
+
     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
         e.preventDefault(); $(this).parent('div').remove(); x--;
     })
@@ -59,8 +59,8 @@ $(function() {
 <p>{{ form_label(form.postal_code, 'Postinumero *') }} {{ form_widget(form.postal_code) }}</p>
 <p>{{ form_label(form.city, 'Postitoimipaikka/Kaupunki *') }} {{ form_widget(form.city) }}</p>
 <p>{{ form_label(form.country, 'Maa') }} {{ form_widget(form.country) }}</p>
-<p>{{ form_label(form.email, 'Email') }} {{ form_widget(form.email) }}</p>
-<p>{{ form_label(form.telephone, 'Puhelinnumero') }} {{ form_widget(form.telephone) }}</p>
+<p>{{ form_label(form.email, 'Email *') }} {{ form_widget(form.email) }}</p>
+<p>{{ form_label(form.telephone, 'Puhelinnumero *') }} {{ form_widget(form.telephone) }}</p>
 <p>{{ form_label(form.magazine_preference,  'Haluan jäsenlehden sähköisenä') }} {{ form_widget(form.magazine_preference) }}</p>
 <p>{{ form_label(form.mailing_list_yleinen, 'Haluan liittyä yleiselle sähköpostilistalle (tiedote toiminnasta kerran viikossa)') }} {{ form_widget(form.mailing_list_yleinen) }}</p>
 

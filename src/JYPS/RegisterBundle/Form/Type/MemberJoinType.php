@@ -33,9 +33,9 @@ class MemberJoinType extends AbstractType {
 			->add('city', 'text', array('attr' => array('size' => '63')))
 			->add('country', 'text', array('required' => false,
 				'attr' => array('size' => '63')))
-			->add('email', 'email', array('required' => false,
+			->add('email', 'email', array('required' => true,
 				'attr' => array('size' => '63')))
-			->add('telephone', 'text', array('required' => false,
+			->add('telephone', 'text', array('required' => true,
 				'attr' => array('size' => '63')))
 			->add('magazine_preference', 'checkbox', array('required' => false,
 				'attr' => array('size' => '63')))

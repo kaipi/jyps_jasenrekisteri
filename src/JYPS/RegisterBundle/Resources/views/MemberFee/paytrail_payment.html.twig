@@ -15,6 +15,13 @@ Hei, tervetuloa maksamaan Jyps Ry:n vuoden {{memberfee_year}} jäsenmaksusi, all
 Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{memberid}}/{{referencenumber}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
 {%endif%}
 <p>
+
+ Huom! Jos olet entuudestaan jäsen ja haluat liittää samassa
+   osoitteessa asuvan perheesi jäseniksi (perhejäsenmaksu 60 €), niin
+   ilmoita siitä
+<a href="https://docs.google.com/forms/d/e/1FAIpQLScr0ZEqCYKU-rtW0z1V27_Z2pxJdjqAFsCv1khNyjC_bP3qeA/viewform">tällä lomakkeella</a>.
+   Perhejäsenyydestä lähetetään tämän jälkeen erillinen lasku.
+   </p>
 <form id="payment" action="https://payment.paytrail.com/" method="post">
   <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
   <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">

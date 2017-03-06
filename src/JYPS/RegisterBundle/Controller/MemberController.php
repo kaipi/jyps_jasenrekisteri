@@ -84,7 +84,7 @@ class MemberController extends Controller
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
-                if ($childMember !== null) {
+                if ($childMember != null) {
                     $this->addChildMember($member->getMemberId(), $childMember);
                 }
                 $removedChilds = $request->get('removed_childs');

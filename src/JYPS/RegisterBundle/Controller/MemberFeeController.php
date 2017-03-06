@@ -313,8 +313,8 @@ class MemberFeeController extends Controller
                     }
                     $this->get('mailer')->send($message);
 
-                   // $memberfee->setEmailSent(1);
-                   // $em->flush($memberfee);
+                    $memberfee->setEmailSent(1);
+                    $em->flush($memberfee);
 
                     $sent++;
                 }

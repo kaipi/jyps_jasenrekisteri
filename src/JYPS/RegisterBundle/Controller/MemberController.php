@@ -84,7 +84,7 @@ class MemberController extends Controller
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
-                if ($childMember != null) {
+                if ($childMember !== null) {
                     $this->addChildMember($member->getMemberId(), $childMember);
                 }
                 $removedChilds = $request->get('removed_childs');
@@ -185,7 +185,7 @@ class MemberController extends Controller
     {
         $intrest_names = array();
         $recipents = array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com');
-        if ($member->getGender() == false) {
+        if ($member->getGender() === false) {
             array_push($recipents, 'ledpis@gmail.com');
         }
         if ($member->getIntrests()) {
@@ -317,9 +317,9 @@ class MemberController extends Controller
             if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
                 $ok++;
                 /* check if the fee is paid for current year */
-                if ($member->isMemberFeePaid(date('Y')) == true || $send_payment_info == '') {
+                if ($member->isMemberFeePaid(date('Y')) === true || $send_payment_info === '') {
                     $magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
-                } elseif ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) == false && $member->getParent() == null) {
+                } elseif ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) === false && $member->getParent() === null) {
                     $magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';
                 }
 
@@ -437,7 +437,7 @@ class MemberController extends Controller
             //Send mail here, if user exits confirmation page too fast no mail is sent.
             //1) List join
             if ($member->getEmail() != "") {
-                if ($member->getMailingListYleinen() == true) {
+                if ($member->getMailingListYleinen() === true) {
                     $message = \Swift_Message::newInstance()
                         ->setFrom($member->getEmail())
                         ->setTo('yleinen-lista-join@jyps.fi');
@@ -518,7 +518,7 @@ class MemberController extends Controller
 
             $send_mail_without_payment_info = false;
 
-            if ($memberFeeConfig->getCampaignFee() == true) {
+            if ($memberFeeConfig->getCampaignFee() === true) {
                 $send_mail_without_payment_info = true;
 
                 $realMemberFeeConfig = $this->getDoctrine()
@@ -529,7 +529,7 @@ class MemberController extends Controller
                 $memberfee->setMemo("KAMPPIS");
             }
             if (isset($temp['mark_fee_paid'])) {
-                if ($temp['mark_fee_paid'] == true) {
+                if ($temp['mark_fee_paid'] === true) {
                     $memberfee->setPaid(true);
                 }
             }
@@ -539,7 +539,7 @@ class MemberController extends Controller
             $em->persist($memberfee);
             $em->flush();
 
-            if ($childMember != null) {
+            if ($childMember !== null) {
                 $parent_member = $this->getDoctrine()
                     ->getRepository('JYPSRegisterBundle:Member')
                     ->findOneBy(array('member_id' => $childMember));
@@ -557,14 +557,14 @@ class MemberController extends Controller
             //Send mail here, if user exits confirmation page too fast no mail is sent.
             //1) List join
             if ($member->getEmail() != "") {
-                if ($member->getMailingListYleinen() == true) {
+                if ($member->getMailingListYleinen() === true) {
                     $message = \Swift_Message::newInstance()
                         ->setFrom($member->getEmail())
                         ->setTo('yleinen-join@jyps.info');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail
-                if ($send_mail_without_payment_info == false) {
+                if ($send_mail_without_payment_info === false) {
                     $message = \Swift_Message::newInstance()
                         ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
                         ->setFrom('jasenrekisteri@jyps.fi')
@@ -824,7 +824,7 @@ class MemberController extends Controller
     private function sendYleinenJoinMail(Member $member)
     {
         if ($member->getEmail() != "") {
-            if ($member->getMailingListYleinen() == true) {
+            if ($member->getMailingListYleinen() === true) {
                 $message = \Swift_Message::newInstance()
                     ->setFrom($member->getEmail())
                     ->setTo('jasenet-lista-join@jyps.fi');

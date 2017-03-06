@@ -71,9 +71,9 @@ class MemberFeeController extends Controller
             if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
                 $member->getMembershipEndDate() > new \DateTime("now") &&
                 $member->getEmail() != "" &&
-                $member->getParent() == null &&
+                $member->getParent() === null &&
                 ($member->getReminderSentDate() <= $treshold_date ||
-                    $member->getReminderSentDate() == null)) {
+                    $member->getReminderSentDate() === null)) {
                 $errors = "";
                 $emailConstraint = new EmailConstraint();
                 $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
@@ -173,7 +173,7 @@ class MemberFeeController extends Controller
                 }
             }
             //Fee is prepaid, create fee and mark paid, unmark member prepaid status
-            if ($member->getNextMemberfeePaid() == true) {
+            if ($member->getNextMemberfeePaid() === true) {
                 $memberfee_prepaid = true;
                 $member->setNextMemberfeePaid(false);
                 $em = $this->getDoctrine()->getManager();
@@ -183,7 +183,7 @@ class MemberFeeController extends Controller
                 $memberfee_prepaid = false;
             }
 
-            if ($createfee == true) {
+            if ($createfee === true) {
                 $total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
                 $total_qty = $total_qty + 1;
                 $memberfee = new MemberFee();

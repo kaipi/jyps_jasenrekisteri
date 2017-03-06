@@ -284,7 +284,7 @@ class MemberFeeController extends Controller
                     'email_sent' => null,
                     'paid' => 0));
 
-            if (empty($memberfee) || $member->getParent() != null) {
+            if (empty($memberfee) || $member->getParent() !== null) {
                 continue;
             }
             $emailConstraint = new EmailConstraint();

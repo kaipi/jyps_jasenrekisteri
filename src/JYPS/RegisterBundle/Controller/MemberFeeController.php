@@ -234,7 +234,7 @@ class MemberFeeController extends Controller
         if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
             if (\Swift_Validate::email($member->getEmail())) {
                 $message = \Swift_Message::newInstance()
-                    ->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
+                    ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                     ->setFrom("jasenrekisteri@jyps.fi")
                     ->setTo(array($member->getEmail()))
                     ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
@@ -294,7 +294,7 @@ class MemberFeeController extends Controller
             if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
                 if (\Swift_Validate::email($member->getEmail())) {
                     $message = \Swift_Message::newInstance()
-                        ->setSubject("JYPS Ry:n jäsenmaksu vuodelle " . date('Y'))
+                        ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                         ->setFrom("jasenrekisteri@jyps.fi")
                         ->setTo(array($member->getEmail()))
                         ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))

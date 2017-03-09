@@ -440,7 +440,7 @@ class MemberController extends Controller
                 if ($member->getMailingListYleinen() === true) {
                     $message = \Swift_Message::newInstance()
                         ->setFrom($member->getEmail())
-                        ->setTo('yleinen-lista-join@jyps.fi');
+                        ->setTo('jasenet-lista-join@jyps.fi');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail
@@ -560,7 +560,7 @@ class MemberController extends Controller
                 if ($member->getMailingListYleinen() === true) {
                     $message = \Swift_Message::newInstance()
                         ->setFrom($member->getEmail())
-                        ->setTo('yleinen-join@jyps.info');
+                        ->setTo('jasenet-join@jyps.info');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail

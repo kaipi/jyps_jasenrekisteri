@@ -312,6 +312,7 @@ class MemberController extends Controller
 
         foreach ($members as $member) {
             $errors = "";
+            $magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
             $emailConstraint = new EmailConstraint();
             $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
             if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {

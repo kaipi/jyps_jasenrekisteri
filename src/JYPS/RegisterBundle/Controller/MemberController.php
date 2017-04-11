@@ -121,6 +121,11 @@ class MemberController extends Controller
                         $em->flush($markfee);
                     }
                 }
+                //check that this years fee is aligned with membertype
+                $membertype = $member->getMemberType();
+                $memberfee = $member->getMemberFee(date('Y'));
+                $memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
+                $em->flush($memberfee);
 
                 return $this->redirect($this->generateUrl('member', array('memberid' => $memberid)));
             }

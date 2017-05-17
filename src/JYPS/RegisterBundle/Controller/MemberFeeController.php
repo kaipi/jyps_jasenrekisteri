@@ -151,16 +151,17 @@ class MemberFeeController extends Controller
         $total_qty = 0;
 
         foreach ($members as $member) {
-            /*if member is child of familymember -> do not create fee */
+            $setpaid = false;
+            /*if member is child of familymember -> flag it as paid */
             $memberparent = $member->getParent();
             if (!empty($memberparent)) {
-                continue;
+                $setpaid = true;
             }
             $memberFeeConfig = $member->getMemberType();
 
-            //Do not create fees for membertypes where it's prevented
+            //flag fee paid
             if ($memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
-                continue;
+                $setpaid = true;
             }
 
             //Check that fee does not exists fe. already joined members who get fee when joining.
@@ -174,13 +175,13 @@ class MemberFeeController extends Controller
             }
             //Fee is prepaid, create fee and mark paid, unmark member prepaid status
             if ($member->getNextMemberfeePaid() === true) {
-                $memberfee_prepaid = true;
+                $setpaid = true;
                 $member->setNextMemberfeePaid(false);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($member);
                 $em->flush($member);
             } else {
-                $memberfee_prepaid = false;
+                $setpaid = false;
             }
 
             if ($createfee === true) {
@@ -193,7 +194,7 @@ class MemberFeeController extends Controller
                 $memberfee->setDueDate($duedate);
                 $memberfee->setMemberFee($member);
                 $memberfee->setFeePeriod(date('Y'));
-                $memberfee->setPaid($memberfee_prepaid);
+                $memberfee->setPaid($setpaid);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($memberfee);

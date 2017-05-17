@@ -754,7 +754,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
      *
      * @return \JYPS\RegisterBundle\Entity\MemberFee $memberfee
      */
-    public function getMemberFee($period)
+    public function getMemberFee()
     {
         $all_fees = $this->getMemberFees();
         return $all_fees->last();

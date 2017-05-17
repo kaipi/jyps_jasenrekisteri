@@ -36,17 +36,17 @@ class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
             $lastfee = $member->getMembershipStartDate()->format('Y');
             $memberfees = $member->getMemberFees();
             $memberFeeConfig = $member->getMemberType();
-            $lastfee = date('Y');
+         //   $lastfee = date('Y');
             //first every fee as paid
             foreach ($memberfees as $fee) {
                 $lastfee = $fee->getFeePeriod();
                 if ($fee->getPaid() === false) {
-                    echo $member->getMemberId() . " " . $fee->getFeePeriod() . " " . $member->getFullname() . "\n";
                     if ($dryrun === false) {
-                        //$fee->setPaid(true);
-                        //$em->flush($fee);
                     }
                 }
+            }
+            if ($memberfees === null) {
+                $lastfee = $lastfee - 1;
             }
             if ($lastfee < date('Y')) {
             //then create missing fees
@@ -57,16 +57,18 @@ class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
                     $i++;
                     echo "will create fee for period " . $i . "\n";
                     $memberFeeConfig = $member->getMemberType();
+                    if ($memberFeeConfig === null) {
+                        echo "there was a problem, aborting \n";
+                        continue;
+                    }
                     $memberfee = new MemberFee();
                     $memberfee->setMemberId($member->getMemberid());
                     $memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
                     $memberfee->setReferenceNumber($i . $member->getMemberId());
-                    $memberfee->setDueDate(new \DateTime("2016-03-31"));
+                    $memberfee->setDueDate(new \DateTime($i."-03-31"));
                     $memberfee->setMemberFee($member);
                     $memberfee->setFeePeriod($i);
                     $memberfee->setPaid(true);
-
-                    //$em = $this->getDoctrine()->getManager();
                     $em->persist($memberfee);
                     $em->flush($memberfee);
                 } while ($i < date('Y'));

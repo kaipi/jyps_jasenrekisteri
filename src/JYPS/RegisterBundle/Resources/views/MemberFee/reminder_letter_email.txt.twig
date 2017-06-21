@@ -2,19 +2,14 @@ Hei,
 
 jäsenrekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Jäsenmaksun maksamalla voit osallistua laajaan toimintaamme ja tuet samalla pyöräilyn kehittämistä.
 
-Maksathan jäsenmaksusi seuraavilla tiedoilla:
+Maksathan jäsenmaksusi verkossa osoitteessa : https://jasenrekisteri.jyps.fi/pay/{{memberfee.getReferenceNumber()}}
+tai tilisiirtona seuraavilla tiedoilla:
 
 Maksun saaja: Jyväskylän Pyöräilyseura ry
-Tilinumero: Tapiola FI24 3636 3002 0883 00
-Viesti: Jäsenmaksu 2016 + maksettavan jäsenen nimi/nimet
+Tilinumero: Tapiola {{bankaccount.getStringValue()}}
+Viesti: Jäsenmaksu {{year}} + maksettavan jäsenen nimi/nimet
+Summa: {{memberfee.getFeeAmountWithVat()}}
 Eräpäivä: heti
-
-Tämän vuoden jäsenmaksut ovat:
-
-- alle 18-vuotiaat 10 € (tänä vuonna I Cycle -liittymistarjouksella liittyneet 15 €)
-- aikuiset 30 €  (tänä vuonna I Cycle -liittymistarjouksella liittyneet 35 €)
-- vähävaraiset aikuiset 20 €  (tänä vuonna I Cycle -liittymistarjouksella liittyneet 25 €)
-- perhejäsenmaksu 60 €.
 
 Jos olet jo maksanut tämän vuoden jäsenmaksun, pahoittelemme aiheetonta muistutusta. Otathan kuitenkin yhteyttä Jyrki Soljaan (jyrki.solja@gmail.com) maksutietojen tarkistamista varten
 

@@ -20,4 +20,4 @@ src/JYPS/RegisterBundle/Resources/savedCards/*.png
 composer.lock
 /app/*.cache
 app/bootstrap.php.cache
-
+.vscode/

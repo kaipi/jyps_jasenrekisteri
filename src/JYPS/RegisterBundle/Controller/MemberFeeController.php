@@ -65,6 +65,9 @@ class MemberFeeController extends Controller
         //1month treshold from previous reminder
         $treshold_date = new \Datetime("now");
         $treshold_date->sub(new \DateInterval('P1M'));
+        $bankaccount = $this->getDoctrine()
+            ->getRepository('JYPSRegisterBundle:SystemParameter')
+            ->findOneBy(array('key' => 'BankAccount'));
 
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberFee();
@@ -83,7 +86,11 @@ class MemberFeeController extends Controller
                         ->setFrom('jasenrekisteri@jyps.fi')
                         ->setTo($member->getEmail())
                         ->setBody($this->renderView(
-                            'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig'));
+                            'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig', array('member' => $member,
+                                'memberfee' => $memberfee,
+                                'bankaccount' => $bankaccount,
+                                'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                                'year' => date("Y"))));
                     $this->get('mailer')->send($message);
                     $qty++;
                     $em = $this->getDoctrine()->getManager();

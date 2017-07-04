@@ -6,6 +6,7 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Twilio\Rest\Client;
 
 class MemberFeeController extends Controller
 {
@@ -53,13 +54,19 @@ class MemberFeeController extends Controller
     }
     public function sendReminderLetterAction(Request $request)
     {
-        $join_date_limit = $request->request->get('join_date_limit');
+        //twilio client
+        $sid = $this->getParameter('twillo_sid');
+        $token = $this->getParameter('twillo_auth_token');
+        $client = new Client($sid, $token);
 
+        $join_date_limit = $request->request->get('join_date_limit');
+        $send_sms = $request->request->get('send_sms');
         $memberfees = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
             ->findBy(array('paid' => 0),
                 array('member_id' => 'ASC'));
         $qty = 0;
+        $smsqty = 0;
         $error_qty = 0;
         $error_members = array();
         //1month treshold from previous reminder
@@ -81,6 +88,18 @@ class MemberFeeController extends Controller
                 $emailConstraint = new EmailConstraint();
                 $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
                 if ($errors == "") {
+                    //sms
+                    if ($member->getTelephone() !== null && $send_sms == true) {
+                        $message = $client->messages->create(
+                        $member->getInternationalTelephone(),
+                        array(
+                        'from' => '+3584573975175',
+                        'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Ks. ohjeet ja lisätiedot https://jasenrekisteri.jyps.fi/pay/' .  $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.'
+                        )
+                        );
+                        $smsqty++;
+                    }
+                    //email
                     $message = \Swift_Message::newInstance();
                     $message->setSubject('JYPS ry jäsenmaksumuistutus')
                         ->setFrom('jasenrekisteri@jyps.fi')
@@ -103,7 +122,7 @@ class MemberFeeController extends Controller
             }
         }
 
-        return $this->render('JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig', array('reminder_qty' => $qty, 'error_qty' => $error_qty, 'error_members' => $error_members));
+        return $this->render('JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig', array('reminder_qty' => $qty, 'error_qty' => $error_qty, 'error_members' => $error_members,'sms_qty' => $smsqty));
     }
     public function markFeesPaidAction(Request $request)
     {

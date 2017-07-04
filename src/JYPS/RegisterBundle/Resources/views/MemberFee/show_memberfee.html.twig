@@ -33,7 +33,7 @@ $(function() {
   <th>Näytä summa liittymislomakkeella</th>
   <th>Tyypin vaihto sallittu (kohde) </th>
   <th>Tyypin vaihto sallittu (lähde) </th>
-  
+
   </tr>
   {% for memberfee_conf in memberfee_configs %}
 
@@ -107,6 +107,9 @@ Tästä voit lähettää muistutukset. Muistutukset lähetetään kaikille kell�
 <form name="reminder_send" method="post" action='../member/memberfees/sendReminders'>
 </br>
 <input type="text" id="datepicker_reminder" name="join_date_limit"></br>
+<p>Lähetä sms
+<input type="checkbox" id="send_sms" name="send_sms"></br>
+<p/>
 <button type="submit" id="send_reminders" name='send_reminders'>Lähetä muistutukset</button>
 </form>
 </fieldset>

@@ -4,9 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": {
+            "": "src/"
+        }
     },
-
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.8.*",
@@ -27,8 +28,8 @@
         "nelmio/api-doc-bundle": "@stable",
         "liuggio/excelbundle": "~2.0",
         "symfony/console": "2.8.*",
-	    "phpmd/phpmd" : "@stable"
-
+        "phpmd/phpmd": "@stable",
+        "twilio/sdk": ">=5.11.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -48,8 +49,8 @@
     },
     "config": {
         "platform": {
-	"php": "5.4"
-	},
+            "php": "5.4"
+        },
         "bin-dir": "bin"
     },
     "extra": {

@@ -226,10 +226,10 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function serialize()
     {
         return serialize(array(
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password,
+        $this->id,
+        $this->username,
+        $this->salt,
+        $this->password,
         ));
     }
 
@@ -239,10 +239,10 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function unserialize($serialized)
     {
         list(
-            $this->id,
-            $this->username,
-            $this->salt,
-            $this->password
+        $this->id,
+        $this->username,
+        $this->salt,
+        $this->password
         ) = unserialize($serialized);
     }
 
@@ -585,6 +585,19 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function getTelephone()
     {
         return $this->telephone;
+    }
+    /**
+     * Get international telephone
+     *
+     * @return string
+     */
+    public function getInternationalTelephone()
+    {
+        if (substr($this->telephone, 0, 4) !== '+358') {
+            return '+358' . str_replace(' ', '', $this->telephone);
+        } else {
+            return $this->telephone;
+        }
     }
     /**
      * Set selfcare_password_salt

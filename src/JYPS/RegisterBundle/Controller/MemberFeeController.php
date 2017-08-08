@@ -94,7 +94,7 @@ class MemberFeeController extends Controller
                         $member->getInternationalTelephone(),
                         array(
                         'from' => '+3584573975175',
-                        'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Ks. ohjeet ja lisätiedot https://jasenrekisteri.jyps.fi/pay/' .  $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.'
+                        'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .  $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.'
                         )
                         );
                         $smsqty++;

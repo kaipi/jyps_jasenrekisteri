@@ -22,7 +22,6 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "@stable",
-        "endroid/qrcode-bundle": "@stable",
         "friendsofsymfony/rest-bundle": "~1.3",
         "jms/serializer-bundle": "@stable",
         "nelmio/api-doc-bundle": "@stable",

@@ -2209,14 +2209,14 @@ return method_exists($this,'get'.strtr($id, $this->underscoreMap).'Service');
 public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE)
 {
 for ($i = 2;;) {
-if ('service_container'=== $id) {
-return $this;
-}
 if (isset($this->aliases[$id])) {
 $id = $this->aliases[$id];
 }
 if (isset($this->services[$id]) || array_key_exists($id, $this->services)) {
 return $this->services[$id];
+}
+if ('service_container'=== $id) {
+return $this;
 }
 if (isset($this->loading[$id])) {
 throw new ServiceCircularReferenceException($id, array_keys($this->loading));
@@ -2265,11 +2265,11 @@ return $service;
 public function initialized($id)
 {
 $id = strtolower($id);
-if ('service_container'=== $id) {
-return true;
-}
 if (isset($this->aliases[$id])) {
 $id = $this->aliases[$id];
+}
+if ('service_container'=== $id) {
+return true;
 }
 return isset($this->services[$id]) || array_key_exists($id, $this->services);
 }
@@ -2481,11 +2481,11 @@ protected $booted = false;
 protected $name;
 protected $startTime;
 protected $loadClassCache;
-const VERSION ='2.8.23';
-const VERSION_ID = 20823;
+const VERSION ='2.8.26';
+const VERSION_ID = 20826;
 const MAJOR_VERSION = 2;
 const MINOR_VERSION = 8;
-const RELEASE_VERSION = 23;
+const RELEASE_VERSION = 26;
 const EXTRA_VERSION ='';
 const END_OF_MAINTENANCE ='11/2018';
 const END_OF_LIFE ='11/2019';

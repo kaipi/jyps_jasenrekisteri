@@ -10,8 +10,10 @@
 <h3>Muistutukset lähetetty!</h3>
 
 <p>Muistutuksia lähetetty yhteensä: {{ reminder_qty }}</p>
-<p>SMS:ä lähetetty yhteensä: {{ sms_qty }}</p>
+<p>Vialliset sähköpostiosoitteet jäsenillä: </p>
 <p>Viallisia sähköpostiosoitteita oli: {{ error_qty }}</p>
+<p>Viallisia puhelinnumeroita oli: {{ sms_errors }}</p>
+
 <p>Vialliset sähköpostiosoitteet jäsenillä: </p>
 <table border=1 class="gridtable">
 <th>Jäsennumero</th>
@@ -19,6 +21,21 @@
 <th>email</th>
 </tr>
 {% for error_member in error_members %}
+<td>{{ error_member.getMemberId() }}</td>
+<td>{{ error_member.getFullname() }}</td>
+<td>{{ error_member.getEmail() }}</td>
+</tr>
+{%endfor%}
+</table>
+
+
+<p>Vialliset puhelinnumerot jäsenillä: </p>
+<table border=1 class="gridtable">
+<th>Jäsennumero</th>
+<th>Nimi</th>
+<th>email</th>
+</tr>
+{% for error_member in smserror_member %}
 <td>{{ error_member.getMemberId() }}</td>
 <td>{{ error_member.getFullname() }}</td>
 <td>{{ error_member.getEmail() }}</td>

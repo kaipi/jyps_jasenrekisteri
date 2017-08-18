@@ -69,13 +69,14 @@ class MemberFeeController extends Controller
         $smsqty = 0;
         $error_qty = 0;
         $error_members = array();
+        $error_smsmember = array();
+        $smserrors = 0;
         //1month treshold from previous reminder
         $treshold_date = new \Datetime("now");
         $treshold_date->sub(new \DateInterval('P1M'));
         $bankaccount = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:SystemParameter')
         ->findOneBy(array('key' => 'BankAccount'));
-
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberFee();
             if ($member->getMembershipStartDate()->format('Y-m-d') < $join_date_limit &&
@@ -83,46 +84,52 @@ class MemberFeeController extends Controller
             $member->getEmail() != "" &&
             $member->getParent() === null &&
             ($member->getReminderSentDate() <= $treshold_date ||
-                $member->getReminderSentDate() === null)) {
+            $member->getReminderSentDate() === null)) {
                 $errors = "";
                 $emailConstraint = new EmailConstraint();
                 $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
                 if ($errors == "") {
                     //sms
                     if ($member->getTelephone() !== null && $send_sms == true) {
-                        $message = $client->messages->create(
-                        $member->getInternationalTelephone(),
-                        array(
-                        'from' => '+3584573975175',
-                        'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .  $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.'
-                        )
-                        );
-                        $smsqty++;
+                        try {
+                            $message = $client->messages->create(
+                            $member->getInternationalTelephone(),
+                            array(
+                            'from' => '+3584573975175',
+                            'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .  $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.'
+                            )
+                            );
+                            $smsqty++;
+                        } catch (\Twilio\Exceptions\RestException $e) {
+                                $smserrors++;
+                                $error_smsmember[] = $member;
+                        }
                     }
                     //email
-                        $message = \Swift_Message::newInstance();
-                        $message->setSubject('JYPS ry jäsenmaksumuistutus')
-                        ->setFrom('jasenrekisteri@jyps.fi')
-                        ->setTo($member->getEmail())
-                        ->setBody($this->renderView(
-                            'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig', array('member' => $member,
-                        'memberfee' => $memberfee,
-                        'bankaccount' => $bankaccount,
-                        'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
-                        'year' => date("Y"))));
-                        $this->get('mailer')->send($message);
-                        $qty++;
-                        $em = $this->getDoctrine()->getManager();
-                        $member->setReminderSentDate(new \DateTime("now"));
-                        $em->flush($member);
+                    $message = \Swift_Message::newInstance();
+                    $message->setSubject('JYPS ry jäsenmaksumuistutus')
+                    ->setFrom('jasenrekisteri@jyps.fi')
+                    ->setTo($member->getEmail())
+                    ->setBody($this->renderView(
+                    'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig', array('member' => $member,
+                    'memberfee' => $memberfee,
+                    'bankaccount' => $bankaccount,
+                    'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                    'year' => date("Y"))));
+                    $this->get('mailer')->send($message);
+                    $qty++;
+                    $em = $this->getDoctrine()->getManager();
+                    $member->setReminderSentDate(new \DateTime("now"));
+                    $em->flush($member);
                 } else {
-                        $error_qty++;
-                        $error_members[] = $member;
+                    $error_qty++;
+                    $error_members[] = $member;
                 }
             }
         }
 
-        return $this->render('JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig', array('reminder_qty' => $qty, 'error_qty' => $error_qty, 'error_members' => $error_members,'sms_qty' => $smsqty));
+
+        return $this->render('JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig', array('reminder_qty' => $qty, 'error_qty' => $error_qty, 'error_members' => $error_members,'sms_qty' => $smsqty, 'smserror_member'=>$error_smsmember, 'sms_errors'=>$smserrors));
     }
     public function markFeesPaidAction(Request $request)
     {
@@ -266,11 +273,11 @@ class MemberFeeController extends Controller
                 ->setTo(array($member->getEmail()))
                 ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
                 ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                    array('member' => $member,
-                        'memberfee' => $memberfee,
-                        'bankaccount' => $bankaccount,
-                        'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
-                        'year' => date("Y"))));
+                array('member' => $member,
+                'memberfee' => $memberfee,
+                'bankaccount' => $bankaccount,
+                'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                'year' => date("Y"))));
             }
             $childs = $member->getChildren();
             //attach also all childmembers cards to mail
@@ -297,7 +304,7 @@ class MemberFeeController extends Controller
         $repository = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:Member');
         $query = $repository->createQueryBuilder('m')
-        ->where('m.membership_end_date >= :current_date AND m.membership_start_date <= :period_start')
+        ->where('m.membership_end_date >= :current_date and m.membership_start_date <= :period_start')
         ->setParameter('current_date', new \DateTime("now"))
         ->setParameter('period_start', new \DateTime("first day of January " . date('Y')))
         ->getQuery();
@@ -307,9 +314,9 @@ class MemberFeeController extends Controller
             $memberfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
             ->findOneBy(array('member_id' => $member->getId(),
-                'fee_period' => date('Y'),
-                'email_sent' => null,
-                'paid' => 0));
+            'fee_period' => date('Y'),
+            'email_sent' => null,
+            'paid' => 0));
 
             if (empty($memberfee) || $member->getParent() !== null) {
                     continue;
@@ -326,7 +333,7 @@ class MemberFeeController extends Controller
                     ->setTo(array($member->getEmail()))
                     ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
                     ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                        array('member' => $member,
+                    array('member' => $member,
                     'memberfee' => $memberfee,
                     'bankaccount' => $bankaccount,
                     'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),

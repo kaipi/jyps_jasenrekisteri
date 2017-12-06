@@ -323,7 +323,7 @@ class MemberController extends Controller
             if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
                 $ok++;
                 /* check if the fee is paid for current year */
-                if ($member->isMemberFeePaid(date('Y')) === true || $send_payment_info === '') {
+                if ($member->isMemberFeePaid(date('Y')) === true || $send_payment_info === '' || $member->checkReminderSpecialCases() === true) {
                     $magazine_template = 'JYPSRegisterBundle:Member:magazine_info.txt.twig';
                 } elseif ($send_payment_info == 'on' && $member->isMemberFeePaid(date('Y')) === false && $member->getParent() === null) {
                     $magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';

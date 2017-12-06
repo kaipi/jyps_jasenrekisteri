@@ -1026,4 +1026,18 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     {
         return $this->parent;
     }
+
+    /**
+     * Check if this is special case that we don't remind, specialcase = ainaisjäsen
+     *
+     * @return \JYPS\RegisterBundle\Entity\Member
+     */
+    public function checkReminderSpecialCases()
+    {
+        if($this->member_type_id == 5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

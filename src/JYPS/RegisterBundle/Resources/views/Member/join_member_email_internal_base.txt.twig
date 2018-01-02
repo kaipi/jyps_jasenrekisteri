@@ -8,14 +8,6 @@ Jäsennumerosi on: {{member.getMemberId()}}
 
 Jos et ole maksanut jäsenmaksuasi, niin voit maksaa maksun osoitteessa https://jasenrekisteri.jyps.fi/pay/{{memberfee.getReferenceNumber()}}
 
-Tai vaihtoehtoisesti tilisiirrolla:
-
-Saaja: Jyväskylän Pyöräilyseura Ry
-Tilinumero: {{bankaccount.getStringValue()}}
-Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
-Viesti: "Jäsenmaksu {{'now'|date('Y')}} + oma nimi"
-Summa: {{memberfee.getFeeAmountWithVat()}}eur
-
 Jos olet maksanut jäsenmaksusi käteisellä, niin sinun ei tarvitse maksaa maksua uudelleen.
 
 Voit lukea uusimman seuralehden osoitteesta https://drive.google.com/file/d/0B3ssmXVLZWt5N2xteTVBNnY1bzg/view

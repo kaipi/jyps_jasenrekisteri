@@ -6,14 +6,6 @@ Voit maksaa jäsenmaksusi verkkopankissa seuraavassa osoitteessa:
 
 https://jasenrekisteri.jyps.fi/pay/{{memberfee.getReferenceNumber()}}
 
-Tai tilisiirrolla:
-
-Saaja: Jyväskylän Pyöräilyseura ry
-Tilinumero: {{bankaccount.getStringValue()}}
-Eräpäivä: {{memberfee.getDueDate()|date('Y-m-d')}}
-Viesti: "Jäsenmaksu {{'now'|date('Y')}} + oma nimi"
-Summa: {{memberfee.getFeeAmountWithVat()}}eur
-
 Jos olet jo maksanut tämän vuoden jäsenmaksusi, niin tämä viesti on aiheeton.
 
 Huom! Samassa taloudessa asuvien perhejäsenmaksu on vain 60 €, joten kaikki samassa taloudessa asuvat kannattaa ilmoittaa jäseniksi! Jos haluat liittää koko perheesi jäseniksi, niin ilmoita perheesi tiedot osoitteessa http://urly.fi/ltc. Älä maksa jäsenmaksu(j)a ennen uuden jäsenmaksulaskun lähettämistä.

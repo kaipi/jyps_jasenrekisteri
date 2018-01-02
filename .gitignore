@@ -21,3 +21,4 @@ composer.lock
 /app/*.cache
 app/bootstrap.php.cache
 .vscode/
+/app/Resources/bootstrap.php.cache

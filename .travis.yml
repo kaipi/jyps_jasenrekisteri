@@ -5,7 +5,7 @@ before_script: composer install -n
 script: phpunit -c app
 addons:
   ssh_known_hosts: jyps.fi
- before_deploy:
+before_deploy:
 - openssl aes-256-cbc -K $encrypted_<...>_key -iv $encrypted_<...>_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/deploy_rsa

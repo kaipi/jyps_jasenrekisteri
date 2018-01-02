@@ -29,7 +29,8 @@
         "symfony/console": "2.8.*",
         "phpmd/phpmd": "@stable",
         "twilio/sdk": "^5.11",
-        "endroid/qrcode": "^1.9"
+        "endroid/qrcode": "^1.9",
+        "doctrine/doctrine-migrations-bundle": "^1.0"
     },
     "scripts": {
         "post-install-cmd": [

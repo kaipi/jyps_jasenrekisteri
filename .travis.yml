@@ -17,6 +17,3 @@ deploy:
   script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ git@jyps.fi:/tmp/deplotesti
   on:
     branch: master
-before_install:
-- openssl aes-256-cbc -K $encrypted_928069d7bbc2_key -iv $encrypted_928069d7bbc2_iv
-  -in deploy_rsa.enc -out deploy_rsa -d

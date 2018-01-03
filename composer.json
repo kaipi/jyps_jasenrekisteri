@@ -31,6 +31,7 @@
     "phpmd/phpmd": "@stable",
     "twilio/sdk": "@stable",
     "endroid/qr-code": "@stable"
+
   },
   "scripts": {
     "post-install-cmd": [
@@ -51,6 +52,9 @@
   "config": {
     "platform": {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4670d373f19053b056bd72d1259e0238aa90cee0
       "php": "7.1"
     },
     "bin-dir": "bin"
@@ -61,6 +65,7 @@
     "incenteev-parameters": {
       "file": "app/config/parameters.yml"
     },
+<<<<<<< HEAD
 =======
       "php": "5.4"
     },
@@ -73,6 +78,8 @@
       "file": "app/config/parameters.yml"
     },
 >>>>>>> master
+=======
+>>>>>>> 4670d373f19053b056bd72d1259e0238aa90cee0
     "branch-alias": {
       "dev-master": "2.4-dev"
     }

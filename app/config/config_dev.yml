@@ -37,7 +37,7 @@ swiftmailer:
     delivery_address:  timo.kaipiainen@gmail.com
 sensio_framework_extra:
     view:
-        annotations: false
+        annotations: true
 fos_rest:
     view:
         view_response_listener: true

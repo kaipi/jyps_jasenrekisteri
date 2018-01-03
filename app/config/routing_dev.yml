@@ -25,7 +25,7 @@ logout:
     path:   /member/logout
 
 member:
-    pattern: /member/show/{memberid}
+    path: /member/show/{memberid}
     defaults: { _controller: JYPSRegisterBundle:Member:showAll }
     requirements:
         id:  \d+

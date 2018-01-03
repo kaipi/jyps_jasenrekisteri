@@ -13,7 +13,7 @@ logout:
     path:   /member/logout
 
 member:
-    pattern: /member/show/{memberid}
+    path: /member/show/{memberid}
     defaults: { _controller: JYPSRegisterBundle:Member:showAll }
     requirements:
         id:  \d+
@@ -149,11 +149,6 @@ sendSingleMemberFeeEmail:
     path: /member/memberfees/sendSingleEmail
     defaults: {_controller: JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail }
     methods:  [POST]
-
-acme_blog:
-    type: rest
-    prefix: /member/api
-    resource: "@JYPSRegisterBundle/Resources/config/routes.yml"  
 
 paytrailPayment:
     path:   /pay/{reference}

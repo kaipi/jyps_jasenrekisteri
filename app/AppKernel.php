@@ -26,6 +26,8 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Symfony\Bundle\WebServerBundle\WebServerBundle(),
+
 
         );
 

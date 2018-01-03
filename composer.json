@@ -50,6 +50,7 @@
   },
   "config": {
     "platform": {
+<<<<<<< HEAD
       "php": "7.1"
     },
     "bin-dir": "bin"
@@ -60,6 +61,18 @@
     "incenteev-parameters": {
       "file": "app/config/parameters.yml"
     },
+=======
+      "php": "5.4"
+    },
+    "bin-dir": "bin"
+  },
+  "extra": {
+    "symfony-app-dir": "app",
+    "symfony-web-dir": "web",
+    "incenteev-parameters": {
+      "file": "app/config/parameters.yml"
+    },
+>>>>>>> master
     "branch-alias": {
       "dev-master": "2.4-dev"
     }

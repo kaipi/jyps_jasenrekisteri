@@ -195,7 +195,7 @@ class MemberFeeController extends Controller
             $memberFeeConfig = $member->getMemberType();
 
             //flag fee paid
-            if ($memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
+           if ($memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
                 $setpaid = true;
             }
 
@@ -219,7 +219,7 @@ class MemberFeeController extends Controller
                 $setpaid = false;
             }
 
-            if ($createfee === true) {
+            if ($createfee === true ) {
                 $total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
                 $total_qty = $total_qty + 1;
                 $memberfee = new MemberFee();

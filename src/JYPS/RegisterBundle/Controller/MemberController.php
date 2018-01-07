@@ -154,7 +154,7 @@ class MemberController extends Controller
         'intrest_configs' => $all_confs,
         'memberfee_configs' => $memberfee_confs));
 
-        $request = $this->get('request');
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ($request->getMethod() == 'POST') {
             if ($form->isValid()) {

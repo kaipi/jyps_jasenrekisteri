@@ -3,14 +3,43 @@
 <title>JYPSin Jäsenmaksun maksaminen</title>
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
+<script>
+function updateSupportFee(value) {
+  var span = document.getElementById('support_fee');
+  var total_value = document.getElementById('total_amount');
+  var member_fee = document.getElementById('memberfee_amount').innerText;
+  tt = (+member_fee) + (+value);
+  span.textContent = value;
+  total_value.textContent = tt;
+}
+</script>
 <center>
 Hei, tervetuloa maksamaan JYPSin vuoden {{memberfee_year}} jäsenmaksusi, alla näet laskun tiedot.
 <pre>
   Jäsen: {{memberfullname}}
   Jäsennumero: {{memberid}}
   Jäsentyyppi: {{membertype}}
-  Jäsenmaksu: {{memberfee_amount}} eur
+  Jäsenmaksu: <span id="memberfee_amount">{{memberfee_amount}}</span> eur
+  Tukimaksu <span id="support_fee">0</span> eur
+  Yhteensä <span id="total_amount">0</span> eur
 </pre>
+<span>Voit myös maksaa vapaaehtoisen tukimaksun, valitse kohde ja summa alhaalta</span>
+<form id="support_fee">
+<select >
+  <option value="nofee">Ei tukimaksua</option>
+  <option value="yleinen">Yleinen</option>
+  <option value="ohjatut">Ohjatut lenkit</option>
+  <option value="fillariakatemia">Fillariakatemia</option>
+  <option value="pyorailynedistaminen">Pyöräilynedistäminen</option>
+</select>
+<select onChange="updateSupportFee(this.value)">
+  <option value="0">0eur</option>
+  <option value="5">5eur</option>
+  <option value="10">10eur</option>
+  <option value="20">20eur</option>
+  <option value="30">30eur</option>
+</select>
+</form>
 {%if (change_allowed_from) %}
 Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{memberid}}/{{referencenumber}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
 {%endif%}

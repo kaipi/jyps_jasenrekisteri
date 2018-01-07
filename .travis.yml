@@ -15,11 +15,11 @@ before_deploy:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: bin/deploy.sh production
+    script: scripts/deploy.sh production
     on:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: bin/deploy.sh development
+    script: scripts/deploy.sh development
     on:
       branch: development

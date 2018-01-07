@@ -20,6 +20,6 @@ deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ git@jyps.fi:/usr/share/betarekkari.jyps.fi
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ git@jyps.fi:/usr/share/nginx/betarekkari.jyps.fi
   on:
     branch: development

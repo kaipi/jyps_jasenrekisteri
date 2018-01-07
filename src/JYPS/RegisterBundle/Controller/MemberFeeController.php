@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use Twilio\Rest\Client;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class MemberFeeController extends Controller
 {
@@ -106,7 +108,7 @@ class MemberFeeController extends Controller
                         }
                     }
                     //email
-                    $message = \Swift_Message::newInstance();
+                    $message = (new Swift_Message);
                     $message->setSubject('JYPS ry jäsenmaksumuistutus')
                     ->setFrom('jasenrekisteri@jyps.fi')
                     ->setTo($member->getEmail())
@@ -262,12 +264,10 @@ class MemberFeeController extends Controller
             ->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period - 1));
         }
         $emailConstraint = new EmailConstraint();
+        $validator = new EmailValidator();
 
-        $errors = "";
-        $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-        if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
-            if (\Swift_Validate::email($member->getEmail())) {
-                $message = \Swift_Message::newInstance()
+        if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
+                $message = (new \Swift_Message)
                 ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                 ->setFrom("jasenrekisteri@jyps.fi")
                 ->setTo(array($member->getEmail()))
@@ -278,7 +278,7 @@ class MemberFeeController extends Controller
                 'bankaccount' => $bankaccount,
                 'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
                 'year' => date("Y"))));
-            }
+            
             $childs = $member->getChildren();
             //attach also all childmembers cards to mail
             foreach ($childs as $child) {
@@ -327,7 +327,7 @@ class MemberFeeController extends Controller
             $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
             if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
                 if (\Swift_Validate::email($member->getEmail())) {
-                    $message = \Swift_Message::newInstance()
+                    $message = (new Swift_Message)
                     ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                     ->setFrom("jasenrekisteri@jyps.fi")
                     ->setTo(array($member->getEmail()))

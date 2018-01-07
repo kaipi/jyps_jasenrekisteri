@@ -23,8 +23,8 @@ class MemberCardGenerator {
 		$qrCode = new QrCode();
 		$qrCode->setSize(380);
 		$qrCode->setText($member_qr_data);
-		$qrCode = $qrCode->get('png');
-		$qr_image = imagecreatefromstring($qrCode);
+		$qrCodedata = $qrCode->writeString();
+		$qr_image = imagecreatefromstring($qrCodedata);
 		imagecopy($base_image, $qr_image, 550, 22, 0, 0, imagesx($qr_image), imagesy($qr_image));
 		/*write image to disk */
 		imagepng($base_image, $output_image);

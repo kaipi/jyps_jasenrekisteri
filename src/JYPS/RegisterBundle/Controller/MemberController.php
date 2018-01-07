@@ -11,6 +11,9 @@ use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
+
 
 class MemberController extends Controller
 {
@@ -49,7 +52,7 @@ class MemberController extends Controller
     public function showAllAction($memberid)
     {
 
-        $request = $this->get('request');
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if (is_null($memberid)) {
             $postData = $request->get('member');
@@ -71,13 +74,13 @@ class MemberController extends Controller
         ->findBy(array('member_id' => $member->getId()),
         array('fee_period' => 'ASC'));
 
-        $form = $this->createForm(new MemberEditType(), $member, array('action' => $this->generateUrl('member', array('memberid' => $member->getMemberId())),
+        $form = $this->createForm(MemberEditType::class, $member, array('action' => $this->generateUrl('member', array('memberid' => $member->getMemberId())),
         ));
 
         if ($request->getMethod() == 'POST') {
             $em = $this->getDoctrine()->getEntityManager();
 
-            $form->submit($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $em->flush();
@@ -147,7 +150,7 @@ class MemberController extends Controller
         ->getManager()
         ->getRepository('JYPSRegisterBundle:MemberFeeConfig');
 
-        $form = $this->createForm(new MemberAddType(), $member, array('action' => $this->generateUrl('join_internal_save'),
+        $form = $this->createForm(MemberAddType::class, $member, array('action' => $this->generateUrl('join_internal_save'),
         'intrest_configs' => $all_confs,
         'memberfee_configs' => $memberfee_confs));
 
@@ -177,7 +180,7 @@ class MemberController extends Controller
         ->getManager()
         ->getRepository('JYPSRegisterBundle:MemberFeeConfig');
 
-        $form = $this->createForm(new MemberJoinType(), $member, array('action' => $this->generateUrl('join_save'),
+        $form = $this->createForm(MemberJoinType::class, $member, array('action' => $this->generateUrl('join_save'),
         'intrest_configs' => $all_confs,
         'memberfee_configs' => $memberfee_confs));
 
@@ -202,7 +205,7 @@ class MemberController extends Controller
             }
         }
         $member_age = date('Y') - $member->getBirthYear();
-        $message = \Swift_Message::newInstance()
+        $message = (new Swift_Message)
         ->setSubject('Uusi JYPS-jäsen!')
         ->setFrom('jasenrekisteri@jyps.fi')
         ->setTo($recipents)
@@ -222,14 +225,12 @@ class MemberController extends Controller
 
     public function sendMembershipCardAction(Request $request)
     {
-
-        $memberid = $this->get('request')->request->get('memberid');
-
+        $memberid = $this->container->get('request_stack')->getCurrentRequest()->request->get('memberid');;
         $member = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:Member')
         ->findOneBy(array('member_id' => $memberid));
 
-        $message = \Swift_Message::newInstance()
+        $message = (new \Swift_Message)
         ->setSubject('JYPS ry:n jäsenkorttisi')
         ->setFrom('jasenrekisteri@jyps.fi')
         ->setTo($member->getEmail())
@@ -238,7 +239,6 @@ class MemberController extends Controller
         'JYPSRegisterBundle:Member:membercard_resend.txt.twig', array()));
 
         $this->get('mailer')->send($message);
-
         $this->get('session')->getFlashBag()->add(
         'notice',
         'Jäsenkortti lähetty');
@@ -258,6 +258,7 @@ class MemberController extends Controller
         }
         $ok = 0;
         $nok = 0;
+        $qty = 0;
         $repository = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:Member');
 
@@ -272,28 +273,26 @@ class MemberController extends Controller
             if ($member->getEmail() == "") {
                 continue;
             }
-            $emailConstraint = new EmailConstraint();
-            $errors = "";
-            $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-            if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
-                if (\Swift_Validate::email($member->getEmail())) {
+            //$emailConstraint = new EmailConstraint();
+            $validator = new EmailValidator();
+
+         if ($validator->isValid($member->getEmail(), new RFCValidation()) //true
+            && !is_null($member->getEmail()) && $member->getEmail() != "") {
                     $ok++;
-                    $message = \Swift_Message::newInstance()
+                    $message = (new \Swift_Message)
                     ->setSubject($subject)
                     ->setFrom($from_address)
                     ->setTo(array($member->getEmail()))
                     ->setBody($message);
                     $this->get('mailer')->send($message);
-                } else {
-                    $nok++;
-                }
+                    $qty++;
             } else {
                 $nok++;
             }
         }
         $this->get('session')->getFlashBag()->add(
         'notice',
-        'Sähköpostit lähetetty, ok: ' . $ok . 'kpl, not ok:' . $nok . 'kpl');
+        'Sähköpostit lähetetty,' . $qty . 'kpl');
 
         return $this->redirect($this->generateUrl('memberActions'));
     }
@@ -329,7 +328,7 @@ class MemberController extends Controller
                     $magazine_template = 'JYPSRegisterBundle:Member:magazine_info_pay_notice.txt.twig';
                 }
 
-                $message = \Swift_Message::newInstance()
+                $message = (new \Swift_Message)
                 ->setSubject("JYPS Ry Jäsenlehti")
                 ->setFrom('jasenrekisteri@jyps.fi')
                 ->setTo(array($member->getEmail()))
@@ -416,7 +415,7 @@ class MemberController extends Controller
             }
         }
 
-        $form = $this->createForm(new MemberJoinType, $member);
+        $form = $this->createForm( MemberJoinType::class, $member);
 
         $form->handleRequest($request);
 
@@ -444,13 +443,13 @@ class MemberController extends Controller
             //1) List join
             if ($member->getEmail() != "") {
                 if ($member->getMailingListYleinen() === true) {
-                    $message = \Swift_Message::newInstance()
+                    $message = (new \Swift_Message)
                     ->setFrom($member->getEmail())
                     ->setTo('jasenet-lista-join@jyps.fi');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail
-                $message = \Swift_Message::newInstance()
+                $message = (new \Swift_Message)
                 ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
                 ->setFrom('jasenrekisteri@jyps.fi')
                 ->setTo($member->getEmail())
@@ -484,7 +483,7 @@ class MemberController extends Controller
     {
         $member = new Member();
 
-        $form = $this->createForm(new MemberAddType, $member);
+        $form = $this->createForm(MemberAddType::class, $member);
 
         $form->handleRequest($request);
 
@@ -564,14 +563,14 @@ class MemberController extends Controller
             //1) List join
             if ($member->getEmail() != "") {
                 if ($member->getMailingListYleinen() === true) {
-                    $message = \Swift_Message::newInstance()
+                    $message = (new \Swift_Message)
                     ->setFrom($member->getEmail())
                     ->setTo('jasenet-join@jyps.info');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail
                 if ($send_mail_without_payment_info === false) {
-                    $message = \Swift_Message::newInstance()
+                    $message = (new \Swift_Message)
                     ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
                     ->setFrom('jasenrekisteri@jyps.fi')
                     ->setTo($member->getEmail())
@@ -583,7 +582,7 @@ class MemberController extends Controller
                             'bankaccount' => $bankaccount,
                             'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount))));
                 } else {
-                    $message = \Swift_Message::newInstance()
+                    $message = (new \Swift_Message)
                     ->setSubject('Tervetuloa JYPS Ry:n jäseneksi')
                     ->setFrom('jasenrekisteri@jyps.fi')
                     ->setTo($member->getEmail())
@@ -857,7 +856,7 @@ class MemberController extends Controller
     {
         if ($member->getEmail() != "") {
             if ($member->getMailingListYleinen() === true) {
-                $message = \Swift_Message::newInstance()
+                $message = (new Swift_Message)
                     ->setFrom($member->getEmail())
                     ->setTo('jasenet-lista-join@jyps.fi');
                 $this->get('mailer')->send($message);

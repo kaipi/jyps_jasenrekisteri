@@ -14,20 +14,20 @@ class MemberAddType extends AbstractType {
 		$conf = $options['intrest_configs'];
 
 		$builder
-			->add('firstname', 'text')
+			->add('firstname', TextType::class)
 			->add('second_name', 'text', array('required' => false))
 			->add('surname', 'text')
-			->add('birth_year', 'text')
+			->add('birth_year', TextType::class)
 			->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
 				'property' => 'NameWithFeeAmount'))
 			->add('street_address')
 			->add('postal_code')
 			->add('city')
-			->add('country', 'text', array('required' => false,
+			->add('country', TextType::class, array('required' => false,
 				'data' => 'Suomi'))
 			->add('email', 'email', array('required' => false,
 				'attr' => array('size' => '46')))
-			->add('telephone', 'text', array('required' => false))
+			->add('telephone', TextType::class, array('required' => false))
 			->add('magazine_preference', 'checkbox', array('required' => false))
 			->add('mailing_list_yleinen', 'checkbox', array('required' => false))
 			->add('gender', 'choice', array('choices' => array(
@@ -48,7 +48,7 @@ class MemberAddType extends AbstractType {
 				'property_path' => 'JYPS\RegisterBundle\Entity\Intrest'))
 
 			->add('join_form_freeword', 'textarea', array('required' => false))
-			->add('referer_person_name', 'text', array('required' => false))
+			->add('referer_person_name', TextType::class, array('required' => false))
 			->add('mark_fee_paid', 'checkbox', array('required' => false,
 				'mapped' => false))
 			->add('save', 'submit');

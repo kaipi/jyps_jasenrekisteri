@@ -6,37 +6,45 @@ namespace JYPS\RegisterBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class MemberEditType extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 
 		$builder
-			->add('firstname', 'text')
-			->add('second_name', 'text', array('required' => false))
-			->add('surname', 'text')
-			->add('birth_year', 'text')
-			->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
-				'property' => 'NameWithFeeAmount'))
+			->add('firstname', TextType::class)
+			->add('second_name', TextType::class, array('required' => false))
+			->add('surname', TextType::class)
+			->add('birth_year', TextType::class)
+			->add('membertype', EntityType::class, array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
+				'choice_name' => 'NameWithFeeAmount'))
 			->add('street_address')
 			->add('postal_code')
 			->add('city')
-			->add('country', 'text', array('required' => false))
-			->add('email', 'text', array('required' => false,
+			->add('country', TextType::class, array('required' => false))
+			->add('email', TextType::class, array('required' => false,
 				'attr' => array('size' => '46')))
-			->add('telephone', 'text', array('required' => false))
-			->add('magazine_preference', 'checkbox', array('required' => false))
-			->add('mailing_list_yleinen', 'checkbox', array('required' => false))
-			->add('memo', 'textarea', array('required' => false))
-			->add('gender', 'choice', array('choices' => array(
-				true => 'Mies',
-				false => 'Nainen'),
+			->add('telephone', TextType::class, array('required' => false))
+			->add('magazine_preference', CheckboxType::class, array('required' => false))
+			->add('mailing_list_yleinen', CheckboxType::class, array('required' => false))
+			->add('memo', TextareaType::class, array('required' => false))
+			->add('gender', ChoiceType::class, array('choices' => array(
+				'Mies' => true,
+				'Nainen' => false),
 				'required' => true,
 				'expanded' => false,
 				'multiple' => false))
-			->add('next_memberfee_paid', 'checkbox', array('required' => false))
-			->add('membership_start_date', 'date', array('required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
-			->add('save', 'submit');
+			->add('next_memberfee_paid', CheckboxType::class, array('required' => false))
+			->add('membership_start_date', DateType::class, array('required' => false, 'widget' => 'single_text', 'format' => 'yyyy-MM-dd'))
+			->add('save', SubmitType::class);
 
 	}
 	public function getDefaultOptions(array $options) {

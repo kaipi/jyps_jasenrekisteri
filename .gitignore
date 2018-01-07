@@ -22,3 +22,4 @@ composer.lock
 app/bootstrap.php.cache
 .vscode/
 /app/Resources/bootstrap.php.cache
+.web-server-pid

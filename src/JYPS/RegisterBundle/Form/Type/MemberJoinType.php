@@ -7,6 +7,12 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class MemberJoinType extends AbstractType
 {
@@ -17,11 +23,11 @@ class MemberJoinType extends AbstractType
         $fee_conf = $options['memberfee_configs'];
 
         $builder
-            ->add('firstname', 'text', array('attr' => array('size' => '63')))
-            ->add('second_name', 'text', array('required' => false,
+            ->add('firstname', TextType::class, array('attr' => array('size' => '63')))
+            ->add('second_name', TextType::class, array('required' => false,
                 'attr' => array('size' => '63')))
-            ->add('surname', 'text', array('attr' => array('size' => '63')))
-            ->add('birth_year', 'text', array('attr' => array('size' => '4',
+            ->add('surname', TextType::class, array('attr' => array('size' => '63')))
+            ->add('birth_year', TextType::class, array('attr' => array('size' => '4',
                 'max_length' => '4')))
 
             ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
@@ -31,26 +37,26 @@ class MemberJoinType extends AbstractType
                         ->orderBy('f.member_type', 'ASC');
                 },
                 'property' => 'NameWithFeeAmount'))
-            ->add('street_address', 'text', array('attr' => array('size' => '63')))
-            ->add('postal_code', 'text', array('attr' => array('size' => '63')))
-            ->add('city', 'text', array('attr' => array('size' => '63')))
-            ->add('country', 'text', array('required' => false,
+            ->add('street_address', TextType::class, array('attr' => array('size' => '63')))
+            ->add('postal_code', TextType::class, array('attr' => array('size' => '63')))
+            ->add('city', TextType::class, array('attr' => array('size' => '63')))
+            ->add('country', TextType::class, array('required' => false,
                 'attr' => array('size' => '63')))
-            ->add('email', 'email', array('required' => true,
+            ->add('email', EmailType::class, array('required' => true,
                 'attr' => array('size' => '63')))
-            ->add('telephone', 'text', array('required' => true,
+            ->add('telephone', TextType::class, array('required' => true,
                 'attr' => array('size' => '63')))
-            ->add('magazine_preference', 'checkbox', array('required' => false,
+            ->add('magazine_preference', CheckboxType::class, array('required' => false,
                 'attr' => array('size' => '63')))
-            ->add('mailing_list_yleinen', 'checkbox', array('required' => false,
+            ->add('mailing_list_yleinen', CheckboxType::class, array('required' => false,
                 'attr' => array('size' => '63')))
-            ->add('gender', 'choice', array('choices' => array(
-                true => 'Mies',
-                false => 'Nainen'),
+            ->add('gender', ChoiseType::class, array('choices' => array(
+                'Mies' => true,
+                'Nainen' => false),
                 'required' => true,
                 'expanded' => false,
                 'multiple' => false))
-            ->add('intrests', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\IntrestConfig',
+            ->add('intrests', EntityType::class, array('class' => 'JYPS\RegisterBundle\Entity\IntrestConfig',
                 'query_builder' => function (EntityRepository $conf) {
                     return $conf->createQueryBuilder('c')
                         ->orderBy('c.order', 'ASC');
@@ -63,9 +69,9 @@ class MemberJoinType extends AbstractType
                 'property_path' => 'JYPS\RegisterBundle\Entity\Intrest',
                 'attr' => array('size' => '21')))
 
-            ->add('join_form_freeword', 'textarea', array('required' => false,
+            ->add('join_form_freeword', TextareaType::class, array('required' => false,
                 'attr' => array('cols' => '45', 'rows' => '10')))
-            ->add('referer_person_name', 'text', array('required' => false,
+            ->add('referer_person_name', TextType::class, array('required' => false,
                 'attr' => array('size' => '63')))
             ->add('save', 'submit');
     }

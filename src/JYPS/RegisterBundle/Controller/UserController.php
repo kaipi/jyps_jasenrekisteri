@@ -59,7 +59,7 @@ class UserController extends Controller {
 	 * @return \Symfony\Component\Form\Form The form
 	 */
 	private function createCreateForm(User $entity) {
-		$form = $this->createForm(new UserType(), $entity, array(
+		$form = $this->createForm( UserType::class, $entity, array(
 			'action' => $this->generateUrl('user_create'),
 			'method' => 'POST',
 		));
@@ -134,7 +134,7 @@ class UserController extends Controller {
 	 * @return \Symfony\Component\Form\Form The form
 	 */
 	private function createEditForm(User $entity) {
-		$form = $this->createForm(new UserEditType(), $entity, array(
+		$form = $this->createForm( UserEditType::class, $entity, array(
 			'action' => $this->generateUrl('user_update', array('id' => $entity->getId())),
 			'method' => 'PUT',
 		));

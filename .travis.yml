@@ -1,26 +1,25 @@
 language: php
 php:
-- 7.1
+  - 7.1
 before_script: composer install -n
 script: bin/phpunit -c app
 addons:
   ssh_known_hosts: jyps.fi
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_928069d7bbc2_key -iv $encrypted_928069d7bbc2_iv
-  -in deploy_rsa.enc -out /tmp/deploy_rsa -d
-- eval "$(ssh-agent -s)"
-- chmod 600 /tmp/deploy_rsa
-- ssh-add /tmp/deploy_rsa
+  - >-
+    openssl aes-256-cbc -K $encrypted_928069d7bbc2_key -iv
+    $encrypted_928069d7bbc2_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
 deploy:
-  #production deploy
   - provider: script
-  skip_cleanup: true
-  script: bin/deploy.sh production
-  on:
-    branch: master
-  #development deploy
+    skip_cleanup: true
+    script: bin/deploy.sh production
+    on:
+      branch: master
   - provider: script
-  skip_cleanup: true
-  script: bin/deploy.sh development
-  on:
-    branch: development
+    skip_cleanup: true
+    script: bin/deploy.sh development
+    on:
+      branch: development

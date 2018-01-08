@@ -32,7 +32,8 @@
     "twilio/sdk": "@stable",
     "endroid/qr-code": "@stable",
     "doctrine/doctrine-migrations-bundle": "^1.0",
-    "egulias/email-validator": "~2.1"
+    "egulias/email-validator": "~2.1",
+    "lexik/jwt-authentication-bundle": "^2.4"
   },
   "scripts": {
     "post-install-cmd": [

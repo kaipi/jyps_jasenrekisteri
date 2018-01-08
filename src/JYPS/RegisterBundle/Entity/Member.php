@@ -940,7 +940,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
 
         foreach ($all_fees as $fee) {
             if ($fee->getFeePeriod() == $year &&
-                $fee->getPaid() == true) {
+                $fee->getPaid() === true) {
                 return true;
             }
         }

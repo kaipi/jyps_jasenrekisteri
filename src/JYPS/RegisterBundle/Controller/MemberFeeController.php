@@ -92,7 +92,7 @@ class MemberFeeController extends Controller
                 $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
                 if ($errors == "") {
                     //sms
-                    if ($member->getTelephone() !== null && $send_sms == true) {
+                    if ($member->getTelephone() !== null && $send_sms === true) {
                         try {
                             $message = $client->messages->create(
                             $member->getInternationalTelephone(),

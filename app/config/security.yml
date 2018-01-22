@@ -2,26 +2,46 @@ security:
     encoders:
         JYPS\RegisterBundle\Entity\User:
             algorithm: bcrypt
-            cost:  15 
-
+            cost: 15
     providers:
         administrators:
-            entity: { class: JYPSRegisterBundle:User, property: username }
-
+            entity:
+                class: 'JYPSRegisterBundle:User'
+                property: username
     firewalls:
-       login_firewall:
-          pattern:    ^/member/login$
-          anonymous:  ~
-
-       secured_area:
-           pattern: ^/member
-           form_login:
+        login_firewall:
+            pattern: ^/member/login$
+            anonymous: null
+        secured_area:
+            pattern: ^/member
+            form_login:
                 login_path: /member/login
                 check_path: /member/login_check
                 default_target_path: /member
-           logout: 
-                path:   /member/logout
+            logout:
+                path: /member/logout
                 target: /member/login
-
-
-
+        login:
+            pattern: ^/api/login
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path: /api/login_check
+                username_parameter: _username
+                password_parameter: _password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+        api:
+            pattern: ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+    access_control:
+        -
+            path: ^/api/login
+            roles: IS_AUTHENTICATED_ANONYMOUSLY
+        -
+            path: ^/api
+            roles: IS_AUTHENTICATED_FULLY

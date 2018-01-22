@@ -27,8 +27,7 @@ class AppKernel extends Kernel
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Symfony\Bundle\WebServerBundle\WebServerBundle(),
-
-
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

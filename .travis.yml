@@ -3,6 +3,7 @@ php:
   - 7.2
 before_script:
   - composer install -n
+  - sudo add-apt-repository ppa:ondrej/php-7.2
   - sudo apt-get install php7.2-xml
 script: bin/phpunit -c app
 addons:

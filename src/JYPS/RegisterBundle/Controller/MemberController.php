@@ -8,6 +8,7 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Form\Type\MemberAddType;
 use JYPS\RegisterBundle\Form\Type\MemberEditType;
 use JYPS\RegisterBundle\Form\Type\MemberJoinType;
+use JYPS\RegisterBundle\Form\Type\MemberFeePayment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
@@ -194,7 +195,7 @@ class MemberController extends Controller
         $intrest_names = array();
         $recipents = array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com');
         if ($member->getGender() === false) {
-            array_push($recipents, 'ledpis@gmail.com');
+            array_push($recipents, 'sini.nousiainen@gmail.com');
         }
         if ($member->getIntrests()) {
             foreach ($member->getIntrests() as $intrest) {
@@ -273,7 +274,6 @@ class MemberController extends Controller
             if ($member->getEmail() == "") {
                 continue;
             }
-            //$emailConstraint = new EmailConstraint();
             $validator = new EmailValidator();
 
          if ($validator->isValid($member->getEmail(), new RFCValidation()) //true

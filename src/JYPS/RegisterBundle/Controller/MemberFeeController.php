@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use Twilio\Rest\Client;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use JYPS\RegisterBundle\Form\Type\MemberFeePayment;
 
 class MemberFeeController extends Controller
 {
@@ -361,20 +362,57 @@ class MemberFeeController extends Controller
         'Jäsenmaksut lähetetty, OK:' . $sent . " NOK:" . $errors . "");
         return $this->redirect($this->generateUrl('memberfees'));
     }
+    public function memberFeePaymentForm() {
+        $form = $this->createForm(MemberFeePayment::class, $memberfee);
+    }
+    public function paytrailProcess(Request $request,$reference) {
+        $merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
+        $authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
+        $order_number = $memberfee->getReferencenumber();
+        $order_description = "Jasenmaksu;Jasen:" . $member->getMemberId();
+        $return_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
+        $cancel_address = $this->GetSystemParameter("PaymentCancelledURL")->getStringValue();
+        $notify_address = $this->GetSystemParameter("PaymentCompleteURL")->getStringValue();
+        $contact_firstname = $member->getFirstName();
+        $contact_lastname = $member->getSurname();
+        $contact_email = $member->getEmail();
+        $contact_addr_street = $member->getStreetAddress();
+        $contact_addr_zip = $member->getPostalCode();
+        $contact_addr_city = $member->getCity();
+        $contact_addr_country = $member->getCountry();
+        $memberfee_amount = $memberfee->getFeeAmountWithVat();
 
+        $authcode = strtoupper(md5($authcode . "|" .
+        $merchant_id . "|" .
+        $memberfee_amount . "|" .
+        $order_number . "|" .
+        "|" .
+        $order_description . "|" .
+        "EUR|" .
+        $return_address . "|" .
+        $cancel_address . "|" .
+        "|" .
+        $notify_address . "|" .
+        "S1|" .
+        "fi_FI|" .
+        "|" .
+        "1|" .
+        "|" .
+        ""));
+    }
+    
     public function paytrailPaymentAction(Request $request, $reference)
     {
 
         $memberfee = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:MemberFee')
         ->findOneBy(array('reference_number' => $reference));
-        if ($memberfee->getPaid()) {
-            return $this->render('JYPSRegisterBundle:MemberFee:payment_already_paid.html.twig');
-        }
+
         $member = $this->getDoctrine()
         ->getRepository('JYPSRegisterBundle:Member')
         ->findOneBy(array('id' => $memberfee->getMemberId()));
         $memberfeeconfig = $member->getMemberType();
+        
         $merchant_id = $this->GetSystemParameter("PaytrailMerchantId")->getStringValue();
         $authcode = $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue();
         $order_number = $memberfee->getReferencenumber();

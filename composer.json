@@ -33,7 +33,8 @@
     "endroid/qr-code": "@stable",
     "doctrine/doctrine-migrations-bundle": "^1.0",
     "egulias/email-validator": "~2.1",
-    "lexik/jwt-authentication-bundle": "^2.4"
+    "lexik/jwt-authentication-bundle": "^2.4",
+    "guzzlehttp/guzzle": "~6.0"
   },
   "scripts": {
     "post-install-cmd": [

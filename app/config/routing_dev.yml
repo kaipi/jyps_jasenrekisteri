@@ -116,7 +116,7 @@ JYPSRegisterBundle_member_intrestconfig:
 paytrailPayment:
     path: '/pay/{reference}'
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paytrailPayment'
+        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentForm'
 payment_complete:
     path: /paymentcomplete
     defaults:
@@ -131,3 +131,7 @@ change_membertype:
         _controller: 'JYPSRegisterBundle:Member:changeMemberType'
 api_login_check:
     path: /api/login_check
+testpt:
+    path: /testpt
+    defaults:
+        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentForm'

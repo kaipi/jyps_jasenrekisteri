@@ -131,7 +131,3 @@ change_membertype:
         _controller: 'JYPSRegisterBundle:Member:changeMemberType'
 api_login_check:
     path: /api/login_check
-testpt:
-    path: /testpt
-    defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentForm'

@@ -437,12 +437,15 @@ class MemberFeeController extends Controller
             return $this->redirect($ptrestponse->{'url'});
 
         }
-        return $this->render('JYPSRegisterBundle:MemberFee:paytrail_payment.html.twig', [
-            'form' => $form->createView(),
-            'memberfee' => $memberfee,
-            'member' => $member,
-            'memberfeeconfig' => $memberfeeconfig,
-            'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom()]);
+        return
+        $this->render(
+            'JYPSRegisterBundle:MemberFee:paytrail_payment.html.twig', [
+                'form' => $form->createView(),
+                'memberfee' => $memberfee,
+                'member' => $member,
+                'memberfeeconfig' => $memberfeeconfig,
+                'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom()]
+        );
     }
 
     public function paymentCompleteAction(Request $request)

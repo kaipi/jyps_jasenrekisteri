@@ -172,7 +172,7 @@ sendSingleMemberFeeEmail:
 paytrailPayment:
     path: '/pay/{reference}'
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paytrailPayment'
+        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentFormAction'
 payment_complete:
     path: /paymentcomplete
     defaults:

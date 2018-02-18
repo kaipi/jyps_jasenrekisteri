@@ -86,9 +86,9 @@ class MemberController extends Controller
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
-                // if ($childMember !== null || !empty($childMember)) {
-                //    $this->_addChildMember($member->getMemberId(), $childMember);
-                // }
+                if ($childMember != null) {
+                    $this->_addChildMember($member->getMemberId(), $childMember);
+                }
                 $removedChilds = $request->get('removed_childs');
                 if ($removedChilds != "") {
                     foreach ($removedChilds as $removedChild) {
@@ -749,10 +749,10 @@ class MemberController extends Controller
         $childMember = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member')
             ->findOneBy(array('member_id' => $childMemberId));
-
-        $childMember->setParent($member);
-
-        $em->flush($childMember);
+        if ($childMember != null) {
+            $childMember->setParent($member);
+            $em->flush($childMember);
+        }
         return true;
     }
     private function removeChildMember($childMemberId)

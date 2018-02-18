@@ -10,7 +10,7 @@
     "classmap": ["app/AppKernel.php", "app/AppCache.php"]
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "symfony/symfony": "^3.0",
     "doctrine/orm": "~2.2,>=2.2.3",
     "doctrine/doctrine-bundle": "~1.2",
@@ -55,7 +55,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.1"
+      "php": "7.2"
     },
     "bin-dir": "bin"
   },

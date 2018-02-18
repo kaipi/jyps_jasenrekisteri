@@ -1,2 +1,4 @@
 app/config/parameters.yml
 .git/
+app/cache
+app/logs

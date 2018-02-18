@@ -86,9 +86,9 @@ class MemberController extends Controller
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
-                if ($childMember !== null || !empty($childMember)) {
-                    $this->addChildMember($member->getMemberId(), $childMember);
-                }
+                // if ($childMember !== null || !empty($childMember)) {
+                //    $this->_addChildMember($member->getMemberId(), $childMember);
+                // }
                 $removedChilds = $request->get('removed_childs');
                 if ($removedChilds != "") {
                     foreach ($removedChilds as $removedChild) {
@@ -737,7 +737,7 @@ class MemberController extends Controller
             return $this->render('JYPSRegisterBundle:Member:change_membertype.html.twig', array('memberid' => $member->getMemberId(), 'membertypes' => $memberfeeconfigs, 'referencenumber' => $referencenumber));
         }
     }
-    private function addChildMember($memberid, $childMemberId)
+    private function _addChildMember($memberid, $childMemberId)
     {
 
         $em = $this->getDoctrine()->getManager();

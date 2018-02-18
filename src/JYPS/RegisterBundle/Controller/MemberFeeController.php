@@ -441,8 +441,7 @@ class MemberFeeController extends Controller
             'memberfee' => $memberfee,
             'member' => $member,
             'memberfeeconfig' => $memberfeeconfig,
-            'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom(),
-        ));
+            'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom()));
     }
     public function paytrailProcess(Request $request, $reference)
     {

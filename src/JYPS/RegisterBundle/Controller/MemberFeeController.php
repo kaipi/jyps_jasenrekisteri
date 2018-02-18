@@ -194,10 +194,24 @@ class MemberFeeController extends Controller
                 $setpaid = true;
             }
             $memberFeeConfig = $member->getMemberType();
-
-            //flag fee paid
+            if ($memberFeeConfig == null) {
+                continue;
+            }
+            $amount = $memberFeeConfig->getMemberfeeAmount();
+            //Fee is prepaid, create fee and mark paid, unmark member prepaid status
+            if ($member->getNextMemberfeePaid() === true) {
+                $setpaid = true;
+                $member->setNextMemberfeePaid(false);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($member);
+                $em->flush($member);
+            } else {
+                $setpaid = false;
+            }
+            //flag fee paid, and amount as zero
             if ($memberFeeConfig->getCreatefees() == "JOIN_ONLY") {
                 $setpaid = true;
+                $amount = 0;
             }
 
             //Check that fee does not exists fe. already joined members who get fee when joining.
@@ -209,23 +223,13 @@ class MemberFeeController extends Controller
                     break;
                 }
             }
-            //Fee is prepaid, create fee and mark paid, unmark member prepaid status
-            if ($member->getNextMemberfeePaid() === true) {
-                $setpaid = true;
-                $member->setNextMemberfeePaid(false);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($member);
-                $em->flush($member);
-            } else {
-                $setpaid = false;
-            }
 
             if ($createfee === true) {
-                $total_amount = $total_amount + $memberFeeConfig->getMemberfeeAmount();
+                $total_amount = $total_amount + $amount;
                 $total_qty = $total_qty + 1;
                 $memberfee = new MemberFee();
                 $memberfee->setMemberId($member->getMemberid());
-                $memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
+                $memberfee->setFeeAmountWithVat($amount);
                 $memberfee->setReferenceNumber(date('Y') . $member->getMemberId());
                 $memberfee->setDueDate($duedate);
                 $memberfee->setMemberFee($member);

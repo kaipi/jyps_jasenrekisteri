@@ -2,6 +2,7 @@ language: php
 php:
   - 7.2
 before_script:
+  - SYMFONY_ENV=prod
   - composer install --no-dev --optimize-autoloader
 script: bin/phpunit -c app
 addons:

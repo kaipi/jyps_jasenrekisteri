@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use JYPS\RegisterBundle\Entity\IntrestConfig;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MemberAddType extends AbstractType
 {
@@ -19,8 +20,8 @@ class MemberAddType extends AbstractType
         $fee_conf = $options['memberfee_configs'];
 
         $builder
-        ->add('firstname','text')
-        ->add('surname','text')
+        ->add('firstname',TextType::class)
+        ->add('surname',TextType::class)
         ->add('birthdate','date',array('widget' => 'single_text',
                                        'required' => false,))
         ->add('membertype', 'entity', array('class' => 'JYPS\RegisterBundle\Entity\MemberFeeConfig',
@@ -35,9 +36,9 @@ class MemberAddType extends AbstractType
         ->add('street_address')
         ->add('postal_code')
         ->add('city')
-        ->add('country','text',array('required'=>false,))
-        ->add('email', 'text', array('required'=>false,))
-        ->add('telephone','text', array('required'=>false,))
+        ->add('country',TextType::class,array('required'=>false,))
+        ->add('email', TextType::class, array('required'=>false,))
+        ->add('telephone',TextType::class, array('required'=>false,))
         ->add('magazine_preference','checkbox',array('required'=>false,))
         ->add('mailing_list_yleinen','checkbox',array('required'=>false,))
         ->add('invoice_preference','checkbox',array('required'=>false))
@@ -60,7 +61,7 @@ class MemberAddType extends AbstractType
                                             'property_path' => 'JYPS\RegisterBundle\Entity\Intrest'))
     
         ->add('join_form_freeword', 'textarea',array('required' => false,))
-        ->add('referer_person_name', 'text', array('required'=>false,))
+        ->add('referer_person_name', TextType::class, array('required'=>false,))
         ->add('save', 'submit');
 
     }

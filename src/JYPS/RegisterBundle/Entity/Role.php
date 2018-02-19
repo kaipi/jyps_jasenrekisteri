@@ -1,6 +1,5 @@
 <?php
 namespace JYPS\RegisterBundle\Entity;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Role")
  * @ORM\Entity()
  */
-class Role implements RoleInterface
+class Role
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -40,10 +39,9 @@ class Role implements RoleInterface
     /**
      * @see RoleInterface
      */
-    public function getRole()
-    {
-        return $this->role;
-    }
+   // public function getRole()
+  ////    return $this->role;
+   // }
 
     /**
      * Get id

@@ -11,7 +11,7 @@ class PasswordChangeController extends Controller {
 
 	public function indexAction(Request $request) {
 		$changePasswordModel = new ChangePassword();
-		$form = $this->createForm(new ChangePasswordType(), $changePasswordModel, array('action' => $this->generateUrl('index_password'),
+		$form = $this->createForm( ChangePasswordType::class, $changePasswordModel, array('action' => $this->generateUrl('index_password'),
 			'method' => 'POST'));
 		if ($request->isMethod('POST')) {
 

@@ -3,16 +3,36 @@
 <title>JYPSin Jäsenmaksun maksaminen</title>
 <link href="{{ asset('style.css') }}" rel="stylesheet" />
 </head>
+<script>
+function updateSupportFee(value) {
+  var span = document.getElementById('support_fee');
+  var total_value = document.getElementById('total_amount');
+  var member_fee = document.getElementById('memberfee_amount').innerText;
+  tt = (+member_fee) + (+value);
+  span.textContent = value;
+  total_value.textContent = tt;
+}
+</script>
 <center>
-Hei, tervetuloa maksamaan JYPSin vuoden {{memberfee_year}} jäsenmaksusi, alla näet laskun tiedot.
+Hei, tervetuloa maksamaan JYPSin vuoden  jäsenmaksusi, alla näet laskun tiedot.
+{{form_start(form)}}
+{{form_errors(form)}}
 <pre>
-  Jäsen: {{memberfullname}}
-  Jäsennumero: {{memberid}}
-  Jäsentyyppi: {{membertype}}
-  Jäsenmaksu: {{memberfee_amount}} eur
+  Jäsen: {{member.firstname}} {{member.surname}}
+  Jäsennumero: {{member.memberid}}
+  Jäsentyyppi: {{member.membertype}}
+  Jäsenmaksu: <span id="memberfee_amount">{{memberfee.feeamountwithvat}}</span> eur
+  Tukimaksu <span id="support_fee">0</span> eur
+  Yhteensä <span id="total_amount">0</span> eur
 </pre>
+<span>Voit myös maksaa vapaaehtoisen tukimaksun, valitse kohde ja summa alhaalta</span>
+<p>
+{{ form_widget(form.additional_target) }}
+{{ form_widget(form.additional_sum, { 'attr': { 'onchange': 
+"updateSupportFee(this.value);" } } ) }}
+</p>
 {%if (change_allowed_from) %}
-Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{memberid}}/{{referencenumber}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
+Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{member.memberid}}/{{memberfee.referencenumber}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
 {%endif%}
 <p>
 
@@ -22,24 +42,6 @@ Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/
 <a href="https://docs.google.com/forms/d/e/1FAIpQLScr0ZEqCYKU-rtW0z1V27_Z2pxJdjqAFsCv1khNyjC_bP3qeA/viewform">tällä lomakkeella</a>.
    Perhejäsenyydestä lähetetään tämän jälkeen erillinen lasku.
    </p>
-<form id="payment" action="https://payment.paytrail.com/" method="post">
-  <input name="MERCHANT_ID" type="hidden" value="{{merchant_id}}">
-  <input name="AMOUNT" type="hidden" value="{{memberfee_amount}}">
-  <input name="ORDER_NUMBER" type="hidden" value="{{order_number}}">
-  <input name="REFERENCE_NUMBER" type="hidden" value= "" >
-  <input name="ORDER_DESCRIPTION" type="hidden" value="{{order_description}}">
-  <input name="CURRENCY" type="hidden" value="EUR">
-  <input name="RETURN_ADDRESS" type="hidden" value="{{return_address}}">
-  <input name="CANCEL_ADDRESS" type="hidden" value="{{cancel_address}}">
-  <input name="PENDING_ADDRESS" type="hidden" value="">
-  <input name="NOTIFY_ADDRESS" type="hidden" value="{{notify_address}}">
-  <input name="TYPE" type="hidden" value="S1">
-  <input name="CULTURE" type="hidden" value="fi_FI">
-  <input name="PRESELECTED_METHOD" type="hidden" value="">
-  <input name="MODE" type="hidden" value="1">
-  <input name="VISIBLE_METHODS" type="hidden" value="">
-  <input name="GROUP" type="hidden" value="">
-  <input name="AUTHCODE" type="hidden" value="{{authcode}}">
-  <input type="submit" value="Siirry maksamaan">
-</form>
+ {{ form_widget(form.save, { 'label': 'Maksa jäsenmaksu' }) }}
+{{ form_end(form) }}
 </html>

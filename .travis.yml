@@ -3,6 +3,7 @@ php:
   - 7.2
 before_script:
   - export SYMFONY_ENV=prod;composer install -n
+script: bin/phpunit -c app
 addons:
   ssh_known_hosts: jyps.fi
 before_deploy:

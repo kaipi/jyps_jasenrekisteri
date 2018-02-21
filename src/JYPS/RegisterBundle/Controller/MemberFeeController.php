@@ -289,6 +289,10 @@ class MemberFeeController extends Controller
             foreach ($childs as $child) {
                 $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
             }
+            //add headers
+            $headers = $message->getHeaders();
+            $headers->addTextHeader('Precedence', 'bulk');
+
             $this->get('mailer')->send($message);
         }
         $this->get('session')->getFlashBag()->add(
@@ -350,6 +354,10 @@ class MemberFeeController extends Controller
                     foreach ($childs as $child) {
                         $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
                     }
+                    //add headers
+                    $headers = $message->getHeaders();
+                    $headers->addTextHeader('Precedence', 'bulk');
+
                     $this->get('mailer')->send($message);
 
                     $memberfee->setEmailSent(1);

@@ -333,7 +333,7 @@ class MemberFeeController extends Controller
 
             $errors = "";
             if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
-                $message = (new Swift_Message)
+                $message = (new \Swift_Message)
                     ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                     ->setFrom("jasenrekisteri@jyps.fi")
                     ->setTo(array($member->getEmail()))

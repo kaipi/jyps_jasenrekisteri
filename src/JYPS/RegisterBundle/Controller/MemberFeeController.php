@@ -438,7 +438,7 @@ class MemberFeeController extends Controller
 
             $data = json_encode($paytrailRequest);
             $client = new GuzzleClient();
-            $res = $client->request('POST', 'https://payment.paytrail.com/api-payment/create', ['auth' => ['13466', '6pKF4jkv97zmqBJ3ZL8gUw5DfT2NMQ'],
+            $res = $client->request('POST', 'https://payment.paytrail.com/api-payment/create', ['auth' => [$this->GetSystemParameter("PaytrailMerchantId")->getStringValue(), $this->GetSystemParameter("PaytrailMerchantAuthCode")->getStringValue()],
                 'body' => $data,
                 'headers' => ['Content-Type' => 'application/json',
                     'X-Verkkomaksut-Api-Version' => '1']]

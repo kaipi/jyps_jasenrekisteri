@@ -268,7 +268,6 @@ class MemberFeeController extends Controller
                 ->getRepository('JYPSRegisterBundle:MemberFee')
                 ->findOneBy(array('member_id' => $member_id, 'fee_period' => $fee_period - 1));
         }
-        $emailConstraint = new EmailConstraint();
         $validator = new EmailValidator();
 
         if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
@@ -330,41 +329,38 @@ class MemberFeeController extends Controller
             if (empty($memberfee) || $member->getParent() !== null) {
                 continue;
             }
-            $emailConstraint = new EmailConstraint();
+            $validator = new EmailValidator();
 
             $errors = "";
-            $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-            if ($errors == "" && !is_null($member->getEmail()) && $member->getEmail() != "") {
-                if (\Swift_Validate::email($member->getEmail())) {
-                    $message = (new Swift_Message)
-                        ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
-                        ->setFrom("jasenrekisteri@jyps.fi")
-                        ->setTo(array($member->getEmail()))
-                        ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
-                        ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                            array('member' => $member,
-                                'memberfee' => $memberfee,
-                                'bankaccount' => $bankaccount,
-                                'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
-                                'year' => date("Y"))));
+            if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
+                $message = (new Swift_Message)
+                    ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
+                    ->setFrom("jasenrekisteri@jyps.fi")
+                    ->setTo(array($member->getEmail()))
+                    ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
+                    ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
+                        array('member' => $member,
+                            'memberfee' => $memberfee,
+                            'bankaccount' => $bankaccount,
+                            'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                            'year' => date("Y"))));
 
-                    $childs = $member->getChildren();
+                $childs = $member->getChildren();
 
-                    //attach also all childmembers cards to mail
-                    foreach ($childs as $child) {
-                        $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
-                    }
-                    //add headers
-                    $headers = $message->getHeaders();
-                    $headers->addTextHeader('Precedence', 'bulk');
-
-                    $this->get('mailer')->send($message);
-
-                    $memberfee->setEmailSent(1);
-                    $em->flush($memberfee);
-
-                    $sent++;
+                //attach also all childmembers cards to mail
+                foreach ($childs as $child) {
+                    $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
                 }
+                //add headers
+                $headers = $message->getHeaders();
+                $headers->addTextHeader('Precedence', 'bulk');
+
+                $this->get('mailer')->send($message);
+
+                $memberfee->setEmailSent(1);
+                $em->flush($memberfee);
+
+                $sent++;
             } else {
                 $errors++;
             }

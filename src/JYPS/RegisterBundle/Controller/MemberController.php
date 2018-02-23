@@ -609,9 +609,9 @@ class MemberController extends Controller
         return $this->render('JYPSRegisterBundle:Member:join_member_failed.html.twig');
     }
 
-    public function searchMembersAction()
+    public function searchMembersAction(Request $request)
     {
-        $search_term = $this->get('request')->request->get('search_name');
+        $search_term = $request->get('search_name');
 
         $repository = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member');
@@ -628,9 +628,9 @@ class MemberController extends Controller
         return $this->render('JYPSRegisterBundle:Member:show_members_search.html.twig', array('members' => $members));
     }
 
-    public function searchOldMembersAction()
+    public function searchOldMembersAction(Request $request)
     {
-        $search_term = $this->get('request')->request->get('search_name');
+        $search_term = $request->get('search_name');
 
         $repository = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member');
@@ -647,9 +647,9 @@ class MemberController extends Controller
         return $this->render('JYPSRegisterBundle:Member:show_members_old.html.twig', array('members' => $members));
     }
 
-    public function endMemberAction()
+    public function endMemberAction(Request $request)
     {
-        $memberid = $this->get('request')->request->get('memberid');
+        $memberid = $request->get('memberid');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -667,9 +667,9 @@ class MemberController extends Controller
         return $this->render('JYPSRegisterBundle:Member:member_statistics.html.twig');
     }
 
-    public function restoreMemberAction()
+    public function restoreMemberAction(Request $request)
     {
-        $memberid = $this->get('request')->request->get('memberid');
+        $memberid = $request->get('memberid');
 
         $em = $this->getDoctrine()->getManager();
 

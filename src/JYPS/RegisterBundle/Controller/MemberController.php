@@ -204,7 +204,7 @@ class MemberController extends Controller
             }
         }
         $member_age = date('Y') - $member->getBirthYear();
-        $message = (new Swift_Message)
+        $message = (new \Swift_Message)
             ->setSubject('Uusi JYPS-jäsen!')
             ->setFrom('jasenrekisteri@jyps.fi')
             ->setTo($recipents)
@@ -394,7 +394,7 @@ class MemberController extends Controller
     {
 
         $member = new Member();
-        $temp = $request->request->get('memberid');
+        $temp = $request->get('memberid');
         if (isset($temp['intrests'])) {
             $intrests = $temp['intrests'];
         }
@@ -464,9 +464,10 @@ class MemberController extends Controller
                 foreach ($childs as $child) {
                     $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
                 }
-                $emailConstraint = new EmailConstraint();
-                $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-                if ($errors == "") {
+                $validator = new EmailValidator();
+
+                // $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
+                if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
                     $this->get('mailer')->send($message);
                 }
             }

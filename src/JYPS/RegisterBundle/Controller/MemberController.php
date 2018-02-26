@@ -487,7 +487,7 @@ class MemberController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $temp = $request->request->get('memberid');
+            $temp = $request->get('memberid');
             $childMember = $request->get('new_child');
 
             if (isset($temp['intrests'])) {
@@ -593,9 +593,8 @@ class MemberController extends Controller
                                 'bankaccount' => $bankaccount,
                                 'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount))));
                 }
-                $emailConstraint = new EmailConstraint();
-                $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-                if ($errors == "") {
+                $validator = new EmailValidator();
+                if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
                     $this->get('mailer')->send($message);
                     $this->sendJoinInfoEmail($member, $memberfee);
                 }

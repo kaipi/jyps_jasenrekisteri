@@ -9,7 +9,6 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Form\Type\MemberFeePayment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use Twilio\Rest\Client;
 
 class MemberFeeController extends Controller
@@ -90,9 +89,8 @@ class MemberFeeController extends Controller
                 ($member->getReminderSentDate() <= $treshold_date ||
                     $member->getReminderSentDate() === null)) {
                 $errors = "";
-                $emailConstraint = new EmailConstraint();
-                $errors = $this->get('validator')->validateValue($member->getEmail(), $emailConstraint);
-                if ($errors == "") {
+                $validator = new EmailValidator();
+                if ($validator->isValid($member->getEmail(), new RFCValidation())) {
                     //sms
                     if ($member->getTelephone() !== null && $send_sms === true) {
                         try {
@@ -110,7 +108,7 @@ class MemberFeeController extends Controller
                         }
                     }
                     //email
-                    $message = (new Swift_Message);
+                    $message = (new \Swift_Message);
                     $message->setSubject('JYPS ry jäsenmaksumuistutus')
                         ->setFrom('jasenrekisteri@jyps.fi')
                         ->setTo($member->getEmail())

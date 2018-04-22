@@ -543,17 +543,6 @@ class MemberController extends Controller
             $em->persist($memberfee);
             $em->flush();
 
-            if ($childMember !== null) {
-                $parent_member = $this->getDoctrine()
-                    ->getRepository('JYPSRegisterBundle:Member')
-                    ->findOneBy(array('member_id' => $childMember));
-
-                $member->setParent($parent_member);
-                //for child members fee is marked automatically paid, only parent gets the fee
-                $memberfee->setPaid(true);
-                $em->flush();
-                $send_mail_without_payment_info = true;
-            }
             $bankaccount = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:SystemParameter')
                 ->findOneBy(array('key' => 'BankAccount'));
@@ -564,7 +553,7 @@ class MemberController extends Controller
                 if ($member->getMailingListYleinen() === true) {
                     $message = (new \Swift_Message)
                         ->setFrom($member->getEmail())
-                        ->setTo('jasenet-join@jyps.info');
+                        ->setTo('jasenet-lista-join@jyps.fi');
                     $this->get('mailer')->send($message);
                 }
                 //2) information mail

@@ -58,8 +58,8 @@ class MemberFeeController extends Controller
     public function sendReminderLetterAction(Request $request)
     {
         //twilio client
-        $sid = $this->getSystemParameter('TwilioSid');
-        $token = $this->getSystemParameter('TwilioToken');
+        $sid = "NOTINUSENOW"; //$this->getSystemParameter('TwilioSid');
+        $token = "NOTINUSENOW"; //$this->getSystemParameter('TwilioToken');
         $client = new Client($sid, $token);
 
         $join_date_limit = $request->request->get('join_date_limit');

@@ -35,7 +35,6 @@ class MemberAddType extends AbstractType {
 			->add('email', EmailType::class, array('required' => false,
 				'attr' => array('size' => '46')))
 			->add('telephone', TextType::class, array('required' => false))
-			->add('magazine_preference', CheckboxType::class, array('required' => false))
 			->add('mailing_list_yleinen', CheckboxType::class, array('required' => false))
 			->add('gender', ChoiceType::class, array('choices' => array(
 				"Mies" => true,

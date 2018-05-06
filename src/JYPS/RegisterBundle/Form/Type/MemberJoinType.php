@@ -48,8 +48,6 @@ class MemberJoinType extends AbstractType
                 'attr' => array('size' => '63')))
             ->add('telephone', TextType::class, array('required' => true,
                 'attr' => array('size' => '63')))
-            ->add('magazine_preference', CheckboxType::class, array('required' => false,
-                'attr' => array('size' => '63')))
             ->add('mailing_list_yleinen', CheckboxType::class, array('required' => false,
                 'attr' => array('size' => '63')))
             ->add('gender', ChoiceType::class, array('choices' => array(

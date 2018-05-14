@@ -489,13 +489,17 @@ class MemberController extends Controller
         if ($form->isValid()) {
             $temp = $request->get('memberid');
             $childMember = $request->get('new_child');
-
+            if ($childMember !== null) {
+                $parentmember = $this->getDoctrine()
+                    ->getRepository('JYPSRegisterBundle:Member')
+                    ->findOneBy(array('member_id' => $childMember));
+                $member->setParent($parentmember);
+            }
             if (isset($temp['intrests'])) {
                 $intrests = $temp['intrests'];
             }
             //extra params for member
             $member->setMemberid($this->getNextMemberId());
-
             $member->setMembershipEndDate(new \DateTime("2038-12-31"));
 
             if (!empty($intrests)) {

@@ -399,7 +399,7 @@ class MemberFeeController extends Controller
                 "code" => "JASENMAKSU2018",
                 "amount" => 1,
                 "price" => $memberfee->getFeeAmountWithVat(),
-                "vat" => 24,
+                "vat" => 0,
                 "discount" => 0,
                 "type" => 1)];
 
@@ -408,7 +408,7 @@ class MemberFeeController extends Controller
                     "code" => $additional_target,
                     "amount" => 1,
                     "price" => $additional_sum,
-                    "vat" => 24,
+                    "vat" => 0,
                     "discount" => 0,
                     "type" => 1));
             }

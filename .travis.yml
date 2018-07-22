@@ -2,7 +2,8 @@ language: php
 php:
   - 7.2
 before_script:
-  - export SYMFONY_ENV=prod;php -d memory_limit=-1 composer install -n
+  - phpenv config-add travis.php.ini
+  - export SYMFONY_ENV=prod;composer install -n
 script: bin/phpunit -c app
 addons:
   ssh_known_hosts: jyps.fi

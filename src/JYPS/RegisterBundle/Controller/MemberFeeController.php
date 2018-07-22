@@ -58,8 +58,8 @@ class MemberFeeController extends Controller
     public function sendReminderLetterAction(Request $request)
     {
         //twilio client
-        $sid = "NOTINUSENOW"; //$this->getSystemParameter('TwilioSid');
-        $token = "NOTINUSENOW"; //$this->getSystemParameter('TwilioToken');
+        $sid = $this->getSystemParameter('TwilioSid')->getStringValue();
+        $token = $this->getSystemParameter('TwilioToken')->getStringValue();
         $client = new Client($sid, $token);
 
         $join_date_limit = $request->request->get('join_date_limit');
@@ -92,12 +92,12 @@ class MemberFeeController extends Controller
                 $validator = new EmailValidator();
                 if ($validator->isValid($member->getEmail(), new RFCValidation())) {
                     //sms
-                    if ($member->getTelephone() !== null && $send_sms === true) {
+                    if ($member->getTelephone() !== null && $send_sms === "on") {
                         try {
                             $message = $client->messages->create(
                                 $member->getInternationalTelephone(),
                                 array(
-                                    'from' => '+3584573975175',
+                                    'from' => 'JypsRy',
                                     'body' => 'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' . $memberfee->getReferenceNumber() . ' Terveisin JYPS ry.',
                                 )
                             );

@@ -19,18 +19,20 @@ class GeneratePDFInvoicesCommand extends ContainerAwareCommand
         $this
             ->setName('print_pdf_invoices')
             ->setDescription('Prints pdf (reminder) invoices')
-            ->addArgument('Year', InputArgument::OPTIONAL, 'Year of invoices to print');
+            ->addArgument('Year', InputArgument::OPTIONAL, 'Year of invoices to print')
+            ->addArgument("Outputdir", InputArgument::OPTIONAL, 'where to output reminders.pdf');
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $i = 0;
 
-        $mpdf = new Mpdf();
-
         $year = $input->getArgument('Year');
+        $outputdir = $input->getArgument('Outputdir');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $memberfees = $em->getRepository('JYPSRegisterBundle:MemberFee')
             ->findBy(array('fee_period' => $year, 'paid' => 0));
+        $mpdf = new Mpdf();
+
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberfee();
             if ($member->getMembershipEndDate() > new \DateTime("now")) {
@@ -41,15 +43,14 @@ class GeneratePDFInvoicesCommand extends ContainerAwareCommand
                             'invoiceDate' => (new \DateTime())->format("d.n.Y"))
                     );
                 $mpdf->WriteHTML($html);
-                $mpdf->Output(
-                    "invoice_" . $member->getMemberId() .
-                    ".pdf", \Mpdf\Output\Destination::FILE
-                );
+                $mpdf->AddPage();
                 $i++;
                 echo "Generating reminder for member " . $member->getMemberId() . "\n";
             }
         }
-
+        $mpdf->Output(
+            $outputdir . "reminders.pdf", \Mpdf\Output\Destination::FILE
+        );
         echo "Generated  " . $i . " reminders\n";
     }
 

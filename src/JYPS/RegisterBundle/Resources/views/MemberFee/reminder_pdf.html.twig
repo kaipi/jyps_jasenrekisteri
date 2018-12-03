@@ -1,0 +1,139 @@
+{# src/JYPS/RegisterBundle/Resources/views/MemberFee/reminder_pdf.html.twig #}
+<html>
+        <head>
+          <title>Maksumuistutus jäsenlaskusta jäsennumero/2018</title>
+        </head>
+        <body bgcolor="white" text="black">
+
+          <div align="center">
+
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td width="58%"></td>
+                <td width="20%"></td>
+                <td width="22%"></td>
+              </tr>
+
+              <tr valign="top">
+
+                <td rowspan="8">
+                  <p><img src="https://www.jyps.fi/wp-content/uploads/2009/03/jyps_kscup.jpg" height="50px">
+                    <br>
+                    <br>
+                    <font size="-3">
+                    Jyväskylän Pyöräilyseura JYPS ry<br>
+                    Yliopistonkatu 18 D 67<br>
+                    40100 Jyväskylä
+                    </font>
+                  </p>
+
+                  <br>
+
+                  <p>
+                    <tt>{{member.getFullname()}}<br>
+                    {{member.getStreetAddress()}}<br>
+                    {{member.getPostalCode()}}  {{member.getCity()}}
+                    </tt>
+                  </p>
+                </td>
+
+                <td><b>Maksumuistutus jäsenlaskusta</b></td>
+                <td align="right"><small>Jäsennumero: {{member.getMemberId()}}</small></td>
+
+              </tr>
+
+              <tr valign="top">
+                <td><small>Laskun päivämäärä</small></td>
+                <td align="right"><small>{{invoiceDate}}</small></td>
+              </tr>
+
+              <tr valign="top">
+                <td><small>Eräpäivä</small></td>
+                <td align="right"><small><b>HETI</b></small></td>
+              </tr>
+            </table>
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+
+            <table width="100%" cellspacing="3" cellpadding="0">
+
+              <tr>
+                <th align="left">Erittely</th>
+                <th align="right"><small>Määrä</small></th>
+                <th align="right"><small>Summa</small></th>
+              </tr>
+
+              <tr>
+                <td colspan="7"><hr noshade="noshade" size="1"></td>
+              </tr>
+
+              <tr valign="top">
+                <td align="left"><small>{{member.getMemberType()}}</small></td>
+                <td align="right"><small>1</small></td>
+                <td align="right"><small>{{memberfee.getFeeAmountWithVat()}}</small></td>
+              </tr>
+
+              <tr rowspan="10"></tr>
+
+              <tr>
+                <td><small><b>Lasku yhteensä</b></small></td>
+                <td colspan="1"></td>
+                <td align="right">&nbsp;<small><b>{{memberfee.getFeeAmountWithVat()}}</b></small></td>
+              </tr>
+
+            </table>
+
+            <p>&nbsp;</p>
+
+            <div align="left">
+              <fieldset>
+                <legend><b>Maksa verkossa</b></legend>
+                <p>Voit maksaa tämän jäsenlaskun myös suoraan verkkopankissa! Suorita maksu osoitteessa <a href="https://jasenrekisteri.jyps.fi/pay/{{memberfee.getReferenceNumber()}}">https://jasenrekisteri.jyps.fi/pay/{{memberfee.getReferenceNumber()}}</a></p>
+              </fieldset>
+            </div>
+
+            <p>&nbsp;</p>
+
+            <div align="left">
+              <fieldset>
+                <legend><b>Jäsentietojen ajantasaisuus</b></legend>
+                <p>Lähetämme tämän maksumuistutuksen vuoden 2018 jäsenlaskustasi, koska et ole maksanut jäsenmaksua sähköposti- ja tekstiviestimuistutuksista huolimatta. Voi olla, että et ole saanut näitä muistutuksia jos jäsentietosi ei ole ajan tasalla.</p>
+
+                <p>Huolehdithan tietojen ajantasaisuudesta! Muuttuneet tiedot on helppo päivittää nettilomakkeella <a href="https://urly.fi/15qU">https://urly.fi/15qU</a> </p>
+              </fieldset>
+            </div>
+
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+
+            <table>
+
+              <tr>
+                <th align="left">Maksettava summa</th>
+                <td><b>summa&euro;</b></td>
+              </tr>
+
+              <tr>
+                <th align="left">Maksun saaja</th>
+                <td><b>Jyväskylän Pyöräilyseura JYPS ry</b></td>
+              </tr>
+
+              <tr>
+                <th align="left">Pankkitili</th>
+                <td><b>FI59 4108 0010 3053 76 (ITELFIHH)</b></td>
+              </tr>
+
+              <tr>
+                <th align="left">Viesti</th>
+                <td><b>Jäsenmaksu {{memberfee.feeperiod}} : {{member.firstname}}  {{member.surname}} / {{member.getMemberType}} </b></td>
+              </tr>
+
+            </table>
+
+          </div>
+
+        </body>
+      </html>

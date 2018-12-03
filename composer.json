@@ -35,7 +35,8 @@
     "egulias/email-validator": "~2.1",
     "lexik/jwt-authentication-bundle": "^2.4",
     "guzzlehttp/guzzle": "~6.0",
-    "squizlabs/php_codesniffer": "*"
+    "squizlabs/php_codesniffer": "*",
+    "mpdf/mpdf": "^7.1"
   },
   "scripts": {
     "post-install-cmd": [

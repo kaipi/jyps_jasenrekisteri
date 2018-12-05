@@ -31,11 +31,12 @@ class GeneratePDFInvoicesCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $memberfees = $em->getRepository('JYPSRegisterBundle:MemberFee')
             ->findBy(array('fee_period' => $year, 'paid' => 0));
-        $mpdf = new Mpdf();
 
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberfee();
             if ($member->getMembershipEndDate() > new \DateTime("now")) {
+                $mpdf = new Mpdf();
+
                 $html = $this->getContainer()->get('templating')
                     ->render(
                         "JYPSRegisterBundle:MemberFee:reminder_pdf.html.twig",
@@ -43,14 +44,16 @@ class GeneratePDFInvoicesCommand extends ContainerAwareCommand
                             'invoiceDate' => (new \DateTime())->format("d.n.Y"))
                     );
                 $mpdf->WriteHTML($html);
-                $mpdf->AddPage();
+                $mpdf->Output(
+                    $outputdir . "reminder_" . $member->getMemberId() . ".pdf",
+                    \Mpdf\Output\Destination::FILE
+                );
                 $i++;
-                echo "Generating reminder for member " . $member->getMemberId() . "\n";
+                echo "Generating reminder for member " .
+                $member->getMemberId() . "\n";
             }
         }
-        $mpdf->Output(
-            $outputdir . "reminders.pdf", \Mpdf\Output\Destination::FILE
-        );
+
         echo "Generated  " . $i . " reminders\n";
     }
 

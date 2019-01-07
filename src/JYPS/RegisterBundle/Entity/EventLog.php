@@ -14,26 +14,26 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class EventLog implements UserInterface, \Serializable
 {
 /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+ * @ORM\Column(type="integer")
+ * @ORM\Id
+ * @ORM\GeneratedValue(strategy="AUTO")
+ */
     private $id;
-     /**
-    * @ORM\Column(type="string")
-    */
+    /**
+     * @ORM\Column(type="string")
+     */
     private $event;
-     /**
-    * @ORM\Column(type="string")
-    */
+    /**
+     * @ORM\Column(type="string")
+     */
     private $user;
-     /**
-    * @ORM\Column(type="date")
-    */
+    /**
+     * @ORM\Column(type="date")
+     */
     private $date;
-     /**
-    * @ORM\Column(type="integer")
-    */
+    /**
+     * @ORM\Column(type="integer")
+     */
     private $member_id;
     /**
      * @inheritDoc
@@ -87,13 +87,12 @@ class EventLog implements UserInterface, \Serializable
         ));
     }
 
-
     /**
      * @see \Serializable::unserialize()
      */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->username,
             $this->salt,
@@ -104,7 +103,7 @@ class EventLog implements UserInterface, \Serializable
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -127,7 +126,7 @@ class EventLog implements UserInterface, \Serializable
     /**
      * Get event
      *
-     * @return string 
+     * @return string
      */
     public function getEvent()
     {
@@ -150,7 +149,7 @@ class EventLog implements UserInterface, \Serializable
     /**
      * Get user
      *
-     * @return string 
+     * @return string
      */
     public function getUser()
     {
@@ -173,7 +172,7 @@ class EventLog implements UserInterface, \Serializable
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -196,7 +195,7 @@ class EventLog implements UserInterface, \Serializable
     /**
      * Get member_id
      *
-     * @return integer 
+     * @return integer
      */
     public function getMemberId()
     {

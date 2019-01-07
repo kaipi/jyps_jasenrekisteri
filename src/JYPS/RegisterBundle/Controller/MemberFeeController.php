@@ -88,7 +88,6 @@ class MemberFeeController extends Controller
                 $member->getParent() === null &&
                 ($member->getReminderSentDate() <= $treshold_date ||
                     $member->getReminderSentDate() === null)) {
-                $errors = "";
                 $validator = new EmailValidator();
                 if ($validator->isValid($member->getEmail(), new RFCValidation())) {
                     //sms
@@ -192,7 +191,7 @@ class MemberFeeController extends Controller
                 $setpaid = true;
             }
             $memberFeeConfig = $member->getMemberType();
-            if ($memberFeeConfig == null) {
+            if ($memberFeeConfig === null) {
                 continue;
             }
             $amount = $memberFeeConfig->getMemberfeeAmount();

@@ -13,7 +13,6 @@
 /app/logs/*
 /app/config/parameters.yml
 /migration/*
-*.DS_Store
 /vendor/*
 src/JYPS/RegisterBundle/Resources/savedCards/*.png
 *.cache

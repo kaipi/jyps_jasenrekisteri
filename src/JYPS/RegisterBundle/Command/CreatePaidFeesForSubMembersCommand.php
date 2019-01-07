@@ -3,11 +3,11 @@
 
 namespace JYPS\RegisterBundle\Command;
 
+use JYPS\RegisterBundle\Entity\MemberFee;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use JYPS\RegisterBundle\Entity\MemberFee;
 
 class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
 {
@@ -36,7 +36,7 @@ class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
             $lastfee = $member->getMembershipStartDate()->format('Y');
             $memberfees = $member->getMemberFees();
             $memberFeeConfig = $member->getMemberType();
-         //   $lastfee = date('Y');
+            //   $lastfee = date('Y');
             //first every fee as paid
             foreach ($memberfees as $fee) {
                 $lastfee = $fee->getFeePeriod();
@@ -49,7 +49,7 @@ class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
                 $lastfee = $lastfee - 1;
             }
             if ($lastfee < date('Y')) {
-            //then create missing fees
+                //then create missing fees
                 echo $member->getMemberId() . " " . $lastfee . "\n";
 
                 $i = $lastfee;
@@ -65,7 +65,7 @@ class CreatePaidFeesForSubMembersCommand extends ContainerAwareCommand
                     $memberfee->setMemberId($member->getMemberid());
                     $memberfee->setFeeAmountWithVat($memberFeeConfig->getMemberfeeAmount());
                     $memberfee->setReferenceNumber($i . $member->getMemberId());
-                    $memberfee->setDueDate(new \DateTime($i."-03-31"));
+                    $memberfee->setDueDate(new \DateTime($i . "-03-31"));
                     $memberfee->setMemberFee($member);
                     $memberfee->setFeePeriod($i);
                     $memberfee->setPaid(true);

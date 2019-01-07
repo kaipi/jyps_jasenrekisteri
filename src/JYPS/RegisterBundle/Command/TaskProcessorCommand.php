@@ -26,11 +26,11 @@ class TaskProcessorCommand extends ContainerAwareCommand
     {
         $continueprocess = true;
         $task_type = $input->getArgument('TaskType');
-        if ($task_type != "") {
+        if ($task_type !== "") {
             $output->writeln("Processing type: " . $task_type);
         } else {
             $output->writeln("Processing all types");
-            while ($continueprocess == true) {
+            while ($continueprocess === true) {
                 sleep(5);
                 $output->writeln("Processed");
             }

@@ -16,10 +16,8 @@
 /vendor/*
 src/JYPS/RegisterBundle/Resources/savedCards/*.png
 *.cache
-composer.lock
 /app/*.cache
 app/bootstrap.php.cache
-.vscode/
 /app/Resources/bootstrap.php.cache
 .web-server-pid
 /var/*

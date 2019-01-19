@@ -82,7 +82,7 @@ class MemberController extends Controller
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $em->flush();
+                 $em->flush();
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
@@ -105,13 +105,13 @@ class MemberController extends Controller
                                 ->getRepository('JYPSRegisterBundle:MemberFee')
                                 ->findOneBy(array('id' => $member_fee->getId()));
                             $markfee->setPaid(true);
-                            $em->flush($markfee);
+                            $em->flush();
                         } else {
                             $markfee = $this->getDoctrine()
                                 ->getRepository('JYPSRegisterBundle:MemberFee')
                                 ->findOneBy(array('id' => $member_fee->getId()));
                             $markfee->setPaid(false);
-                            $em->flush($markfee);
+                            $em->flush();
                         }
                     }
                 } else {
@@ -120,14 +120,15 @@ class MemberController extends Controller
                             ->getRepository('JYPSRegisterBundle:MemberFee')
                             ->findOneBy(array('id' => $member_fee->getId()));
                         $markfee->setPaid(false);
-                        $em->flush($markfee);
+                        $em->persist($markfee);
+                        $em->flush();
                     }
                 }
                 //check that this years fee is aligned with membertype
                 $membertype = $member->getMemberType();
                 $memberfee = $member->getMemberFee(date('Y'));
-                $memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
-                $em->flush($memberfee);
+               // $memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
+                $em->flush();
 
                 return $this->redirect($this->generateUrl('member', array('memberid' => $memberid)));
             }

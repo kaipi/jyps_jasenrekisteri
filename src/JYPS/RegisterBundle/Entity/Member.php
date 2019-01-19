@@ -226,10 +226,10 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function serialize()
     {
         return serialize(array(
-        $this->id,
-        $this->username,
-        $this->salt,
-        $this->password,
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password,
         ));
     }
 
@@ -239,10 +239,10 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function unserialize($serialized)
     {
         list(
-        $this->id,
-        $this->username,
-        $this->salt,
-        $this->password
+            $this->id,
+            $this->username,
+            $this->salt,
+            $this->password
         ) = unserialize($serialized);
     }
 
@@ -770,7 +770,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
     public function getMemberFee()
     {
         $all_fees = $this->getMemberFees();
-        return $all_fees->last();
+        return $all_fees;
     }
     /**
      * Add intrests
@@ -1034,7 +1034,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
      */
     public function checkReminderSpecialCases()
     {
-        if($this->member_type_id == 5) {
+        if ($this->member_type_id == 5) {
             return true;
         } else {
             return false;

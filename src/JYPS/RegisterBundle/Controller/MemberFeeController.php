@@ -395,7 +395,7 @@ class MemberFeeController extends Controller
             $additional_sum = $data['additional_sum'];
 
             $productArray = [array("title" => $member->getMemberId(),
-                "code" => "JASENMAKSU2018",
+                "code" => "JASENMAKSU2019",
                 "amount" => 1,
                 "price" => $memberfee->getFeeAmountWithVat(),
                 "vat" => 0,

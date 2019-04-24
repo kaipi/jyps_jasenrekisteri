@@ -7,29 +7,34 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MemberFeeType extends AbstractType {
+class MemberFeeType extends AbstractType
+{
 
-	public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
 
-		$builder
-			->add('memberid', 'integer')
-			->add('memberfee_amount', 'checkbox', array('required' => false))
-			->add('memo')
-			->add('paid', 'checkbox')
-			->add('save', 'submit');
+        $builder
+            ->add('memberid', 'integer')
+            ->add('memberfee_amount', 'checkbox', array('required' => false))
+            ->add('memo')
+            ->add('paid', 'checkbox')
+            ->add('save', 'submit');
 
-	}
-	public function getDefaultOptions(array $options) {
-		return array('data_class' => 'JYPS\RegisterBundleBundle\Entity\MemberFee',
-		);
-	}
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
-		$resolver->setDefaults(array(
-			'data_class' => null,
+    }
+    public function getDefaultOptions(array $options)
+    {
+        return array('data_class' => 'JYPS\RegisterBundleBundle\Entity\MemberFee',
+        );
+    }
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => null,
 
-		));
-	}
-	public function getName() {
-		return 'memberfee';
-	}
+        ));
+    }
+    public function getName()
+    {
+        return 'memberfee';
+    }
 }

@@ -82,7 +82,7 @@ class MemberController extends Controller
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                 $em->flush();
+                $em->flush();
                 $fees = $request->get('Fees_to_be_marked');
 
                 $childMember = $request->get('new_child');
@@ -127,7 +127,7 @@ class MemberController extends Controller
                 //check that this years fee is aligned with membertype
                 $membertype = $member->getMemberType();
                 $memberfee = $member->getMemberFee(date('Y'));
-               // $memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
+                // $memberfee->setFeeAmountWithVat($membertype->getMemberFeeAmount());
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('member', array('memberid' => $memberid)));
@@ -194,7 +194,7 @@ class MemberController extends Controller
         $intrest_names = array();
         $recipents = array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com');
         if ($member->getGender() === false) {
-            array_push($recipents, 'sini.nousiainen@gmail.com');
+            array_push($recipents, 'johanna.nikander@jyps.fi');
         }
         if ($member->getIntrests()) {
             foreach ($member->getIntrests() as $intrest) {

@@ -23,7 +23,7 @@ class APIController extends FOSRestController
             ->getQuery();
 
         $result = $query->getScalarResult();
-        return $this->handleView($this->view($result));
+        return $this->view($result);
     }
 
 }

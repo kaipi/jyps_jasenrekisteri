@@ -78,12 +78,29 @@ lexik_jwt_authentication:
     public_key_path:  %kernel.root_dir%/../var/jwt/public.pem
     pass_phrase:      %jwt_key_pass_phrase%
     token_ttl:        3600
+
 fos_rest:
-    routing_loader:
-        default_format: json                            # All responses should be JSON formated
-        include_format: true                           # We do not include format in request, so that all responses                                                # will eventually be JSON formated
+    param_fetcher_listener: true
+    view:
+        mime_types:
+            json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
+        view_response_listener: 'force'
+        formats:
+            xml:  false
+            json: true
+        templating_formats:
+            html: true
     format_listener:
         rules:
-            - { priorities: ['json','html'], fallback_format: json, prefer_extension: false }
-    view:
-        view_response_listener: false
+           - { path: ^/, priorities: [ json, html ], fallback_format: ~, prefer_extension: true }
+    exception:
+        codes:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+        messages:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
+    allowed_methods_listener: true
+    access_denied_listener:
+        json: true
+    body_listener: true
+    format_listener: false

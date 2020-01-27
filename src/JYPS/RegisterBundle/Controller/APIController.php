@@ -18,7 +18,7 @@ class APIController extends FOSRestController
         $query = $repository->createQueryBuilder('m')
             ->where('m.membership_start_date <= :year_end and m.membership_end_date > :year_end')
             ->select('count(m.id)')
-            ->setParameter('year_end', new \DateTime("now"))
+            ->setParameter('year_end', new \DateTime($year . "-12-31"))
             ->groupBy('m.gender')
             ->getQuery();
 

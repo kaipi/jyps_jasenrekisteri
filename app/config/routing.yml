@@ -1,189 +1,193 @@
 jyps_register:
-    resource: '@JYPSRegisterBundle/Resources/config/routing.yml'
+    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"
     prefix: /
 login:
     path: /member/login
     defaults:
-        _controller: 'JYPSRegisterBundle:Security:login'
+        _controller: "JYPSRegisterBundle:Security:login"
 login_check:
     path: /member/login_check
 logout:
     path: /member/logout
 member:
-    path: '/member/show/{memberid}'
+    path: "/member/show/{memberid}"
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:showAll'
+        _controller: "JYPSRegisterBundle:Member:showAll"
     requirements:
         id: \d+
 all_members:
     path: /member
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:index'
+        _controller: "JYPSRegisterBundle:Member:index"
 add_member:
     path: /member/add
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:addMember'
+        _controller: "JYPSRegisterBundle:Member:addMember"
 search:
     path: /member/search
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:searchMembers'
+        _controller: "JYPSRegisterBundle:Member:searchMembers"
     methods:
         - POST
 searchOld:
     path: /member/searchOld
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:searchOldMembers'
+        _controller: "JYPSRegisterBundle:Member:searchOldMembers"
     methods:
         - POST
 join_member:
     path: /join
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinMember'
+        _controller: "JYPSRegisterBundle:Member:joinMember"
     methods:
         - GET
 join_save:
     path: /join/joinSave
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinSave'
+        _controller: "JYPSRegisterBundle:Member:joinSave"
     methods:
         - POST
 join_internal_save:
     path: /member/joinSave
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinSaveInternal'
+        _controller: "JYPSRegisterBundle:Member:joinSaveInternal"
     methods:
         - POST
 configuration:
     path: /member/configuration
     defaults:
-        _controller: 'JYPSRegisterBundle:Configuration:showAll'
+        _controller: "JYPSRegisterBundle:Configuration:showAll"
     methods:
         - GET
 memberfees:
     path: /member/memberfees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:showAll'
+        _controller: "JYPSRegisterBundle:MemberFee:showAll"
 memberfees_create:
     path: /member/memberfees/create
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:createMemberFees'
+        _controller: "JYPSRegisterBundle:MemberFee:createMemberFees"
     methods:
         - POST
 end_member:
     path: /member/end_member
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:endMember'
+        _controller: "JYPSRegisterBundle:Member:endMember"
     methods:
         - POST
 mark_member_fees:
     path: /member/memberfees/showFees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:showUnpaidFees'
+        _controller: "JYPSRegisterBundle:MemberFee:showUnpaidFees"
     methods:
         - POST
 mark_fees:
     path: /member/memberfees/markUnpaidFees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:markFeesPaid'
+        _controller: "JYPSRegisterBundle:MemberFee:markFeesPaid"
     methods:
         - POST
 showClosed:
     path: /member/history
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:showClosed'
+        _controller: "JYPSRegisterBundle:Member:showClosed"
     methods:
         - GET
 restoreMember:
     path: /member/history/restore
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:restoreMember'
+        _controller: "JYPSRegisterBundle:Member:restoreMember"
     methods:
         - POST
 JYPSRegisterBundle_user:
-    resource: '@JYPSRegisterBundle/Resources/config/routing/user.php'
+    resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
     prefix: /member/user
 JYPSRegisterBundle_member_intrestconfig:
-    resource: '@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php'
+    resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
     prefix: /member/intrestconfig
 index_password:
     path: /member/changePassword
     defaults:
-        _controller: 'JYPSRegisterBundle:PasswordChange:index'
+        _controller: "JYPSRegisterBundle:PasswordChange:index"
 member_statistics:
     path: /member/statistics
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:memberStatistics'
+        _controller: "JYPSRegisterBundle:Member:memberStatistics"
     methods:
         - GET
 showQuickReports:
     path: /member/reports
     defaults:
-        _controller: 'JYPSRegisterBundle:Report:index'
+        _controller: "JYPSRegisterBundle:Report:index"
     methods:
         - GET
 sendReminders:
     path: /member/memberfees/sendReminders
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:sendReminderLetter'
+        _controller: "JYPSRegisterBundle:MemberFee:sendReminderLetter"
     methods:
         - POST
 exportAddressExcel:
     path: /member/addressExcel
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:addressExcel'
+        _controller: "JYPSRegisterBundle:Member:addressExcel"
     methods:
         - POST
 memberActions:
     path: /member/memberactions
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:memberExtra'
+        _controller: "JYPSRegisterBundle:Member:memberExtra"
     methods:
         - GET
 magazineInfo:
     path: /member/magazineInfo
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:sendMagazineLink'
+        _controller: "JYPSRegisterBundle:Member:sendMagazineLink"
     methods:
         - POST
 communicationMail:
     path: /member/communicationMail
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:sendCommunicationMail'
+        _controller: "JYPSRegisterBundle:Member:sendCommunicationMail"
     methods:
         - POST
 sendCard:
     path: /member/send_membership_card
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:sendMembershipCard'
+        _controller: "JYPSRegisterBundle:Member:sendMembershipCard"
     methods:
         - POST
 sendMemberFeeEmail:
     path: /member/memberfees/sendEmail
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:sendMemberFeeEmails'
+        _controller: "JYPSRegisterBundle:MemberFee:sendMemberFeeEmails"
     methods:
         - POST
 sendSingleMemberFeeEmail:
     path: /member/memberfees/sendSingleEmail
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail'
+        _controller: "JYPSRegisterBundle:MemberFee:sendOneMemberFeeEmail"
     methods:
         - POST
 paytrailPayment:
-    path: '/pay/{reference}'
+    path: "/pay/{reference}"
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentForm'
+        _controller: "JYPSRegisterBundle:MemberFee:memberFeePaymentForm"
 payment_complete:
     path: /paymentcomplete
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paymentComplete'
+        _controller: "JYPSRegisterBundle:MemberFee:paymentComplete"
 change_membertype:
-    path: '/typechange/{memberid}/{referencenumber}'
+    path: "/typechange/{memberid}/{referencenumber}"
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:changeMemberType'
+        _controller: "JYPSRegisterBundle:Member:changeMemberType"
 payment_cancelled:
     path: /paymentcancelled
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paymentCancelled'
+        _controller: "JYPSRegisterBundle:MemberFee:paymentCancelled"
 api_login_check:
     path: /api/login_check
+api_members_statistics:
+    path: /api/members/stats/{year}
+    defaults: { _controller: "JYPSRegisterBundle:API:getMemberStatistics" }
+    methods: [GET]

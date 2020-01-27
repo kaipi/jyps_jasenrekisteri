@@ -14,16 +14,17 @@ imports:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
+            type: fingers_crossed
             action_level: error
-            handler:      nested
+            handler: nested
         nested:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
         console:
-            type:  console
+            type: console
 fos_rest:
     view:
         view_response_listener: true
-
+    routing_loader:
+        default_format: json

@@ -84,6 +84,6 @@ fos_rest:
         include_format: true                           # We do not include format in request, so that all responses                                                # will eventually be JSON formated
     format_listener:
         rules:
-            - { priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { priorities: ['json','html'], fallback_format: json, prefer_extension: false }
     view:
         view_response_listener: false

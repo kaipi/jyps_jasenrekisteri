@@ -192,7 +192,7 @@ class MemberController extends Controller
     private function sendJoinInfoEmail(Member $member, MemberFee $memberfee)
     {
         $intrest_names = array();
-        $recipents = array('teemu.j.tenhunen@gmail.com', 'jyrki.solja@gmail.com', 'timi+jyps@wahalahti.fi');
+        $recipents = array('teemu.j.tenhunen@gmail.com', 'teemu.peltonen@jyps.fi', 'timi+jyps@wahalahti.fi');
         if ($member->getGender() === false) {
             array_push($recipents, 'johanna.nikander@jyps.fi');
         }

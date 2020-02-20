@@ -19,6 +19,7 @@ class MemberFeePayment extends AbstractType
                 'Ohjatut lenkit' => "TUKILENKIT",
                 'Fillariakatemia' => "TUKIAKATEMIA",
                 "Pyöräilynedistäminen" => "TUKIEDISTAMINEN",
+                "Pyöräilyliiton jäsenyys" => "TUKIPYORALIITTO",
                 "Yleinen toiminta" => "TUKIYLEINEN"),
                 'required' => false,
                 'expanded' => false,

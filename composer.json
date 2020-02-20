@@ -39,7 +39,8 @@
     "lexik/jwt-authentication-bundle": "^2.4",
     "guzzlehttp/guzzle": "~6.0",
     "squizlabs/php_codesniffer": "*",
-    "mpdf/mpdf": "^7.1"
+    "mpdf/mpdf": "^7.1",
+    "aws/aws-sdk-php": "^3.133"
   },
   "scripts": {
     "post-install-cmd": [

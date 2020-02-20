@@ -2,6 +2,7 @@
 
 namespace JYPS\RegisterBundle\Controller;
 
+use Aws\Ses\SesClient;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use GuzzleHttp\Client as GuzzleClient;
@@ -245,7 +246,11 @@ class MemberFeeController extends Controller
     }
     public function sendOneMemberFeeEmailAction(Request $request)
     {
-
+        $SesClient = new SesClient([
+            'profile' => 'jyps',
+            'version' => '2010-12-01',
+            'region' => 'eu-west-1',
+        ]);
         $member_id = $request->request->get('member_id');
 
         $fee_period = date('Y');
@@ -268,28 +273,43 @@ class MemberFeeController extends Controller
         $validator = new EmailValidator();
 
         if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
-            $message = (new \Swift_Message)
-                ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
-                ->setFrom("jasenrekisteri@jyps.fi")
-                ->setTo(array($member->getEmail()))
-                ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
-                ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                    array('member' => $member,
-                        'memberfee' => $memberfee,
-                        'bankaccount' => $bankaccount,
-                        'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
-                        'year' => date("Y"))));
 
-            $childs = $member->getChildren();
-            //attach also all childmembers cards to mail
-            foreach ($childs as $child) {
-                $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
+            try {
+                $result = $SesClient->sendEmail([
+                    'Destination' => [
+                        'ToAddresses' => [$member->getEmail()],
+                    ],
+                    'ReplyToAddresses' => ["jasenrekisteri@jyps.fi"],
+                    'Source' => "jasenrekisteri@jyps.fi",
+                    'Message' => [
+                        'Body' => [
+                            'Text' => [
+                                'Charset' => "UTF-8",
+                                'Data' => $this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
+                                    array('member' => $member,
+                                        'memberfee' => $memberfee,
+                                        'bankaccount' => $bankaccount,
+                                        'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                                        'year' => date("Y"),
+                                    )
+                                ),
+                            ],
+                        ],
+                        'Subject' => [
+                            'Charset' => "UTF-8",
+                            'Data' => "JYPS ry:n jäsenmaksu vuodelle " . date('Y'),
+                        ],
+                    ],
+                ]);
+                $messageId = $result['MessageId'];
+                echo ("Email sent! Message ID: $messageId" . "\n");
+            } catch (AwsException $e) {
+                // output error message if fails
+                echo $e->getMessage();
+                echo ("The email was not sent. Error message: " . $e->getAwsErrorMessage() . "\n");
+                echo "\n";
             }
-            //add headers
-            $headers = $message->getHeaders();
-            $headers->addTextHeader('Precedence', 'bulk');
 
-            $this->get('mailer')->send($message);
         }
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -300,6 +320,13 @@ class MemberFeeController extends Controller
     {
         $errors = 0;
         $sent = 0;
+        $SesClient = new SesClient(
+            [
+                'profile' => 'jyps',
+                'version' => '2010-12-01',
+                'region' => 'eu-west-1',
+            ]
+        );
         $em = $this->getDoctrine()->getManager();
 
         $bankaccount = $this->getDoctrine()
@@ -318,10 +345,12 @@ class MemberFeeController extends Controller
         foreach ($members as $member) {
             $memberfee = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:MemberFee')
-                ->findOneBy(array('member_id' => $member->getId(),
-                    'fee_period' => date('Y'),
-                    'email_sent' => null,
-                    'paid' => 0));
+                ->findOneBy(
+                    array('member_id' => $member->getId(),
+                        'fee_period' => date('Y'),
+                        'email_sent' => null,
+                        'paid' => 0)
+                );
 
             if (empty($memberfee) || $member->getParent() !== null) {
                 continue;
@@ -330,29 +359,45 @@ class MemberFeeController extends Controller
 
             $errors = "";
             if ($validator->isValid($member->getEmail(), new RFCValidation()) && !is_null($member->getEmail()) && $member->getEmail() != "") {
-                $message = (new \Swift_Message)
-                    ->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
-                    ->setFrom("jasenrekisteri@jyps.fi")
-                    ->setTo(array($member->getEmail()))
-                    ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($member)))
-                    ->setBody($this->renderView('JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                        array('member' => $member,
-                            'memberfee' => $memberfee,
-                            'bankaccount' => $bankaccount,
-                            'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
-                            'year' => date("Y"))));
 
-                $childs = $member->getChildren();
-
-                //attach also all childmembers cards to mail
-                foreach ($childs as $child) {
-                    $message->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
+                try {
+                    $result = $SesClient->sendEmail(
+                        [
+                            'Destination' => [
+                                'ToAddresses' => [$member->getEmail()],
+                            ],
+                            'ReplyToAddresses' => ["jasenrekisteri@jyps.fi"],
+                            'Source' => "jasenrekisteri@jyps.fi",
+                            'Message' => [
+                                'Body' => [
+                                    'Text' => [
+                                        'Charset' => "UTF-8",
+                                        'Data' => $this->renderView(
+                                            'JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
+                                            array('member' => $member,
+                                                'memberfee' => $memberfee,
+                                                'bankaccount' => $bankaccount,
+                                                'virtualbarcode' => $memberfee->getVirtualBarcode($bankaccount),
+                                                'year' => date("Y"),
+                                                'childs' => $member->getChildern(),
+                                            )
+                                        ),
+                                    ],
+                                ],
+                                'Subject' => [
+                                    'Charset' => "UTF-8",
+                                    'Data' => "JYPS ry:n jäsenmaksu vuodelle " . date('Y'),
+                                ],
+                            ],
+                        ]
+                    );
+                    $messageId = $result['MessageId'];
+                } catch (AwsException $e) {
+                    // output error message if fails
+                    echo $e->getMessage();
+                    echo ("The email was not sent. Error message: " . $e->getAwsErrorMessage() . "\n");
+                    echo "\n";
                 }
-                //add headers
-                $headers = $message->getHeaders();
-                $headers->addTextHeader('Precedence', 'bulk');
-
-                $this->get('mailer')->send($message);
 
                 $memberfee->setEmailSent(1);
                 $em->flush($memberfee);

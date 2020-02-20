@@ -106,3 +106,7 @@ fos_rest:
         json: true
     body_listener: true
     format_listener: false
+aws:
+    credentials:
+        key: "%aws_key%"
+        secret: "%aws_secret%"

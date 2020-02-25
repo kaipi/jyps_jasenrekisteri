@@ -50,6 +50,8 @@ class SendMemberFeesCommand extends ContainerAwareCommand
 
         foreach ($members as $member) {
             echo $member->getEmail() . "\n";
+            echo $this->makeMemberCard($member);
+
             $memberfee = $this->getContainer()->get('doctrine')
                 ->getRepository('JYPSRegisterBundle:MemberFee')
                 ->findOneBy(
@@ -68,6 +70,7 @@ class SendMemberFeesCommand extends ContainerAwareCommand
 
             if (!is_null($member->getEmail()) && $member->getEmail() != "") {
                 echo "email ok\n";
+                echo $this->makeMemberCard($member);
                 $message = new \Swift_Message();
                 $message->setSubject("JYPS ry:n jäsenmaksu vuodelle " . date('Y'))
                     ->setFrom("jasenrekisteri@jyps.fi")
@@ -92,7 +95,7 @@ class SendMemberFeesCommand extends ContainerAwareCommand
                     $message
                         ->attach(\Swift_Attachment::fromPath($this->makeMemberCard($child)));
                 }
-                $this->getContainer()->get('mailer')->send($message);
+                // $this->getContainer()->get('mailer')->send($message);
                 $memberfee->setEmailSent(1);
                 $em->flush($memberfee);
 

@@ -1,54 +1,102 @@
 {# src/JYPS/RegisterBundle/Resources/views/MemberFee/paytrail_payment.twig #}
 <head>
-<title>JYPSin Jäsenmaksun maksaminen</title>
-<link href="{{ asset('style.css') }}" rel="stylesheet" />
+  <title>
+    JYPSin Jäsenmaksun maksaminen
+  </title>
+  <link href="{{ asset('style.css') }}" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<script>
-function updateSupportFee(value) {
-  var span = document.getElementById('support_fee');
-  var total_value = document.getElementById('total_amount');
-  var member_fee = document.getElementById('memberfee_amount').innerText;
-  tt = (+member_fee) + (+value);
-  span.textContent = value;
-  total_value.textContent = tt;
-}
-</script>
-<center>
-Hei, tervetuloa maksamaan JYPSin vuoden {{memberfee.getFeePeriod()}} jäsenmaksusi, alla näet laskun tiedot.
-{{form_start(form)}}
-{{form_errors(form)}}
-<pre>
-  Jäsen: {{member.firstname}} {{member.surname}}
-  Jäsennumero: {{member.memberid}}
-  Jäsentyyppi: {{member.membertype}}
-  Jäsenmaksu: <span id="memberfee_amount">{{memberfee.feeamountwithvat}}</span> eur
-  Tukimaksu <span id="support_fee">0</span> eur
-  Yhteensä <span id="total_amount">0</span> eur
-</pre>
-<span>Voit myös maksaa vapaaehtoisen tukimaksun, valitse kohde ja summa alhaalta</span>
-<p>
-{{ form_widget(form.additional_target) }}
-{{ form_widget(form.additional_sum, { 'attr': { 'onchange': 
-"updateSupportFee(this.value);" } } ) }}
-</p>
-{%if (change_allowed_from) %}
-Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{member.memberid}}/{{memberfee.referencenumber}}">tästä</a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
-{%endif%}
-<p>
+<html>
+  <script>
+    function updateSupportFee(value) { 
+      var span = document.getElementById('support_fee'); 
+    var total_value = document.getElementById('total_amount'); 
+    var member_fee = document.getElementById('memberfee_amount').innerText; tt = (+member_fee) +
+    (+value); span.textContent = value; total_value.textContent = tt; }
+  </script>
+  <div class="payment-container">
+    <div class="payment-content">
+      <h1>
+        JYPS Ry vuoden {{ memberfee.getFeePeriod() }} jäsenmaksun maksaminen
+      </h1>
+      {{ form_start(form) }}
+      {{ form_errors(form) }}
+      <div class="payment-info">
+        <ul>
+          <li>
+            Jäsen: {{ member.firstname }} {{ member.surname }}
+          </li>
+          <li>
+            Jäsennumero: {{ member.memberid }}
+          </li>
+          <li>Jäsentyyppi: {{ member.membertype }}</td>
+          
+          <li>
+          Jäsenmaksu: <span id="memberfee_amount">
+            {{ memberfee.feeamountwithvat }}</span>
+          eur</li><li> Tukimaksu <span id="support_fee">0</span> eur</li><li> Yhteensä <span id="total_amount">
+            0
+          </span> eur<li>
+        </table>
+      </div>
+      <div class="payment-extrafee">
+        <h4>
+          Voit myös maksaa vapaaehtoisen tukimaksun, valitse kohde ja summa
+          alhaalta
+        </h4>
+        {{ form_widget(form.additional_target) }}
+        {{
+          form_widget(
+            form.additional_sum,
+            {
+              attr: {
+                onchange: 'updateSupportFee(this.value);'
+              }
+            }
+          )
+        }}
+      </div>
+      <div class="payment-change-membertype">
+        {% if change_allowed_from %}
+          Haluatko vaihtaa jäsentyyppisi? Tee se ennen maksamista <a href="../typechange/{{
+            member.memberid
+            }}/{{ memberfee.referencenumber }}">
+            tästä
+          </a>, huomioithan että perhejäsenyyttä ei voi muuttaa tätä kautta.
+        {% endif %}
+      </div>
 
- Huom! Jos olet entuudestaan jäsen ja haluat liittää samassa
-   osoitteessa asuvan perheesi jäseniksi (perhejäsenmaksu 60 €), niin
-   ilmoita siitä
-<a href="https://docs.google.com/forms/d/e/1FAIpQLScr0ZEqCYKU-rtW0z1V27_Z2pxJdjqAFsCv1khNyjC_bP3qeA/viewform">tällä lomakkeella</a>.
-   Perhejäsenyydestä lähetetään tämän jälkeen erillinen lasku.
-   </p>
-   <p>
-   LISÄTIETOA VAPAAEHTOISESTA TUKIMAKSUSTA
+      {{
+        form_widget(
+          form.save,
+          {
+            label: 'Maksa jäsenmaksu',
+            id: "payment-paybutton"
+          }
+        )
+      }}
+      <p>
+      Huom! Jos olet entuudestaan jäsen ja haluat liittää samassa osoitteessa asuvan
+      perheesi jäseniksi (perhejäsenmaksu 60 €), niin ilmoita siitä
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScr0ZEqCYKU-rtW0z1V27_Z2pxJdjqAFsCv1khNyjC_bP3qeA/viewform">
+        tällä lomakkeella
+      </a>. Perhejäsenyydestä lähetetään tämän jälkeen erillinen lasku.
+      </p>
+      <h3>LISÄTIETOA VAPAAEHTOISESTA TUKIMAKSUSTA</h3>
 
-Jäsenet voivat halutessaan tukea yhdistyksen toimintaa jäsenmaksun lisäksi suuremmallakin summalla – korvaamattoman arvokkaan vapaaehtoistyön ohella myös rahalle on todellista tarvetta! Yhdistys maksaa jokaista aikuisjäsentään kohti 7 € Pyöräliiton jäsenmaksua, tästä 1 € menee European Cyclists’ Federationille. Rahaa sijoitetaan vuosittain tuhansia euroja myös esimerkiksi lenkkeihin ja retkiin, lasten ja nuorten toimintaan sekä Jyväskylän ja Keski-Suomen pyöräilyolosuhteiden edistämiseen ja edunvalvontaan.
+      Jäsenet voivat halutessaan tukea yhdistyksen toimintaa jäsenmaksun lisäksi
+      suuremmallakin summalla – korvaamattoman arvokkaan vapaaehtoistyön ohella
+      myös rahalle on todellista tarvetta! Yhdistys maksaa jokaista
+      aikuisjäsentään kohti 7 € Pyöräliiton jäsenmaksua, tästä 1 € menee
+      European Cyclists’ Federationille. Rahaa sijoitetaan vuosittain tuhansia
+      euroja myös esimerkiksi lenkkeihin ja retkiin, lasten ja nuorten
+      toimintaan sekä Jyväskylän ja Keski-Suomen pyöräilyolosuhteiden
+      edistämiseen ja edunvalvontaan.
 
-Vapaaehtoisen toimintatuen voit kohdistaa yleisesti yhdistyksen toimintaan tai Pyöräliiton jäsenyyteen, ohjattuihin lenkkeihin, Fillariakatemialle ja/tai paikalliseen pyöräilynedistämiseen.
-</p>
- {{ form_widget(form.save, { 'label': 'Maksa jäsenmaksu' }) }}
-{{ form_end(form) }}
+      Vapaaehtoisen toimintatuen voit kohdistaa yleisesti yhdistyksen toimintaan
+      tai Pyöräliiton jäsenyyteen, ohjattuihin lenkkeihin, Fillariakatemialle
+      ja/tai paikalliseen pyöräilynedistämiseen.
+      {{ form_end(form) }}
+    </div>
+  </div>
 </html>

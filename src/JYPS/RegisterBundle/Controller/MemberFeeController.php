@@ -3,6 +3,7 @@
 namespace JYPS\RegisterBundle\Controller;
 
 use Aws\Ses\SesClient;
+use Aws\Sns\SnsClient;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use GuzzleHttp\Client as GuzzleClient;
@@ -10,7 +11,7 @@ use JYPS\RegisterBundle\Entity\MemberFee;
 use JYPS\RegisterBundle\Form\Type\MemberFeePayment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Twilio\Rest\Client;
+use Psr\Log\LoggerInterface;
 
 class MemberFeeController extends Controller
 {
@@ -36,10 +37,10 @@ class MemberFeeController extends Controller
 
         return $this->render(
             'JYPSRegisterBundle:MemberFee:show_memberfee.html.twig',
-            array(
+            [
                 'memberfee_configs' => $memberfeeconfigs,
-                'years' => $distinct_years
-            )
+                'years' => $distinct_years,
+            ]
         );
     }
     public function showUnpaidFeesAction(Request $request)
@@ -50,10 +51,10 @@ class MemberFeeController extends Controller
         $memberfees = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
             ->findBy(
-                array('fee_period' => $year, 'paid' => 0),
-                array('member_id' => 'ASC')
+                ['fee_period' => $year, 'paid' => 0],
+                ['member_id' => 'ASC']
             );
-        $ok_fees = array();
+        $ok_fees = [];
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberFee();
 
@@ -66,38 +67,79 @@ class MemberFeeController extends Controller
         }
         return $this->render(
             'JYPSRegisterBundle:MemberFee:show_unpaid_fees.html.twig',
-            array(
+            [
                 'memberfees' => $ok_fees,
                 'year' => $year,
                 'qty' => $total_qty,
-                'total_amount' => $total_amount
-            )
+                'total_amount' => $total_amount,
+            ]
+        );
+    }
+    public function sendSMSReminderAction($memberid)
+    {
+        $SnSclient = new SnsClient([
+            'profile' => 'jyps',
+            'region' => 'eu-west-1',
+            'version' => '2010-03-31',
+        ]);
+        $member = $this->getDoctrine()
+            ->getRepository('JYPSRegisterBundle:Member')
+            ->findOneBy(['member_id' => $memberid]);
+        $memberfee = $this->getDoctrine()
+            ->getRepository('JYPSRegisterBundle:MemberFee')
+            ->findOneBy([
+                'member_id' => $member->getId(),
+                'fee_period' => date('Y'),
+                'paid' => 0,
+            ]);
+        try {
+            $result = $SnSclient->publish([
+                'SenderId' => 'JypsRy',
+                'Message' =>
+                    'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .
+                    $memberfee->getReferenceNumber() .
+                    ' Terveisin JYPS ry.',
+                'PhoneNumber' => $member->getInternationalTelephone(),
+            ]);
+            $this->get('session')
+                ->getFlashBag()
+                ->add('notice', 'SMS lähetetty');
+        } catch (AwsException $e) {
+            $this->get('session')
+                ->getFlashBag()
+                ->add('notice', 'Lähetys epäonnistui');
+        }
+
+        return $this->redirect(
+            $this->generateUrl('member', ['memberid' => $member->getMemberId()])
         );
     }
     public function sendReminderLetterAction(Request $request)
     {
-        //twilio client
-        $sid = $this->getSystemParameter('TwilioSid')->getStringValue();
-        $token = $this->getSystemParameter('TwilioToken')->getStringValue();
-        $client = new Client($sid, $token);
+        //sns aws client
+        $SnSclient = new SnsClient([
+            'profile' => 'jyps',
+            'region' => 'eu-west-1',
+            'version' => '2010-03-31',
+        ]);
 
         $join_date_limit = $request->request->get('join_date_limit');
         $send_sms = $request->request->get('send_sms');
         $memberfees = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
-            ->findBy(array('paid' => 0), array('member_id' => 'ASC'));
+            ->findBy(['paid' => 0], ['member_id' => 'ASC']);
         $qty = 0;
         $smsqty = 0;
         $error_qty = 0;
-        $error_members = array();
-        $error_smsmember = array();
+        $error_members = [];
+        $error_smsmember = [];
         $smserrors = 0;
         //1month treshold from previous reminder
         $treshold_date = new \Datetime('now');
         $treshold_date->sub(new \DateInterval('P1M'));
         $bankaccount = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:SystemParameter')
-            ->findOneBy(array('key' => 'BankAccount'));
+            ->findOneBy(['key' => 'BankAccount']);
         foreach ($memberfees as $memberfee) {
             $member = $memberfee->getMemberFee();
             if (
@@ -109,77 +151,75 @@ class MemberFeeController extends Controller
                 ($member->getReminderSentDate() <= $treshold_date ||
                     $member->getReminderSentDate() === null)
             ) {
-                $validator = new EmailValidator();
-                if (
-                    $validator->isValid(
-                        $member->getEmail(),
-                        new RFCValidation()
-                    )
-                ) {
-                    //sms
-                    if (
-                        $member->getTelephone() !== null &&
-                        $send_sms === 'on'
-                    ) {
-                        try {
-                            $message = $client->messages->create(
-                                $member->getInternationalTelephone(),
-                                array(
-                                    'from' => 'JypsRy',
-                                    'body' =>
-                                        'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .
-                                        $memberfee->getReferenceNumber() .
-                                        ' Terveisin JYPS ry.'
-                                )
-                            );
-                            $smsqty++;
-                        } catch (\Twilio\Exceptions\RestException $e) {
-                            $smserrors++;
-                            $error_smsmember[] = $member;
-                        }
+                //sms
+                if ($member->getTelephone() !== null && $send_sms === 'on') {
+                    try {
+                        $result = $SnSclient->publish([
+                            'Message' =>
+                                'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .
+                                $memberfee->getReferenceNumber() .
+                                ' Terveisin JYPS ry.',
+                            'PhoneNumber' => $member->getInternationalTelephone(),
+                        ]);
+                        $smsqty++;
+                    } catch (AwsException $e) {
+                        $smserrors++;
+                        $error_smsmember[] = $member;
                     }
-                    //email
-                    $message = new \Swift_Message();
-                    $message
-                        ->setSubject('JYPS ry jäsenmaksumuistutus')
-                        ->setFrom('jasenrekisteri@jyps.fi')
-                        ->setTo($member->getEmail())
-                        ->setBody(
-                            $this->renderView(
-                                'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig',
-                                array(
-                                    'member' => $member,
-                                    'memberfee' => $memberfee,
-                                    'bankaccount' => $bankaccount,
-                                    'virtualbarcode' => $memberfee->getVirtualBarcode(
-                                        $bankaccount
-                                    ),
-                                    'year' => date('Y')
-                                )
-                            )
-                        );
-                    $this->get('mailer')->send($message);
-                    $qty++;
                     $em = $this->getDoctrine()->getManager();
                     $member->setReminderSentDate(new \DateTime('now'));
                     $em->flush($member);
                 } else {
-                    $error_qty++;
-                    $error_members[] = $member;
+                    $validator = new EmailValidator();
+                    if (
+                        $validator->isValid(
+                            $member->getEmail(),
+                            new RFCValidation()
+                        )
+                    ) {
+                        //email
+                        $message = new \Swift_Message();
+                        $message
+                            ->setSubject('JYPS ry jäsenmaksumuistutus')
+                            ->setFrom('jasenrekisteri@jyps.fi')
+                            ->setTo($member->getEmail())
+                            ->setBody(
+                                $this->renderView(
+                                    'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig',
+                                    [
+                                        'member' => $member,
+                                        'memberfee' => $memberfee,
+                                        'bankaccount' => $bankaccount,
+                                        'virtualbarcode' => $memberfee->getVirtualBarcode(
+                                            $bankaccount
+                                        ),
+                                        'year' => date('Y'),
+                                    ]
+                                )
+                            );
+                        $this->get('mailer')->send($message);
+                        $qty++;
+                        $em = $this->getDoctrine()->getManager();
+                        $member->setReminderSentDate(new \DateTime('now'));
+                        $em->flush($member);
+                    } else {
+                        $error_qty++;
+                        $error_members[] = $member;
+                    }
                 }
             }
         }
 
         return $this->render(
             'JYPSRegisterBundle:MemberFee:sent_reminder_report.html.twig',
-            array(
+            [
                 'reminder_qty' => $qty,
                 'error_qty' => $error_qty,
                 'error_members' => $error_members,
                 'sms_qty' => $smsqty,
                 'smserror_member' => $error_smsmember,
-                'sms_errors' => $smserrors
-            )
+                'sms_errors' => $smserrors,
+            ]
         );
     }
     public function markFeesPaidAction(Request $request)
@@ -190,7 +230,7 @@ class MemberFeeController extends Controller
         foreach ($fees as $fee) {
             $markfee = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:MemberFee')
-                ->findOneBy(array('id' => $fee));
+                ->findOneBy(['id' => $fee]);
             $markfee->setPaid(true);
             $em->flush($markfee);
         }
@@ -204,13 +244,13 @@ class MemberFeeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $markfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
-            ->findOneBy(array('id' => $feeid));
+            ->findOneBy(['id' => $feeid]);
         $markfee->setPaid(true);
         $em->flush($markfee);
 
         $member = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member')
-            ->findOneBy(array('member_id' => $memberid));
+            ->findOneBy(['member_id' => $memberid]);
 
         return $member->showAllAction($memberid);
     }
@@ -309,32 +349,32 @@ class MemberFeeController extends Controller
         $SesClient = new SesClient([
             'profile' => 'jyps',
             'version' => '2010-12-01',
-            'region' => 'eu-west-1'
+            'region' => 'eu-west-1',
         ]);
         $member_id = $request->request->get('member_id');
 
         $fee_period = date('Y');
         $bankaccount = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:SystemParameter')
-            ->findOneBy(array('key' => 'BankAccount'));
+            ->findOneBy(['key' => 'BankAccount']);
 
         $member = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member')
-            ->findOneBy(array('id' => $member_id));
+            ->findOneBy(['id' => $member_id]);
 
         $memberfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
-            ->findOneBy(array(
+            ->findOneBy([
                 'member_id' => $member_id,
-                'fee_period' => $fee_period
-            ));
+                'fee_period' => $fee_period,
+            ]);
         if ($memberfee === null) {
             $memberfee = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:MemberFee')
-                ->findOneBy(array(
+                ->findOneBy([
                     'member_id' => $member_id,
-                    'fee_period' => $fee_period - 1
-                ));
+                    'fee_period' => $fee_period - 1,
+                ]);
         }
         $validator = new EmailValidator();
 
@@ -346,7 +386,7 @@ class MemberFeeController extends Controller
             try {
                 $result = $SesClient->sendEmail([
                     'Destination' => [
-                        'ToAddresses' => [$member->getEmail()]
+                        'ToAddresses' => [$member->getEmail()],
                     ],
                     'ReplyToAddresses' => ['jasenrekisteri@jyps.fi'],
                     'Source' => 'jasenrekisteri@jyps.fi',
@@ -356,24 +396,24 @@ class MemberFeeController extends Controller
                                 'Charset' => 'UTF-8',
                                 'Data' => $this->renderView(
                                     'JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                                    array(
+                                    [
                                         'member' => $member,
                                         'memberfee' => $memberfee,
                                         'bankaccount' => $bankaccount,
                                         'virtualbarcode' => $memberfee->getVirtualBarcode(
                                             $bankaccount
                                         ),
-                                        'year' => date('Y')
-                                    )
-                                )
-                            ]
+                                        'year' => date('Y'),
+                                    ]
+                                ),
+                            ],
                         ],
                         'Subject' => [
                             'Charset' => 'UTF-8',
                             'Data' =>
-                                'JYPS ry:n jäsenmaksu vuodelle ' . date('Y')
-                        ]
-                    ]
+                                'JYPS ry:n jäsenmaksu vuodelle ' . date('Y'),
+                        ],
+                    ],
                 ]);
                 $messageId = $result['MessageId'];
                 echo "Email sent! Message ID: $messageId" . "\n";
@@ -390,9 +430,9 @@ class MemberFeeController extends Controller
             ->getFlashBag()
             ->add('notice', 'Sähköposti lähetetty');
         return $this->redirect(
-            $this->generateUrl('member', array(
-                'memberid' => $member->getMemberId()
-            ))
+            $this->generateUrl('member', [
+                'memberid' => $member->getMemberId(),
+            ])
         );
     }
     public function sendMemberFeeEmailsAction(Request $request)
@@ -402,13 +442,13 @@ class MemberFeeController extends Controller
         $SesClient = new SesClient([
             'profile' => 'jyps',
             'version' => '2010-12-01',
-            'region' => 'eu-west-1'
+            'region' => 'eu-west-1',
         ]);
         $em = $this->getDoctrine()->getManager();
 
         $bankaccount = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:SystemParameter')
-            ->findOneBy(array('key' => 'BankAccount'));
+            ->findOneBy(['key' => 'BankAccount']);
 
         $repository = $this->getDoctrine()->getRepository(
             'JYPSRegisterBundle:Member'
@@ -429,12 +469,12 @@ class MemberFeeController extends Controller
         foreach ($members as $member) {
             $memberfee = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:MemberFee')
-                ->findOneBy(array(
+                ->findOneBy([
                     'member_id' => $member->getId(),
                     'fee_period' => date('Y'),
                     'email_sent' => null,
-                    'paid' => 0
-                ));
+                    'paid' => 0,
+                ]);
 
             if (empty($memberfee) || $member->getParent() !== null) {
                 continue;
@@ -450,7 +490,7 @@ class MemberFeeController extends Controller
                 try {
                     $result = $SesClient->sendEmail([
                         'Destination' => [
-                            'ToAddresses' => [$member->getEmail()]
+                            'ToAddresses' => [$member->getEmail()],
                         ],
                         'ReplyToAddresses' => ['jasenrekisteri@jyps.fi'],
                         'Source' => 'jasenrekisteri@jyps.fi',
@@ -460,24 +500,25 @@ class MemberFeeController extends Controller
                                     'Charset' => 'UTF-8',
                                     'Data' => $this->renderView(
                                         'JYPSRegisterBundle:MemberFee:memberfee_email.txt.twig',
-                                        array(
+                                        [
                                             'member' => $member,
                                             'memberfee' => $memberfee,
                                             'bankaccount' => $bankaccount,
                                             'virtualbarcode' => $memberfee->getVirtualBarcode(
                                                 $bankaccount
                                             ),
-                                            'year' => date('Y')
-                                        )
-                                    )
-                                ]
+                                            'year' => date('Y'),
+                                        ]
+                                    ),
+                                ],
                             ],
                             'Subject' => [
                                 'Charset' => 'UTF-8',
                                 'Data' =>
-                                    'JYPS ry:n jäsenmaksu vuodelle ' . date('Y')
-                            ]
-                        ]
+                                    'JYPS ry:n jäsenmaksu vuodelle ' .
+                                    date('Y'),
+                            ],
+                        ],
                     ]);
                     $messageId = $result['MessageId'];
                 } catch (AwsException $e) {
@@ -509,7 +550,7 @@ class MemberFeeController extends Controller
     {
         $memberfee = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:MemberFee')
-            ->findOneBy(array('reference_number' => $reference));
+            ->findOneBy(['reference_number' => $reference]);
         if ($memberfee->getPaid()) {
             return $this->render(
                 'JYPSRegisterBundle:MemberFee:payment_already_paid.html.twig'
@@ -517,10 +558,10 @@ class MemberFeeController extends Controller
         }
         $member = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:Member')
-            ->findOneBy(array('id' => $memberfee->getMemberId()));
+            ->findOneBy(['id' => $memberfee->getMemberId()]);
         $memberfeeconfig = $member->getMemberType();
 
-        $defaultData = array('message' => 'Type your message here');
+        $defaultData = ['message' => 'Type your message here'];
 
         $form = $this->createForm(MemberFeePayment::class, $defaultData);
 
@@ -534,37 +575,37 @@ class MemberFeeController extends Controller
             $additional_sum = $data['additional_sum'];
 
             $productArray = [
-                array(
+                [
                     'title' => $member->getMemberId(),
                     'code' => 'JASENMAKSU' + date('Y'),
                     'amount' => 1,
                     'price' => $memberfee->getFeeAmountWithVat(),
                     'vat' => 0,
                     'discount' => 0,
-                    'type' => 1
-                )
+                    'type' => 1,
+                ],
             ];
 
             if (
                 $additional_target !== 'EiTukimaksua' &&
                 $additional_sum !== 0
             ) {
-                array_push($productArray, array(
+                array_push($productArray, [
                     'title' => $member->getMemberId(),
                     'code' => $additional_target,
                     'amount' => 1,
                     'price' => $additional_sum,
                     'vat' => 0,
                     'discount' => 0,
-                    'type' => 1
-                ));
+                    'type' => 1,
+                ]);
             }
 
-            $paytrailRequest = array(
+            $paytrailRequest = [
                 'orderNumber' => $reference,
                 'currency' => 'EUR',
                 'locale' => 'fi_FI',
-                'urlSet' => array(
+                'urlSet' => [
                     'success' => $this->GetSystemParameter(
                         'PaymentCompleteURL'
                     )->getStringValue(),
@@ -576,27 +617,27 @@ class MemberFeeController extends Controller
                     )->getStringValue(),
                     'notification' => $this->GetSystemParameter(
                         'PaymentCompleteURL'
-                    )->getStringValue()
-                ),
-                'orderDetails' => array(
+                    )->getStringValue(),
+                ],
+                'orderDetails' => [
                     'includeVat' => 1,
-                    'contact' => array(
+                    'contact' => [
                         'telephone' => $member->getTelephone(),
                         'mobile' => $member->getTelephone(),
                         'email' => $member->getEmail(),
                         'firstName' => $member->getFirstName(),
                         'lastName' => $member->getSurname(),
                         'companyName' => '',
-                        'address' => array(
+                        'address' => [
                             'street' => $member->getStreetAddress(),
                             'postalCode' => $member->getPostalCode(),
                             'postalOffice' => $member->getPostalCode(),
-                            'country' => 'FI'
-                        )
-                    ),
-                    'products' => $productArray
-                )
-            );
+                            'country' => 'FI',
+                        ],
+                    ],
+                    'products' => $productArray,
+                ],
+            ];
 
             $data = json_encode($paytrailRequest);
             $client = new GuzzleClient();
@@ -610,13 +651,13 @@ class MemberFeeController extends Controller
                         )->getStringValue(),
                         $this->GetSystemParameter(
                             'PaytrailMerchantAuthCode'
-                        )->getStringValue()
+                        )->getStringValue(),
                     ],
                     'body' => $data,
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'X-Verkkomaksut-Api-Version' => '1'
-                    ]
+                        'X-Verkkomaksut-Api-Version' => '1',
+                    ],
                 ]
             );
 
@@ -631,7 +672,7 @@ class MemberFeeController extends Controller
                 'memberfee' => $memberfee,
                 'member' => $member,
                 'memberfeeconfig' => $memberfeeconfig,
-                'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom()
+                'change_allowed_from' => $memberfeeconfig->getChangeAllowedFrom(),
             ]
         );
     }
@@ -662,7 +703,7 @@ class MemberFeeController extends Controller
         if ($check_hash == $return_auth) {
             $fee = $this->getDoctrine()
                 ->getRepository('JYPSRegisterBundle:MemberFee')
-                ->findOneBy(array('reference_number' => $ordernumber));
+                ->findOneBy(['reference_number' => $ordernumber]);
             $fee->setPaid(true);
             $em = $this->getDoctrine()->getManager();
             $em->persist($fee);
@@ -673,7 +714,7 @@ class MemberFeeController extends Controller
         } else {
             return $this->render(
                 'JYPSRegisterBundle:MemberFee:paytrail_payment_failed.html.twig',
-                array('return_auth' => $return_auth)
+                ['return_auth' => $return_auth]
             );
         }
     }
@@ -706,7 +747,7 @@ class MemberFeeController extends Controller
     {
         $value = $this->getDoctrine()
             ->getRepository('JYPSRegisterBundle:SystemParameter')
-            ->findOneBy(array('key' => $parameter_name));
+            ->findOneBy(['key' => $parameter_name]);
         return $value;
     }
 }

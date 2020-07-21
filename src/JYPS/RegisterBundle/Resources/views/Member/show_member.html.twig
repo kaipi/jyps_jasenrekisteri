@@ -130,6 +130,9 @@
 <form action="../memberfees/sendSingleEmail" method="post"><input type="hidden" name="member_id" value={{member.getId()}}>
 <input  type="submit" value="Lähetä jäsenmaksu"></form>
 
+<form action="../reminder_sms/{{member.getMemberId()}}" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
+<input  type="submit" value="Lähetä sms muistutus"></form>
+
 <form action="../end_member" method="post"><input type="hidden" name="memberid" value={{member.getMemberId()}}>
 <input  type="submit" value="Poista jäsen"></form>
 </font>

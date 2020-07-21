@@ -1,133 +1,137 @@
 _wdt:
-    resource: '@WebProfilerBundle/Resources/config/routing/wdt.xml'
+    resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
     prefix: /_wdt
 _profiler:
-    resource: '@WebProfilerBundle/Resources/config/routing/profiler.xml'
+    resource: "@WebProfilerBundle/Resources/config/routing/profiler.xml"
     prefix: /_profiler
 _main:
     resource: routing.yml
 jyps_register:
-    resource: '@JYPSRegisterBundle/Resources/config/routing.yml'
+    resource: "@JYPSRegisterBundle/Resources/config/routing.yml"
     prefix: /
 login:
     path: /member/login
     defaults:
-        _controller: 'JYPSRegisterBundle:Security:login'
+        _controller: "JYPSRegisterBundle:Security:login"
 login_check:
     path: /member/login_check
 logout:
     path: /member/logout
 member:
-    path: '/member/show/{memberid}'
+    path: "/member/show/{memberid}"
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:showAll'
+        _controller: "JYPSRegisterBundle:Member:showAll"
     requirements:
         id: \d+
 all_members:
     path: /member
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:index'
+        _controller: "JYPSRegisterBundle:Member:index"
 add_member:
     path: /member/add
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:addMember'
+        _controller: "JYPSRegisterBundle:Member:addMember"
 search:
     path: /member/search
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:searchMembers'
+        _controller: "JYPSRegisterBundle:Member:searchMembers"
 save_member:
-    path: '/member/{memberid}/save'
+    path: "/member/{memberid}/save"
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:saveMember'
+        _controller: "JYPSRegisterBundle:Member:saveMember"
     requirements:
         id: \d+
 join_member:
     path: /join
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinMember'
+        _controller: "JYPSRegisterBundle:Member:joinMember"
 join_save:
     path: /join/joinSave
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinSave'
+        _controller: "JYPSRegisterBundle:Member:joinSave"
 join_internal_save:
     path: /member/joinSave
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:joinSaveInternal'
+        _controller: "JYPSRegisterBundle:Member:joinSaveInternal"
 configuration:
     path: /member/configuration
     defaults:
-        _controller: 'JYPSRegisterBundle:Configuration:showAll'
+        _controller: "JYPSRegisterBundle:Configuration:showAll"
 memberfees:
     path: /member/memberfees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:showAll'
+        _controller: "JYPSRegisterBundle:MemberFee:showAll"
 memberfees_create:
     path: /member/memberfees/create
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:createMemberFees'
+        _controller: "JYPSRegisterBundle:MemberFee:createMemberFees"
 end_member:
     path: /member/end_member
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:endMember'
+        _controller: "JYPSRegisterBundle:Member:endMember"
 mark_member_fees:
     path: /member/memberfees/showFees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:showUnpaidFees'
+        _controller: "JYPSRegisterBundle:MemberFee:showUnpaidFees"
 mark_fees:
     path: /member/memberfees/markUnpaidFees
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:markFeesPaid'
+        _controller: "JYPSRegisterBundle:MemberFee:markFeesPaid"
 mark_one_fee:
     path: /member/memberfees/markOneFeeAsPaid
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:markOneFeeAsPaid'
+        _controller: "JYPSRegisterBundle:MemberFee:markOneFeeAsPaid"
 showClosed:
     path: /member/history
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:showClosed'
+        _controller: "JYPSRegisterBundle:Member:showClosed"
 showQuickReports:
     path: /member/reports
     defaults:
-        _controller: 'JYPSRegisterBundle:Report:index'
+        _controller: "JYPSRegisterBundle:Report:index"
 sendReminders:
     path: /member/memberfees/sendReminders
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:sendReminderLetter'
+        _controller: "JYPSRegisterBundle:MemberFee:sendReminderLetter"
 sendCard:
     path: /member/send_membership_card
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:sendMembershipCard'
+        _controller: "JYPSRegisterBundle:Member:sendMembershipCard"
 communicationMail:
     path: /member/communicationMail
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:sendCommunicationMail'
+        _controller: "JYPSRegisterBundle:Member:sendCommunicationMail"
     methods:
         - POST
 index_password:
     path: /member/changePassword
     defaults:
-        _controller: 'JYPSRegisterBundle:PasswordChange:index'
+        _controller: "JYPSRegisterBundle:PasswordChange:index"
 JYPSRegisterBundle_user:
-    resource: '@JYPSRegisterBundle/Resources/config/routing/user.php'
+    resource: "@JYPSRegisterBundle/Resources/config/routing/user.php"
     prefix: /member/user
 JYPSRegisterBundle_member_intrestconfig:
-    resource: '@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php'
+    resource: "@JYPSRegisterBundle/Resources/config/routing/intrestconfig.php"
     prefix: /member/intrestconfig
 paytrailPayment:
-    path: '/pay/{reference}'
+    path: "/pay/{reference}"
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:memberFeePaymentForm'
+        _controller: "JYPSRegisterBundle:MemberFee:memberFeePaymentForm"
 payment_complete:
     path: /paymentcomplete
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paymentComplete'
+        _controller: "JYPSRegisterBundle:MemberFee:paymentComplete"
 payment_cancelled:
     path: /paymentcancelled
     defaults:
-        _controller: 'JYPSRegisterBundle:MemberFee:paymentCancelled'
+        _controller: "JYPSRegisterBundle:MemberFee:paymentCancelled"
 change_membertype:
-    path: '/typechange/{memberid}/{referencenumber}'
+    path: "/typechange/{memberid}/{referencenumber}"
     defaults:
-        _controller: 'JYPSRegisterBundle:Member:changeMemberType'
+        _controller: "JYPSRegisterBundle:Member:changeMemberType"
+send_reminder_sms:
+    path: "/member/reminder_sms/{memberid}"
+    defaults:
+        _controller: "JYPSRegisterBundle:MemberFee:sendSMSReminder"
 api_login_check:
     path: /api/login_check

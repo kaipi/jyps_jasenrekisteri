@@ -191,3 +191,7 @@ api_members_statistics:
     path: /api/members/stats/{year}
     defaults: { _controller: "JYPSRegisterBundle:API:getMemberStatistics" }
     methods: [GET]
+send_reminder_sms:
+    path: "/member/reminder_sms/{memberid}"
+    defaults:
+        _controller: "JYPSRegisterBundle:MemberFee:sendSMSReminder"

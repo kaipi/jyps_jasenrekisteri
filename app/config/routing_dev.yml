@@ -129,9 +129,5 @@ change_membertype:
     path: "/typechange/{memberid}/{referencenumber}"
     defaults:
         _controller: "JYPSRegisterBundle:Member:changeMemberType"
-send_reminder_sms:
-    path: "/member/reminder_sms/{memberid}"
-    defaults:
-        _controller: "JYPSRegisterBundle:MemberFee:sendSMSReminder"
 api_login_check:
     path: /api/login_check

@@ -78,7 +78,7 @@ class MemberFeeController extends Controller
     public function sendSMSReminderAction($memberid)
     {
         $SnSclient = new SnsClient([
-            //'profile' => 'jyps',
+            'profile' => 'jyps',
             'region' => 'eu-west-1',
             'version' => '2010-03-31',
         ]);
@@ -118,7 +118,7 @@ class MemberFeeController extends Controller
     {
         //sns aws client
         $SnSclient = new SnsClient([
-            //'profile' => 'jyps',
+            'profile' => 'jyps',
             'region' => 'eu-west-1',
             'version' => '2010-03-31',
         ]);

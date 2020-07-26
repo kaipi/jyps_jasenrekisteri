@@ -92,24 +92,25 @@ class MemberFeeController extends Controller
                 'fee_period' => date('Y'),
                 'paid' => 0,
             ]);
-        try {
-            $result = $SnSclient->publish([
-                'SenderId' => 'JypsRy',
-                'Message' =>
-                    'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .
-                    $memberfee->getReferenceNumber() .
-                    ' Terveisin JYPS ry.',
-                'PhoneNumber' => $member->getInternationalTelephone(),
-            ]);
-            $this->get('session')
-                ->getFlashBag()
-                ->add('notice', 'SMS lähetetty');
-        } catch (AwsException $e) {
-            $this->get('session')
-                ->getFlashBag()
-                ->add('notice', 'Lähetys epäonnistui');
+        if ($memberfee !== null) {
+            try {
+                $result = $SnSclient->publish([
+                    'SenderId' => 'JypsRy',
+                    'Message' =>
+                        'Hei, rekisterimme mukaan et ole vielä maksanut tämän vuoden jäsenmaksuasi. Maksu: https://jasenrekisteri.jyps.fi/pay/' .
+                        $memberfee->getReferenceNumber() .
+                        ' Terveisin JYPS ry.',
+                    'PhoneNumber' => $member->getInternationalTelephone(),
+                ]);
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('notice', 'SMS lähetetty');
+            } catch (AwsException $e) {
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('notice', 'Lähetys epäonnistui');
+            }
         }
-
         return $this->redirect(
             $this->generateUrl('member', ['memberid' => $member->getMemberId()])
         );

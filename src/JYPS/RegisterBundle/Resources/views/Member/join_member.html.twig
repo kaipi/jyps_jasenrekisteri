@@ -26,8 +26,8 @@
 });
 $(function() {
   $("#family_members").hide();
-  $('#memberid_membertype').change(function(){
-    if ($(this).val() == "10") {
+  $('#member_join_membertype').change(function(){
+    if ($(this).val() === "10") {
         $("#family_members").show();
     } else {
         $("#family_members").hide();

@@ -40,7 +40,8 @@ class MemberAddType extends AbstractType
             ->add('mailing_list_yleinen', CheckboxType::class, array('required' => false))
             ->add('gender', ChoiceType::class, array('choices' => array(
                 "Mies" => true,
-                "Nainen" => false),
+                "Nainen" => false,
+                'Muu' => null),    
                 'required' => true,
                 'expanded' => false,
                 'multiple' => false))

@@ -52,7 +52,8 @@ class MemberJoinType extends AbstractType
                 'attr' => array('size' => '63')))
             ->add('gender', ChoiceType::class, array('choices' => array(
                 'Mies' => true,
-                'Nainen' => false),
+                'Nainen' => false,
+                'Muu' => null),
                 'required' => true,
                 'expanded' => false,
                 'multiple' => false))

@@ -44,6 +44,7 @@ $(document).ready( function() {
   <tr>
   <th>Jäsennumero</th>
   <th>Nimi</th>
+  <th>Sähköposti</th>
   <th>Syntymävuosi</th>
   <th>Katuosoite</th>
   <th>Postinumero</th>
@@ -57,6 +58,7 @@ $(document).ready( function() {
   <tr>
   <td>{{member.getMemberid()}}</td>
   <td><a href=member/show/{{member.getMemberId}}>{{ member.getFullNameSurnameFirst() }}</a>  </td>
+  <td><a href=mailto:{{member.getEmail()}}>{{member.getEmail()}}</a></td>
   <td>{{member.getBirthYear()}}</td>
   <td>{{member.getStreetAddress()}}</td>
   <td>{{member.getPostalCode()}}</td>

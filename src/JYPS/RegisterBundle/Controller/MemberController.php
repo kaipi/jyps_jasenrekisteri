@@ -194,7 +194,7 @@ class MemberController extends Controller
         $intrest_names = array();
         $recipents = array('teemu.j.tenhunen@gmail.com', 'teemu.peltonen@jyps.fi', 'timi+jyps@wahalahti.fi');
         if ($member->getGender() === false) {
-            array_push($recipents, 'johanna.nikander@jyps.fi');
+            array_push($recipents, 'tiina.siik@outlook.com');
         }
         if ($member->getIntrests()) {
             foreach ($member->getIntrests() as $intrest) {

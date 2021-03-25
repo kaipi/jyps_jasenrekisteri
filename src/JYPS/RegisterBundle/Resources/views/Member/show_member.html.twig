@@ -17,7 +17,8 @@
 <h3><a href=../../member>Jäsenet</a> | <a href=../../member/add>Lisää jäsen</a> | <a href=../user>Admin</a> | <a href=../memberfees>Jäsenmaksut</a>| <a href=../configuration>Konfiguraatio</a> | <a href=../logout>Logout</a> Käyttäjä: {{ app.user.username }} </h3>
 
 
-<h3>Henkilötiedot</h3>
+<h2>Henkilötiedot</h2>
+<h3>Jäsennumero {{member.memberid()}}</h3>
 {{ form_start(form) }}
 {{ form_errors(form) }}
 

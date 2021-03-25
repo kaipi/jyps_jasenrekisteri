@@ -2,13 +2,19 @@
 namespace JYPS\RegisterBundle\Controller;
 
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use JYPS\RegisterBundle\Entity\Member;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Color\Color;
 
 class MemberCardGenerator
 {
 
     public static function generateMembershipCard(Member $member, $base_image_path, $font, $image_path)
     {
+        $writer = new PngWriter();
         $base_image = imagecreatefrompng($base_image_path);
         $output_image = $image_path . 'MemberCard_' . $member->getMemberId() . '.png';
         /* member data to image */
@@ -22,11 +28,17 @@ class MemberCardGenerator
             'join_year' => $member->getMembershipStartDate()->format('Y'),
             'name' => $member->getFullName());
         $member_qr_data = json_encode($member_data);
-        $qrCode = new QrCode();
-        $qrCode->setSize(380);
-        $qrCode->setText($member_qr_data);
-        $qrCodedata = $qrCode->writeString();
-        $qr_image = imagecreatefromstring($qrCodedata);
+        $qrCode = QrCode::create($member_qr_data)
+            ->setEncoding(new Encoding('UTF-8'))
+            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+            ->setSize(380)
+            ->setMargin(10)
+            ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->setForegroundColor(new Color(0, 0, 0))
+            ->setBackgroundColor(new Color(255, 255, 255));
+
+        $result = $writer->write($qrCode);
+        $qr_image = imagecreatefromstring($result->getString());
         imagecopy($base_image, $qr_image, 550, 22, 0, 0, imagesx($qr_image), imagesy($qr_image));
         /*write image to disk */
         imagepng($base_image, $output_image);

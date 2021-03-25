@@ -781,7 +781,10 @@ class MemberController extends Controller
     {
         $childMembers = [];
         $i = 0;
-
+        $arr = $request->get('familymember_firstnames');
+        if($request->get('familymember_firstnames')[0] === "") { 
+            return $childMembers; 
+        }
         $firstnames = $request->get('familymember_firstnames');
         $secondnames = $request->get('familymember_secondnames');
         $surnames = $request->get('familymember_surnames');

@@ -1,11 +1,9 @@
 
 {# src/JYPS/RegisterBundle/Resources/views/Member/show_members.html.twig #}
-
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/jypsregister/css/jquery.dataTables.min.css') }}">
 <script src="{{ asset('bundles/jypsregister/js/jquery-1.10.2.js')}}"></script>
-<script type="text/javascript" charset="utf8" src="{{ asset('bundles/jypsregister/js/jquery.dataTables.min.js') }}"></script>
 
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/sb-1.0.1/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/sb-1.0.1/datatables.min.js"></script>
 <head>
 	<title>JYPS Ry jäsenrekisteri</title>
 	  <link href="{{ asset('style.css') }}" rel="stylesheet" />
@@ -32,8 +30,18 @@ $(document).ready( function() {
          "sSearch": "Haku:"
      },    
      language: {
-        searchPlaceholder: "Hakusana"
-    }
+        searchPlaceholder: "Hakusana",
+        searchBuilder: {
+          title: {
+                    0: 'Filters',
+                    _: 'Filters (%d)'
+                },
+        },
+    },
+    buttons:[
+            'searchBuilder'
+        ],
+    dom: 'Qlfrtip',
   } );
 } )
 

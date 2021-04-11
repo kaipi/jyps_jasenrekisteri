@@ -40,9 +40,8 @@ class GenerateMemberCardsCommand extends ContainerAwareCommand
         $repository = $this->getContainer()->get('doctrine')
             ->getRepository('JYPSRegisterBundle:Member');
         $query = $repository->createQueryBuilder('m')
-            ->where('m.membership_end_date >= :current_date and m.membership_start_date <= :period_start')
+            ->where('m.membership_end_date >= :current_date')
             ->setParameter('current_date', new \DateTime("now"))
-            ->setParameter('period_start', new \DateTime("first day of January " . date('Y')))
             ->getQuery();
 
         $members = $query->getResult();

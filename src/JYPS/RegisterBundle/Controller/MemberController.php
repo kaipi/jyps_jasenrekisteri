@@ -13,6 +13,7 @@ use JYPS\RegisterBundle\Form\Type\MemberJoinType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Aws\Ses\SesClient;
 
 class MemberController extends Controller
 {
@@ -191,6 +192,12 @@ class MemberController extends Controller
 
     private function sendJoinInfoEmail(Member $member, MemberFee $memberfee)
     {
+        $SesClient = new SesClient([
+            'profile' => 'jyps',
+            'version' => '2010-12-01',
+            'region' => 'eu-west-1',
+        ]);
+
         $intrest_names = array();
         $recipents = array('teemu.j.tenhunen@gmail.com', 'teemu.peltonen@jyps.fi', 'timi+jyps@wahalahti.fi');
         if ($member->getGender() === false) {
@@ -205,17 +212,44 @@ class MemberController extends Controller
             }
         }
         $member_age = date('Y') - $member->getBirthYear();
-        $message = (new \Swift_Message)
-            ->setSubject('Uusi JYPS-jäsen!')
-            ->setFrom('jasenrekisteri@jyps.fi')
-            ->setTo($recipents)
-            ->setBody($this->renderView(
-                'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
-                array('member' => $member,
-                    'memberfee' => $memberfee,
-                    'intrests' => $intrest_names,
-                    'age' => $member_age)));
-        $this->get('mailer')->send($message);
+        //send with aws ses
+        try {
+                $result = $SesClient->sendEmail([
+                    'Destination' => [
+                        'ToAddresses' => [$recipents],
+                    ],
+                    'ReplyToAddresses' => ['jasenrekisteri@jyps.fi'],
+                    'Source' => 'jasenrekisteri@jyps.fi',
+                    'Message' => [
+                        'Body' => [
+                            'Text' => [
+                                'Charset' => 'UTF-8',
+                                'Data' => $this->renderView($this->renderView(
+                                    'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
+                                    array('member' => $member,
+                                        'memberfee' => $memberfee,
+                                        'intrests' => $intrest_names,
+                                        'age' => $member_age))
+                                ),
+                            ],
+                        ],
+                        'Subject' => [
+                            'Charset' => 'UTF-8',
+                            'Data' =>
+                                'Uusi JYPS-jäsen!',
+                        ],
+                    ],
+                ]);
+                $messageId = $result['MessageId'];
+                echo "Email sent! Message ID: $messageId" . "\n";
+            } catch (AwsException $e) {
+                // output error message if fails
+                echo $e->getMessage();
+                echo 'The email was not sent. Error message: ' .
+                    $e->getAwsErrorMessage() .
+                    "\n";
+                echo "\n";
+            }
     }
 
     public function memberExtraAction()

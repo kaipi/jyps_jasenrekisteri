@@ -216,7 +216,7 @@ class MemberController extends Controller
         try {
                 $result = $SesClient->sendEmail([
                     'Destination' => [
-                        'ToAddresses' => [$recipents],
+                        'ToAddresses' => $recipents,
                     ],
                     'ReplyToAddresses' => ['jasenrekisteri@jyps.fi'],
                     'Source' => 'jasenrekisteri@jyps.fi',
@@ -224,13 +224,14 @@ class MemberController extends Controller
                         'Body' => [
                             'Text' => [
                                 'Charset' => 'UTF-8',
-                                'Data' => $this->renderView($this->renderView(
+                                'Data' => $this->renderView(
                                     'JYPSRegisterBundle:Member:join_member_infomail.txt.twig',
                                     array('member' => $member,
                                         'memberfee' => $memberfee,
                                         'intrests' => $intrest_names,
-                                        'age' => $member_age))
+                                        'age' => $member_age)
                                 ),
+                                   
                             ],
                         ],
                         'Subject' => [

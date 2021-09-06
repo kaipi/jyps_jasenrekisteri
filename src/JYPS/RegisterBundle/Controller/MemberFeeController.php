@@ -124,6 +124,11 @@ class MemberFeeController extends Controller
             'version' => '2010-03-31',
         ]);
 
+        $SesClient = new SesClient([
+            'profile' => 'jyps',
+            'version' => '2010-12-01',
+            'region' => 'eu-west-1',
+        ]);
         $join_date_limit = $request->request->get('join_date_limit');
         $send_sms = $request->request->get('send_sms');
         $memberfees = $this->getDoctrine()
@@ -178,27 +183,48 @@ class MemberFeeController extends Controller
                             new RFCValidation()
                         )
                     ) {
-                        //email
-                        $message = new \Swift_Message();
-                        $message
-                            ->setSubject('JYPS ry jäsenmaksumuistutus')
-                            ->setFrom('jasenrekisteri@jyps.fi')
-                            ->setTo($member->getEmail())
-                            ->setBody(
-                                $this->renderView(
-                                    'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig',
-                                    [
-                                        'member' => $member,
-                                        'memberfee' => $memberfee,
-                                        'bankaccount' => $bankaccount,
-                                        'virtualbarcode' => $memberfee->getVirtualBarcode(
-                                            $bankaccount
-                                        ),
-                                        'year' => date('Y'),
-                                    ]
-                                )
-                            );
-                        $this->get('mailer')->send($message);
+                        try {
+                            $result = $SesClient->sendEmail([
+                                'Destination' => [
+                                    'ToAddresses' => [$member->getEmail()],
+                                ],
+                                'ReplyToAddresses' => ['jasenrekisteri@jyps.fi'],
+                                'Source' => 'jasenrekisteri@jyps.fi',
+                                'Message' => [
+                                    'Body' => [
+                                        'Text' => [
+                                            'Charset' => 'UTF-8',
+                                            'Data' => $this->renderView(
+                                                'JYPSRegisterBundle:MemberFee:reminder_letter_email.txt.twig',
+                                                [
+                                                    'member' => $member,
+                                                    'memberfee' => $memberfee,
+                                                    'bankaccount' => $bankaccount,
+                                                    'virtualbarcode' => $memberfee->getVirtualBarcode(
+                                                        $bankaccount
+                                                    ),
+                                                    'year' => date('Y'),
+                                                ]
+                                            ),
+                                        ],
+                                    ],
+                                    'Subject' => [
+                                        'Charset' => 'UTF-8',
+                                        'Data' =>
+                                        "JYPS ry jäsenmaksumuistutus",
+                                    ],
+                                ],
+                            ]);
+                            $messageId = $result['MessageId'];
+                            echo "Email sent! Message ID: $messageId" . "\n";
+                        } catch (AwsException $e) {
+                            // output error message if fails
+                            echo $e->getMessage();
+                            echo 'The email was not sent. Error message: ' .
+                                $e->getAwsErrorMessage() .
+                                "\n";
+                            echo "\n";
+                        }
                         $qty++;
                         $em = $this->getDoctrine()->getManager();
                         $member->setReminderSentDate(new \DateTime('now'));

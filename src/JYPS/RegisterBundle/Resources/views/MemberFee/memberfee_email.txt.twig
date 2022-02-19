@@ -10,7 +10,7 @@ Jos olet jo maksanut tämän vuoden jäsenmaksusi, niin tämä viesti on aiheeto
 
 Huom! Samassa taloudessa asuvien perhejäsenmaksu on vain 60 €, joten kaikki samassa taloudessa asuvat kannattaa ilmoittaa jäseniksi: https://www.jyps.fi/jyvaskylan-pyorailyseura-jyps-ry/jasenyys. Älä mieluusti maksa jäsenmaksu(j)a ennen uuden perhejäsenmaksulaskun lähettämistä.
 
-Jäsenkortin  (https://jasenkortti.jyps.fi/MemberCard_{{member.getMemberId()}}.png) voit esimerkiksi alennuksia saadaksesi näyttää puhelimella tai paperisena. Jos tulostat kortin, niin skaalaa se sopivaan kokoon (esimerkiksi mahtumaan lompakkoon).
+Jäsenkortin  (https://jasenkortti.jyps.fi/MemberCard_{{member.getMemberCardHash()}}.png) voit esimerkiksi alennuksia saadaksesi näyttää puhelimella tai paperisena. Jos tulostat kortin, niin skaalaa se sopivaan kokoon (esimerkiksi mahtumaan lompakkoon).
 
 Lämmin kiitos jäsenyydestäsi! Jäsenyytesi mahdollistaa pyöräilytoiminnan järjestämistä ja pyöräilyn edistämistä Keski-Suomessa.
 {%if (member.getMemberType() == "Perhejäsen") %}
@@ -18,7 +18,7 @@ Lämmin kiitos jäsenyydestäsi! Jäsenyytesi mahdollistaa pyöräilytoiminnan j
 Olet perhejäsen, ohessa perheenjäsentesi jäsenkortit:
 
 {% for child in member.getChildren() %}
-{{child.getFullName()}} https://jasenkortti.jyps.fi/MemberCard_{{child.getMemberId()}}.png
+{{child.getFullName()}} https://jasenkortti.jyps.fi/MemberCard_{{child.getMemberCardHash()}}.png
 {%endfor%}
 {%endif%}
 

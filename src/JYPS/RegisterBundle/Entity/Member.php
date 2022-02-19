@@ -1040,4 +1040,7 @@ class Member extends ContainerAwareCommand implements UserInterface, \Serializab
             return false;
         }
     }
+    public function getMemberCardHash() { 
+       return hash("sha256", $this->memberId . '' . $this->id)
+    }
 }

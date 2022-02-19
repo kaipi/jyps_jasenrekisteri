@@ -16,7 +16,7 @@ class MemberCardGenerator
     {
         $writer = new PngWriter();
         $base_image = imagecreatefrompng($base_image_path);
-        $output_image = $image_path . 'MemberCard_' . $member->getMemberId() . '.png';
+        $output_image = $image_path . 'MemberCard_' . hash("sha256", $member->getMemberCardHash()) . '.png';
         /* member data to image */
         $black = imagecolorallocate($base_image, 0, 0, 0);
         $memberid = $member->getMemberId();
